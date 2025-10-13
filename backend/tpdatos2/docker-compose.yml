@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:6
+    container_name: tp_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+  cassandra:
+    image: cassandra:4
+    container_name: tp_cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+volumes:
+  mongo_data:
