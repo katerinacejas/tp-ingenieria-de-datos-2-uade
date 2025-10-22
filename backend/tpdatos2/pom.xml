@@ -4,6 +4,14 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.0</version> <!-- usa la misma versión que pusiste en properties -->
+        <relativePath/> <!-- busca en el repositorio central -->
+    </parent>
+
+
     <groupId>com.poliglota</groupId>
     <artifactId>backend-poliglota</artifactId>
     <version>1.0.0</version>
