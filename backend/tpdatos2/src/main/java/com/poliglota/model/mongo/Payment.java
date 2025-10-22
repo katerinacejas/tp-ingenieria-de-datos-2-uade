@@ -1,8 +1,10 @@
+// esto va en el folder de mysql
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Document(collection = "payments")
+@Entity(table="Payment")
+@Data
 public class Payment {
     @Id
     private String paymentId;
