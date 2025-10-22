@@ -1,4 +1,4 @@
-package com.poliglota.DTO;
+package com.poliglota.DTO.request;
 
 import lombok.Data;
 

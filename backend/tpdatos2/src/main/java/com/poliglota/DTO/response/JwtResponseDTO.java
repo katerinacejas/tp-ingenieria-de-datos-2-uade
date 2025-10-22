@@ -1,4 +1,4 @@
-package com.poliglota.dto.response;
+package com.poliglota.DTO.response;
 
 import lombok.Data;
 

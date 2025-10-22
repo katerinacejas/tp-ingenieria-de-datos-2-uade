@@ -1,4 +1,4 @@
-package com.poliglota.DTO;
+package com.poliglota.DTO.response;
 
 import lombok.Data;
 import java.sql.Date;

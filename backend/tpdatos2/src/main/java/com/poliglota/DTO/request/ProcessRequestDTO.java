@@ -3,7 +3,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 @Document(collection = "process_requests")
-public class ProcessRequest {
+public class ProcessRequestDTO {
     @Id
     private String requestId;
     private String userId;
