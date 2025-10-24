@@ -1,6 +1,6 @@
-package com.poliglota.repository.mongo;
+package com.poliglota.repository.mysql;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import com.poliglota.model.mongo.User;
+import com.poliglota.model.mysql.User;
 import java.util.Optional;
 import java.util.Collection;
 
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<Usuario, Long> {
-    Optional<Usuario> findByEmail(String email);
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
     
 	// Método para verificar si un usuario existe por su email
 	boolean existsByEmail(String email);

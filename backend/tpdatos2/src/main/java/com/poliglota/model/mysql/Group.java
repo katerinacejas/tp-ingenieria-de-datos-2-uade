@@ -1,13 +1,26 @@
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.List;
+package com.poliglota.model.sql;
 
-@Document(collection = "groups")
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.*;
+
+@Entity
+@Table(name = "groups")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Group {
-    @Id
-    private String groupId;
-    private String name;
-    private List<String> memberIds;
 
-    // Getters and Setters
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    // Miembros del grupo (lista de IDs de usuarios)
+    @ElementCollection
+    @CollectionTable(name = "group_members", joinColumns = @JoinColumn(name = "group_id"))
+    @Column(name = "member_id")
+    private List<Long> memberIds = new ArrayList<>();
 }

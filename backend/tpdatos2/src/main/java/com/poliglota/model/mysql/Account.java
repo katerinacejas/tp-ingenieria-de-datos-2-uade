@@ -1,14 +1,29 @@
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.List;
+package com.poliglota.model.sql;
 
-@Document(collection = "accounts")
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.*;
+
+@Entity
+@Table(name = "accounts")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account {
-    @Id
-    private String accountId;
-    private String userId;
-    private double currentBalance;
-    private List<String> transactionHistory;
 
-    // Getters and Setters
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // autoincrement en MySQL
+
+    @Column(nullable = false)
+    private Long userId; // referencia a usuario
+
+    @Column(nullable = false)
+    private double currentBalance;
+
+    // Se puede crear una tabla hija o almacenarlo como JSON
+    @ElementCollection
+    @CollectionTable(name = "account_transactions", joinColumns = @JoinColumn(name = "account_id"))
+    @Column(name = "transaction_detail")
+    private List<String> transactionHistory = new ArrayList<>();
 }

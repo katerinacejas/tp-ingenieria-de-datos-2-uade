@@ -1,17 +1,25 @@
-// esto va en el folder de mysql
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.poliglota.model.mysql;
+
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 
-@Entity(table="Payment")
+@Entity
+@Table(name = "payments")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Payment {
-    @Id
-    private String paymentId;
-    private String invoiceId;
-    private LocalDateTime paymentDate;
-    private double amount;
-    private String paymentMethod;
 
-    // Getters and Setters
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String invoiceId; // referenciado de Mongo
+
+    private LocalDateTime paymentDate = LocalDateTime.now();
+
+    private double amount;
+
+    private String paymentMethod;
 }

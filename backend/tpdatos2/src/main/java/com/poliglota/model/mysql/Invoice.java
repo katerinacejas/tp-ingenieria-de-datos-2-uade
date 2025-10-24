@@ -1,16 +1,32 @@
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.poliglota.model.sql;
+
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
-@Document(collection = "invoices")
+@Entity
+@Table(name = "invoices")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Invoice {
-    @Id
-    private String invoiceId;
-    private String userId;
-    private LocalDateTime issueDate;
-    private List<String> billedProcesses;
-    private String status; // pending / paid / overdue
 
-    // Getters and Setters
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private Long userId; // referencia al usuario dueño
+
+    private LocalDateTime issueDate = LocalDateTime.now();
+
+    // Procesos facturados
+    @ElementCollection
+    @CollectionTable(name = "invoice_processes", joinColumns = @JoinColumn(name = "invoice_id"))
+    @Column(name = "process_name")
+    private List<String> billedProcesses = new ArrayList<>();
+
+    @Column(nullable = false)
+    private String status; // pending / paid / overdue
 }

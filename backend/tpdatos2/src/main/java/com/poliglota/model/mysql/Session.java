@@ -1,16 +1,28 @@
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.poliglota.model.mysql;
+
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 
-@Document(collection = "sessions")
-public class Session {
-    @Id
-    private String sessionId;
-    private String userId;
-    private String roleId;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private String status; // active / inactive
+import org.springframework.data.annotation.Id;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-    // Getters and Setters
+@Entity
+@Table(name = "sessions")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Session {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Usuario user;
+
+    private LocalDateTime startTime = LocalDateTime.now();
+    private LocalDateTime endTime;
+    private String status = "ACTIVE"; // ACTIVE / INACTIVE
 }
