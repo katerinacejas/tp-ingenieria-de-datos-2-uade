@@ -11,7 +11,7 @@ import ProcesosList from './features/procesos/ProcesosList.jsx'
 import FacturasList from './features/facturacion/FacturasList.jsx'
 
 export default function App() {
-  const logged = true; // para demo; reemplazar por contexto de auth
+  const logged = false; // para demo; reemplazar por contexto de auth
 
   if (!logged) {
     return <Login />
