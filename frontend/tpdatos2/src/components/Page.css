@@ -1,0 +1,9 @@
+.page h1 {
+    margin: 0 0 16px;
+    font-size: 22px;
+}
+
+.page-actions {
+    display: flex;
+    gap: 10px;
+}

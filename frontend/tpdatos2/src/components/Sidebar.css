@@ -1,0 +1,35 @@
+.sidebar {
+    grid-area: sidebar;
+    padding: 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+}
+
+.sidebar a.active {
+    background: #101826;
+    color: #e5efff;
+    border-color: var(--primary);
+}
+
+.sidebar a:hover {
+    background: #0e1623;
+    color: #e6edf3;
+}

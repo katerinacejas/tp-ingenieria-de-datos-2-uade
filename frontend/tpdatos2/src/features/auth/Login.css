@@ -1,0 +1,20 @@
+.login-wrap {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    padding: 16px;
+}
+
+.login {
+    width: 100%;
+    max-width: 420px;
+    padding: 24px;
+}
+
+.login h2 {
+    margin-top: 0;
+}
+
+.login .input {
+    margin-bottom: 12px;
+}

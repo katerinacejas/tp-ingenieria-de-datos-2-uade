@@ -1,0 +1,16 @@
+:root {
+    --bg: #0f141a;
+    --panel: #121923;
+    --panel-2: #0d131b;
+    --muted: #9fb0c0;
+    --text: #e6edf3;
+    --primary: #3b82f6;
+    /* azul */
+    --primary-600: #2563eb;
+    --primary-700: #1d4ed8;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --card-border: #1f2a37;
+    --shadow: 0 6px 22px rgba(0, 0, 0, .35);
+}
