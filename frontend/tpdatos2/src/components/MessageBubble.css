@@ -1,0 +1,39 @@
+.bubble-row {
+    display: grid;
+    margin-bottom: 10px;
+    max-width: 80%;
+}
+
+.bubble-row.me {
+    margin-left: auto;
+    text-align: right;
+}
+
+.bubble-name {
+    color: var(--muted);
+    font-size: 12px;
+    margin: 0 0 4px 6px;
+}
+
+.bubble {
+    background: #0f1722;
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 10px 12px;
+    box-shadow: var(--shadow);
+}
+
+.bubble-row.me .bubble {
+    background: #132544;
+    border-color: #234778;
+}
+
+.bubble-text {
+    white-space: pre-wrap;
+}
+
+.bubble-time {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 4px;
+}

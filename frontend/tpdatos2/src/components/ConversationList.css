@@ -1,0 +1,58 @@
+.conv-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.conv-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.conv-item:hover {
+    background: #0e1623;
+}
+
+.conv-item.active {
+    border-color: var(--primary);
+    background: #101826;
+}
+
+.conv-icon {
+    color: #93c5fd;
+    font-size: 18px;
+}
+
+.conv-main {
+    overflow: hidden;
+}
+
+.conv-name {
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.conv-last {
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.conv-empty {
+    color: var(--muted);
+    padding: 10px;
+    text-align: center;
+}

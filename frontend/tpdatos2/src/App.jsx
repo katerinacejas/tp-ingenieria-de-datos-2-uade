@@ -9,9 +9,10 @@ import SensorDetalle from './features/sensores/SensorDetalle.jsx'
 import AlertasList from './features/alertas/AlertasList.jsx'
 import ProcesosList from './features/procesos/ProcesosList.jsx'
 import FacturasList from './features/facturacion/FacturasList.jsx'
+import Mensajes from './features/mensajes/Mensajes.jsx'
 
 export default function App() {
-  const logged = false; // para demo; reemplazar por contexto de auth
+  const logged = true; // para demo; reemplazar por contexto de auth
 
   if (!logged) {
     return <Login />
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/alertas" element={<AlertasList />} />
           <Route path="/procesos" element={<ProcesosList />} />
           <Route path="/facturacion" element={<FacturasList />} />
+          <Route path="/mensajes" element={<Mensajes />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
