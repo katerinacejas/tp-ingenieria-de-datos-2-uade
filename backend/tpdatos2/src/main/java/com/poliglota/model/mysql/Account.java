@@ -19,7 +19,7 @@ public class Account {
     private Long userId; // referencia a usuario
 
     @Column(nullable = false)
-    private double currentBalance;
+    private double currentBalance
 
     // Se puede crear una tabla hija o almacenarlo como JSON
     @ElementCollection

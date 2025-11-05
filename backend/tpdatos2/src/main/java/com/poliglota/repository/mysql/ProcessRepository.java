@@ -16,4 +16,5 @@ public interface ProcessRepository extends JpaRepository<Process, Long> {
 
     // Buscar procesos con costo menor a cierto valor
     java.util.List<Process> findByCostLessThan(double maxCost);
+
 }
