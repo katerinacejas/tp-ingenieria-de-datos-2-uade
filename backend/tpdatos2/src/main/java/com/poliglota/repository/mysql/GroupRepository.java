@@ -1,9 +1,10 @@
 package com.project.repository.mongodb;
 
 import com.project.model.mongodb.Group;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GroupRepository extends MongoRepository<Group, String> {
+public interface GroupRepository extends JpaRepository<Group, String> {
+     Group findByGroupbyName(String name);
 }
