@@ -1,0 +1,74 @@
+.msg-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 1000px) {
+    .msg-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.msg-left {
+    padding: 8px;
+}
+
+.msg-right {
+    display: grid;
+    grid-template-rows: 64px 1fr 64px;
+    overflow: hidden;
+}
+
+.msg-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.h-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: #0e1623;
+    border: 1px solid var(--card-border);
+    color: #dbeafe;
+    font-weight: 800;
+}
+
+.h-name {
+    font-weight: 700;
+}
+
+.h-sub {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.msg-box {
+    padding: 16px;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #0c1117, #0a0f15);
+}
+
+.msg-input {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    padding: 12px;
+    border-top: 1px solid var(--card-border);
+}
+
+.msg-empty {
+    padding: 24px;
+    color: var(--muted);
+}
