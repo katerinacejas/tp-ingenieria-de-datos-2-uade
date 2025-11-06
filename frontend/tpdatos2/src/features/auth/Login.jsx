@@ -1,15 +1,42 @@
-import React, { useState } from 'react'
-import './Login.css'
+import React, { useState } from 'react';
+import './Login.css';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from './authContext.jsx';
+import { fetchApi } from '../../app/api.js';
 
 export default function Login() {
-    const [email, setEmail] = useState('')
-    const [pass, setPass] = useState('')
-    const [showPass, setShowPass] = useState(false)
+    const [email, setEmail] = useState('');
+    const [pass, setPass] = useState('');
+    const [showPass, setShowPass] = useState(false);
+    const [error, setError] = useState('');
+    const { login, user } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    const submit = (e) => {
-        e.preventDefault()
-        alert('Demo login. Integra tu backend cuando quieras.')
-    }
+    const submit = async (e) => {
+        e.preventDefault();
+        setError('');
+        try {
+            // ajusta el path si tu back es /auth/login sin /api
+            const data = await fetchApi('/auth/login', {
+                auth: false,
+                method: 'POST',
+                body: JSON.stringify({ email, password: pass }),
+            });
+            const token = data?.token;
+            if (!token) { setError('Respuesta inválida del servidor.'); return; }
+
+            login(token);
+
+            // redirección: si ADMIN -> /admin, si no -> a la ruta previa o "/"
+            const dest = (user?.role === 'ADMIN')
+                ? '/admin'
+                : (location.state?.from?.pathname || '/');
+            navigate(dest, { replace: true });
+        } catch (err) {
+            setError(err.message === 'UNAUTHORIZED' ? 'Credenciales incorrectas.' : 'No se pudo conectar.');
+        }
+    };
 
     return (
         <div className="login-wrap">
@@ -67,14 +94,13 @@ export default function Login() {
                         </label>
                         <a className="link" href="#" onClick={(e) => e.preventDefault()}>¿Olvidaste tu contraseña?</a>
                     </div>
-
+                    {error && <div className="form-error">{error}</div>}
                     <button className="btn btn-primary btn-full" type="submit">Entrar</button>
                 </form>
-
                 <p className="login-foot muted">
-                    ¿No tenés cuenta? <a className="link" href="#" onClick={(e) => e.preventDefault()}>Contactá al admin</a>
+                    ¿No tenés cuenta? <Link className="link" to="/register">Crear cuenta</Link>
                 </p>
             </div>
         </div>
-    )
+    );
 }

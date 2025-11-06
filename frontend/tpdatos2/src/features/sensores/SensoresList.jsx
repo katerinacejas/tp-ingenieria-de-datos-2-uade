@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './SensoresList.css'
 import Page from '../../components/Page.jsx'
 import DataTable from '../../components/DataTable.jsx'
-import { getSensores } from './sensoresApi.js'
+import { listarSensores as getSensores } from './sensoresApi.js'
 import { Link } from 'react-router-dom'
 
 export default function SensoresList() {

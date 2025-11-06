@@ -1,4 +1,4 @@
-import { USE_MOCK } from '../../app/axios.js'
+import { USE_MOCK } from '../../app/config.js'
 import dayjs from 'dayjs'
 
 // Mocks
