@@ -1,0 +1,49 @@
+.grid-roles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.panel {
+    padding: 16px;
+}
+
+.panel h3 {
+    margin: 0 0 8px;
+}
+
+.grid-form {
+    display: grid;
+    gap: 12px;
+}
+
+.form-row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 700px) {
+    .form-row2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn.sm {
+    padding: 8px 10px;
+    font-weight: 700;
+}
+
+.info {
+    margin-top: 8px;
+    background: #0f1623;
+    border: 1px solid var(--card-border);
+    color: var(--muted);
+    padding: 10px 12px;
+    border-radius: 10px;
+}
