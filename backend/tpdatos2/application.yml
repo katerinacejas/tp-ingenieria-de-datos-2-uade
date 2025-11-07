@@ -21,6 +21,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/poliglota_mongo
+      database : poliglota_mongo
 
   # --- Configuración Cassandra (opcional) ---
   cassandra:

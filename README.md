@@ -1,8 +1,19 @@
 # tp-ingenieria-de-datos-2-uade
 Trabajo practico de Ingeniería de Datos 2 de UADE
 
-para levantar 
 
+Asegurar que los servicios estén activos
+
+Iniciá tus motores de base de datos localmente:
+
+# MySQL
+sudo service mysql start
+# MongoDB
+sudo service mongod start
+# Cassandra
+sudo service cassandra start
+
+para Ejecutar backend 
 
 mvn spring-boot:run
 
