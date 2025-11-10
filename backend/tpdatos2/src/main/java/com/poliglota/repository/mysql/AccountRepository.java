@@ -1,6 +1,6 @@
-package com.project.repository.mongodb;
+package com.poliglota.repository.mysql;
 
-import com.project.model.mongodb.Account;
+import com.poliglota.model.mysql.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

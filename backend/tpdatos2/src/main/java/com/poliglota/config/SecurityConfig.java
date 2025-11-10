@@ -20,8 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.List;
+import com.poliglota.security.JwtAuthenticationFilter;
+import com.poliglota.security.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity

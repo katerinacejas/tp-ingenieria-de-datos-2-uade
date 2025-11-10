@@ -4,55 +4,48 @@ import com.poliglota.DTO.request.LoginRequestDTO;
 import com.poliglota.DTO.request.RegistroRequestDTO;
 import com.poliglota.DTO.response.JwtResponseDTO;
 import com.poliglota.DTO.response.UsuarioResponseDTO;
-
+import com.poliglota.service.UsuarioService;
+import com.poliglota.exception.UsuarioNotFoundException;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
-
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+	@Autowired
+	private UsuarioService usuarioService;
 
-    @GetMapping("/me")
-    @PreAuthorize("hasAnyRole('USUARIO', 'ADMIN')")
-    public UsuarioResponseDTO getPerfilUsuarioAutenticado(Authentication auth) {
-        String email = auth.getName();
-        return usuarioService.getUsuarioPorMail(email)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + email));
-    }
+	@GetMapping("/me")
+	@PreAuthorize("hasAnyRole('USUARIO', 'ADMIN')")
+	public UsuarioResponseDTO getPerfilUsuarioAutenticado(Authentication auth) {
+		String email = auth.getName();
+		return usuarioService.getUsuarioPorMail(email)
+				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + email));
+	}
 
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<UsuarioResponseDTO> getTodosLosUsuarios() {
-        return usuarioService.getTodosLosUsuarios();
-    }
+	@GetMapping
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<UsuarioResponseDTO> getTodosLosUsuarios() {
+		return usuarioService.getTodosLosUsuarios();
+	}
 
-    @GetMapping("/buscar")
-    @PreAuthorize("hasRole('ADMIN')")
-    public UsuarioResponseDTO getUsuarioPorMail(@RequestParam String mail) {
-        return usuarioService.getUsuarioPorMail(mail)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + mail));
-    }
+	@GetMapping("/buscar")
+	@PreAuthorize("hasRole('ADMIN')")
+	public UsuarioResponseDTO getUsuarioPorMail(@RequestParam String mail) {
+		return usuarioService.getUsuarioPorMail(mail)
+				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + mail));
+	}
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public UsuarioResponseDTO actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioUpdateRequestDTO usuarioRequest) {
-        return usuarioService.actualizarUsuario(id, usuarioRequest);
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String eliminarUsuario(@PathVariable Long id) {
-        usuarioService.eliminarUsuario(id);
-        return "Usuario eliminado con éxito.";
-    }
+	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String eliminarUsuario(@PathVariable Long id) {
+		usuarioService.eliminarUsuario(id);
+		return "Usuario eliminado con éxito.";
+	}
 
 }
