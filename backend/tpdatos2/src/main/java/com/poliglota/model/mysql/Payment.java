@@ -15,11 +15,16 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String invoiceId; // referenciado de Mongo
+	@ManyToOne(optional = false)
+    @JoinColumn(name = "invoice_id", nullable = false)
+    private Invoice invoice;
 
+	@Column(nullable = false)
     private LocalDateTime paymentDate = LocalDateTime.now();
 
+	@Column(nullable = false)
     private double amount;
 
+	@Column(nullable = false)
     private String paymentMethod;
 }

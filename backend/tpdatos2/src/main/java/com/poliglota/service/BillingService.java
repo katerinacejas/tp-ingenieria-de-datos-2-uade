@@ -23,7 +23,7 @@ public class BillingService {
 	 */
 	public Invoice generateInvoice(Long userId, double amount, String description) {
 		Invoice invoice = new Invoice();
-		invoice.setUserId(userId);
+		invoice.setUser(userId);
 		invoice.setIssueDate(LocalDateTime.now());
 		invoice.setBilledProcesses(java.util.List.of(description));
 		invoice.setStatus("pending");

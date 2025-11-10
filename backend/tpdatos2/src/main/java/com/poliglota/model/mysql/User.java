@@ -30,9 +30,11 @@ public class User implements UserDetails{
     @Column(nullable = false)
     private String password;
 
-    private boolean active = true;
+	@Column(nullable = false)
+    private boolean status;
 
-    private LocalDateTime registeredAt = LocalDateTime.now();
+	@Column(nullable = false)
+    private LocalDateTime registeredAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rol_id", nullable = false)

@@ -16,17 +16,18 @@ public class Invoice {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
-	private Long userId; // referencia al usuario dueño
+	@ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+	private User user; 
 
+	@Column(nullable = false)
 	private LocalDateTime issueDate = LocalDateTime.now();
 
-	// Procesos facturados
 	@ElementCollection
 	@CollectionTable(name = "invoice_processes", joinColumns = @JoinColumn(name = "invoice_id"))
 	@Column(name = "process_name")
-	private List<String> billedProcesses = new ArrayList<>();
+	private List<ProcessRequest> billedProcesses = new ArrayList<ProcessRequest>();
 
 	@Column(nullable = false)
-	private String status; // pending / paid / overdue
+	private String status; 
 }

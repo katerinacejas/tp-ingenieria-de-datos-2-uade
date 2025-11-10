@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import com.poliglota.service.MeasurementService;
 import com.poliglota.DTO.MeasurementDTO;
-
 import java.util.List;
 
 @RestController
