@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Document(collection = "maintenance_checks")
+@NoArgsConstructor
+@AllArgsConstructor
 public class MaintenanceCheck {
 	@Id
 	private String checkId;

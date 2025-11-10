@@ -1,26 +1,25 @@
 package com.poliglota.model.mongo;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.util.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "groups")
+import org.springframework.data.mongodb.core.index.Indexed;
+
 @Data
+@Document(collection = "groups")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+	@Indexed(unique = true)
     private String name;
 
-    // Miembros del grupo (lista de IDs de usuarios)
-    @ElementCollection
-    @CollectionTable(name = "group_members", joinColumns = @JoinColumn(name = "group_id"))
-    @Column(name = "member_id")
     private List<Long> memberIds = new ArrayList<>();
 }
