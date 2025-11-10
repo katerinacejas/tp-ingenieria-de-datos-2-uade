@@ -1,7 +1,7 @@
-package com.project.service;
+package com.poliglota.service;
 
-import com.project.model.mongodb.Group;
-import com.project.repository.mongodb.GroupRepository;
+import com.poliglota.model.mysql.Group;
+import com.poliglota.repository.mysql.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -24,9 +24,14 @@ public class GroupService {
     }
 
     public boolean deleteGroup(String id) {
-        if (groupRepository.existsById(id)) {
-            groupRepository.deleteById(id);
-            return true;
+        try {
+            Long longId = Long.parseLong(id);
+            if (groupRepository.existsById(longId)) {
+                groupRepository.deleteById(longId);
+                return true;
+            }
+        } catch (NumberFormatException e) {
+            // Invalid id format
         }
         return false;
     }

@@ -1,6 +1,5 @@
 package com.poliglota.DTO.request;
 
-
 import lombok.Data;
 
 @Data

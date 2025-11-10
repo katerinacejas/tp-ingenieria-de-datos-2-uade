@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.sql.Date;
-import java.util.Optional;
+import com.poliglota.model.mysql.Rol;
+import com.poliglota.model.mysql.User;
+import com.poliglota.repository.mysql.UserRepository;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UserRepository usuarioRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -22,14 +22,11 @@ public class DataInitializer implements CommandLineRunner {
 
         String adminEmail = "admin@tpdatos2.com";
         if (!usuarioRepository.existsByEmail(adminEmail)) {
-            Usuario admin = new Usuario();
-            admin.setNombreCompleto("Administrador");
+            User admin = new User();
+            admin.setFullName("Administrador");
             admin.setEmail(adminEmail);
             admin.setPassword(passwordEncoder.encode("Admin123!"));
             admin.setRol(Rol.ADMIN);
-            admin.setDireccion("Dirección Admin");
-            admin.setTelefono(0);
-            admin.setFechaNacimiento(Date.valueOf("2000-08-10"));
             usuarioRepository.save(admin);
             System.out.println("Usuario ADMIN creado: " + adminEmail + " / Admin123!");
         }

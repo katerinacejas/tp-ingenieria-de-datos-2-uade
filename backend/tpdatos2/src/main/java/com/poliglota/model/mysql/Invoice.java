@@ -1,4 +1,4 @@
-package com.poliglota.model.sql;
+package com.poliglota.model.mysql;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,21 +12,21 @@ import java.util.*;
 @AllArgsConstructor
 public class Invoice {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private Long userId; // referencia al usuario dueño
+	@Column(nullable = false)
+	private Long userId; // referencia al usuario dueño
 
-    private LocalDateTime issueDate = LocalDateTime.now();
+	private LocalDateTime issueDate = LocalDateTime.now();
 
-    // Procesos facturados
-    @ElementCollection
-    @CollectionTable(name = "invoice_processes", joinColumns = @JoinColumn(name = "invoice_id"))
-    @Column(name = "process_name")
-    private List<String> billedProcesses = new ArrayList<>();
+	// Procesos facturados
+	@ElementCollection
+	@CollectionTable(name = "invoice_processes", joinColumns = @JoinColumn(name = "invoice_id"))
+	@Column(name = "process_name")
+	private List<String> billedProcesses = new ArrayList<>();
 
-    @Column(nullable = false)
-    private String status; // pending / paid / overdue
+	@Column(nullable = false)
+	private String status; // pending / paid / overdue
 }

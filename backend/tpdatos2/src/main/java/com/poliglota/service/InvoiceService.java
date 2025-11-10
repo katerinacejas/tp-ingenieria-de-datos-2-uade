@@ -1,7 +1,7 @@
-package com.project.service;
+package com.poliglota.service;
 
-import com.project.model.mongodb.Invoice;
-import com.project.repository.mongodb.InvoiceRepository;
+import com.poliglota.model.mysql.Invoice;
+import com.poliglota.repository.mysql.InvoiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -15,7 +15,7 @@ public class InvoiceService {
         return invoiceRepository.findAll();
     }
 
-    public List<Invoice> getInvoicesByUser(String userId) {
+    public List<Invoice> getInvoicesByUser(Long userId) {
         return invoiceRepository.findByUserId(userId);
     }
 
@@ -24,9 +24,14 @@ public class InvoiceService {
     }
 
     public boolean deleteInvoice(String id) {
-        if (invoiceRepository.existsById(id)) {
-            invoiceRepository.deleteById(id);
-            return true;
+        try {
+            Long invoiceId = Long.parseLong(id);
+            if (invoiceRepository.existsById(invoiceId)) {
+                invoiceRepository.deleteById(invoiceId);
+                return true;
+            }
+        } catch (NumberFormatException e) {
+            // Handle invalid id format if needed
         }
         return false;
     }

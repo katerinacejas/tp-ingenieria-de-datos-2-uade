@@ -7,12 +7,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.poliglota.DTO.request.LoginRequestDTO;
 import com.poliglota.DTO.request.RegistroRequestDTO;
 import com.poliglota.DTO.response.JwtResponseDTO;
 import com.poliglota.model.mysql.Rol;
 import com.poliglota.model.mysql.User;
+import com.poliglota.repository.mysql.UserRepository;
+import com.poliglota.security.JwtUtil;
 
 @Service
 public class AuthenticationService {
@@ -21,7 +22,7 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UserRepository usuarioRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -57,11 +58,8 @@ public class AuthenticationService {
                 throw new RuntimeException("Ya existe un usuario con ese email");
             }
 
-            User nuevoUsuario = new Usuario();
-            nuevoUsuario.setNombreCompleto(request.getNombreCompleto());
-            nuevoUsuario.setDireccion(request.getDireccion());
-            nuevoUsuario.setTelefono(request.getTelefono());
-            nuevoUsuario.setFechaNacimiento(request.getFechaNacimiento());
+            User nuevoUsuario = new User();
+            nuevoUsuario.setFullName(request.getNombreCompleto());
             nuevoUsuario.setEmail(request.getEmail());
 
             String encryptedPassword = passwordEncoder.encode(request.getPassword());

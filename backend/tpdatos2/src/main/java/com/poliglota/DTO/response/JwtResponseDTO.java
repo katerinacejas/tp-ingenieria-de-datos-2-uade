@@ -1,6 +1,7 @@
 package com.poliglota.DTO.response;
 
 import lombok.Data;
+import com.poliglota.model.mysql.Rol;
 
 @Data
 public class JwtResponseDTO {

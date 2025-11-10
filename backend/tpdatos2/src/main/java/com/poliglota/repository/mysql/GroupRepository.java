@@ -1,10 +1,10 @@
-package com.project.repository.mongodb;
+package com.poliglota.repository.mysql;
 
-import com.project.model.mongodb.Group;
+import com.poliglota.model.mysql.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GroupRepository extends JpaRepository<Group, String> {
-     Group findByGroupbyName(String name);
+public interface GroupRepository extends JpaRepository<Group, Long> {
+    Group findByGroupbyName(String name);
 }

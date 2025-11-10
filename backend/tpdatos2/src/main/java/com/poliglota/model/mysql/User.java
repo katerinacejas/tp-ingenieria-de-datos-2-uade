@@ -1,6 +1,6 @@
 package com.poliglota.model.mysql;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -30,5 +30,5 @@ public class User {
     private LocalDateTime registeredAt = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    private Rol rol = Rol.USUARIO; // relación con tu enum Rol
+    private Rol rol;
 }

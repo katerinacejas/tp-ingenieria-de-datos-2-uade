@@ -3,9 +3,7 @@ package com.poliglota.model.mysql;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.cassandra.core.mapping.Table;
+import com.poliglota.model.mysql.User;
 
 @Entity
 @Table(name = "sessions")
@@ -20,7 +18,7 @@ public class Session {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Usuario user;
+    private User user;
 
     private LocalDateTime startTime = LocalDateTime.now();
     private LocalDateTime endTime;
