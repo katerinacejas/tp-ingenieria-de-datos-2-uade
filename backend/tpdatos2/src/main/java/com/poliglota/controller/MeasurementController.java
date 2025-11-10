@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import com.poliglota.service.MeasurementService;
-import com.poliglota.model.cassandra.Measurement;
+import com.poliglota.DTO.MeasurementDTO;
+
 import java.util.List;
 
 @RestController
@@ -14,12 +15,12 @@ public class MeasurementController {
 	private final MeasurementService measurementService;
 
 	@PostMapping
-	public ResponseEntity<Measurement> create(@RequestBody Measurement measurement) {
-		return ResponseEntity.ok(measurementService.save(measurement));
+	public ResponseEntity<MeasurementDTO> create(@RequestBody MeasurementDTO measurementDTO) {
+		return ResponseEntity.ok(measurementService.save(measurementDTO));
 	}
 
 	@GetMapping("/{sensorId}")
-	public ResponseEntity<List<Measurement>> getBySensor(@PathVariable String sensorId) {
+	public ResponseEntity<List<MeasurementDTO>> getBySensor(@PathVariable String sensorId) {
 		return ResponseEntity.ok(measurementService.getBySensor(sensorId));
 	}
 }
