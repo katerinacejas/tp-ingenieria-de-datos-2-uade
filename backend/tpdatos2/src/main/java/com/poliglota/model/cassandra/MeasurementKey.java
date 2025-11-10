@@ -12,8 +12,10 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MeasurementKey implements Serializable {
+
 	@PrimaryKeyColumn(name = "sensor_id", type = PrimaryKeyType.PARTITIONED)
 	private String sensorId;
+	
 	@PrimaryKeyColumn(name = "timestamp", type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
 	private Instant timestamp;
 }

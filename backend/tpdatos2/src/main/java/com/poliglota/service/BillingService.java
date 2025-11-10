@@ -1,7 +1,9 @@
 package com.poliglota.service;
 
 import com.poliglota.model.mysql.*;
-import com.poliglota.repository.mysql.*;
+import com.poliglota.repository.AccountRepository;
+import com.poliglota.repository.InvoiceRepository;
+import com.poliglota.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,7 @@ public class BillingService {
 	 */
 	public Invoice generateInvoice(Long userId, double amount, String description) {
 		Invoice invoice = new Invoice();
-		invoice.setUserId(userId);
+		invoice.setUser(userId);
 		invoice.setIssueDate(LocalDateTime.now());
 		invoice.setBilledProcesses(java.util.List.of(description));
 		invoice.setStatus("pending");

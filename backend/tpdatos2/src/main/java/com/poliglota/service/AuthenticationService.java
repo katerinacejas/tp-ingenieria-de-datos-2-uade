@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import com.poliglota.DTO.request.LoginRequestDTO;
 import com.poliglota.DTO.request.RegistroRequestDTO;
 import com.poliglota.DTO.response.JwtResponseDTO;
+import com.poliglota.model.mysql.RolEntity;
 import com.poliglota.model.mysql.Rol;
 import com.poliglota.model.mysql.User;
-import com.poliglota.repository.mysql.UserRepository;
+import com.poliglota.repository.RolRepository;
+import com.poliglota.repository.UserRepository;
 import com.poliglota.security.JwtUtil;
 
 @Service
@@ -29,6 +31,9 @@ public class AuthenticationService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+	@Autowired
+    private RolRepository rolRepository;
 
     public JwtResponseDTO authenticate(LoginRequestDTO request) {
         try {
@@ -65,7 +70,9 @@ public class AuthenticationService {
             String encryptedPassword = passwordEncoder.encode(request.getPassword());
             nuevoUsuario.setPassword(encryptedPassword);
 
-            nuevoUsuario.setRol(Rol.USUARIO);
+            RolEntity rolUsuario = rolRepository.findByCode(Rol.USUARIO)
+                .orElseThrow(() -> new IllegalStateException("Rol USUARIO no configurado"));
+            nuevoUsuario.setRolEntity(rolUsuario);
 
             System.out.println("Rol asignado al usuario: " + nuevoUsuario.getRol());
 

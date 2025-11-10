@@ -13,6 +13,13 @@ services:
     ports:
       - "9042:9042"
     environment:
+      - CASSANDRA_CLUSTER_NAME=poliglota-cluster
+      - CASSANDRA_DC=datacenter1
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
 volumes:
   mongo_data:

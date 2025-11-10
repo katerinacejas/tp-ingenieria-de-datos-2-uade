@@ -1,4 +1,4 @@
-package com.poliglota.repository.cassandra;
+package com.poliglota.repository;
 
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;

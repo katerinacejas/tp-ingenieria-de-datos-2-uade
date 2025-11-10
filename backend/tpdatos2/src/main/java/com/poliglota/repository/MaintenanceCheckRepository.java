@@ -1,8 +1,10 @@
-package com.poliglota.repository.cassandra;
+package com.poliglota.repository;
 
-import com.poliglota.model.cassandra.MaintenanceCheck;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
+
+import com.poliglota.model.mongo.MaintenanceCheck;
+
 import java.util.List;
 
 @Repository

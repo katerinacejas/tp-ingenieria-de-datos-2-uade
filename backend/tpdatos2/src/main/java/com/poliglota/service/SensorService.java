@@ -2,8 +2,10 @@ package com.poliglota.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.poliglota.repository.mongo.SensorRepository;
+
 import com.poliglota.model.mongo.Sensor;
+import com.poliglota.repository.SensorRepository;
+
 import java.util.List;
 
 @Service

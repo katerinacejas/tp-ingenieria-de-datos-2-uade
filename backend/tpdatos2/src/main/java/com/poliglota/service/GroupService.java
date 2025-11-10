@@ -1,7 +1,8 @@
 package com.poliglota.service;
 
-import com.poliglota.model.mysql.Group;
-import com.poliglota.repository.mysql.GroupRepository;
+import com.poliglota.model.mongo.Group;
+import com.poliglota.repository.GroupRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
