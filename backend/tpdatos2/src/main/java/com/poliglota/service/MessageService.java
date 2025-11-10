@@ -1,7 +1,8 @@
 package com.poliglota.service;
 
-import com.poliglota.model.mysql.Message;
-import com.poliglota.repository.mysql.MessageRepository;
+import com.poliglota.model.mongo.Message;
+import com.poliglota.repository.MessageRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

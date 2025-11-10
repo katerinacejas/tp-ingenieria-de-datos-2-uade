@@ -2,8 +2,10 @@ package com.poliglota.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.poliglota.repository.cassandra.MeasurementRepository;
+
 import com.poliglota.model.cassandra.Measurement;
+import com.poliglota.repository.MeasurementRepository;
+
 import java.util.List;
 
 @Service

@@ -1,4 +1,4 @@
-package com.poliglota.repository.mysql;
+package com.poliglota.repository;
 
 import com.poliglota.model.mysql.User;
 import java.util.Optional;

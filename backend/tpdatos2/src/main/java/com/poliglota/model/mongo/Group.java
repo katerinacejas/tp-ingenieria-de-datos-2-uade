@@ -1,4 +1,4 @@
-package com.poliglota.model.mysql;
+package com.poliglota.model.mongo;
 
 import jakarta.persistence.*;
 import lombok.*;

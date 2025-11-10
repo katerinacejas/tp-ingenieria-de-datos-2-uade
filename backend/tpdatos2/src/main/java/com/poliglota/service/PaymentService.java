@@ -1,7 +1,8 @@
 package com.poliglota.service;
 
 import com.poliglota.model.mysql.Payment;
-import com.poliglota.repository.mysql.PaymentRepository;
+import com.poliglota.repository.PaymentRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

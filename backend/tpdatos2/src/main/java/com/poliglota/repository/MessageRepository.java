@@ -1,7 +1,9 @@
-package com.poliglota.repository.mysql;
+package com.poliglota.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.poliglota.model.mysql.Message;
+
+import com.poliglota.model.mongo.Message;
+
 import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {

@@ -1,8 +1,10 @@
-package com.poliglota.repository.mongo;
+package com.poliglota.repository;
 
-import com.poliglota.model.mongo.ExecutionHistory;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+
+import com.poliglota.model.mysql.ExecutionHistory;
+
 import java.util.List;
 
 @Repository

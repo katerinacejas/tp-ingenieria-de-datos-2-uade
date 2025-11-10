@@ -1,8 +1,10 @@
-package com.poliglota.repository.cassandra;
+package com.poliglota.repository;
 
-import com.poliglota.model.cassandra.Alerts;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
+
+import com.poliglota.model.mongo.Alerts;
+
 import java.util.List;
 
 @Repository

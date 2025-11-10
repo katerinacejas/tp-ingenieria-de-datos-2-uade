@@ -1,7 +1,8 @@
 package com.poliglota.service;
 
 import com.poliglota.model.mysql.Session;
-import com.poliglota.repository.mysql.SessionRepository;
+import com.poliglota.repository.SessionRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

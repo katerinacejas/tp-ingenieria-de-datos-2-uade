@@ -4,8 +4,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.poliglota.repository.mysql.UserRepository;
-import com.poliglota.repository.mysql.SessionRepository;
+
+import com.poliglota.repository.SessionRepository;
+import com.poliglota.repository.UserRepository;
 import com.poliglota.DTO.response.UsuarioResponseDTO;
 import com.poliglota.model.mysql.Rol;
 import com.poliglota.model.mysql.User;
