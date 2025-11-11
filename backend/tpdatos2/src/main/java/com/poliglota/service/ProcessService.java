@@ -2,10 +2,9 @@ package com.poliglota.service;
 
 import com.poliglota.model.mysql.Process;
 import com.poliglota.repository.ProcessRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import com.poliglota.DTO.ProcessDTO;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,37 +14,41 @@ public class ProcessService {
 
     private final ProcessRepository processRepository;
 
-    // 🔹 Obtener todos los procesos
-    public List<Process> getAllProcesses() {
-        return processRepository.findAll();
+
+    public List<ProcessDTO> getAllProcesses() {
+        return processRepository.findAll()
+			.stream()
+			.map(process -> this.toDto(process))
+			.toList();
     }
 
-    // 🔹 Buscar proceso por ID
-    public Optional<Process> getProcessById(Long id) {
-        return processRepository.findById(id);
+    public ProcessDTO getProcessById(Long id) {
+        Optional<Process> processOpt = processRepository.findById(id);
+        return processOpt.map(this::toDto).orElse(null);
     }
 
-    // 🔹 Buscar proceso por nombre exacto
-    public Optional<Process> getProcessByName(String name) {
-        return Optional.ofNullable(processRepository.findByName(name));
+    public Optional<ProcessDTO> getProcessByName(String name) {
+        return Optional.ofNullable(toDto(processRepository.findByName(name)));
     }
 
-    // 🔹 Buscar procesos por tipo
-    public List<Process> getProcessesByType(String type) {
-        return processRepository.findByProcessType(type);
+    public List<ProcessDTO> getProcessesByType(String type) {
+        return processRepository.findByProcessType(type)
+			.stream()
+			.map(process -> this.toDto(process))
+			.toList();
     }
 
-    // 🔹 Buscar procesos con costo menor a un valor
-    public List<Process> getProcessesByMaxCost(double maxCost) {
-        return processRepository.findByCostLessThan(maxCost);
+    public List<ProcessDTO> getProcessesByMaxCost(double maxCost) {
+        return processRepository.findByCostLessThan(maxCost)
+			.stream()
+			.map(process -> this.toDto(process))
+			.toList();		
     }
 
-    // 🔹 Guardar (crear o actualizar) un proceso
-    public Process saveProcess(Process process) {
-        return processRepository.save(process);
+    public ProcessDTO saveProcess(ProcessDTO processDTO) {
+        return toDto(processRepository.save(toEntity(processDTO)));
     }
 
-    // 🔹 Eliminar un proceso por ID
     public boolean deleteProcess(Long id) {
         if (processRepository.existsById(id)) {
             processRepository.deleteById(id);
@@ -53,5 +56,22 @@ public class ProcessService {
         }
         return false;
     }
+
+	private Process toEntity(ProcessDTO dto) {
+		Process process = new Process();
+		process.setName(dto.getName());
+		process.setDescription(dto.getDescription());
+		process.setProcessType(dto.getProcessType());
+		process.setCost(dto.getCost());
+		return process;
+	}
     
+	private ProcessDTO toDto(Process process) {
+		ProcessDTO dto = new ProcessDTO();
+		dto.setName(process.getName());
+		dto.setDescription(process.getDescription());
+		dto.setProcessType(process.getProcessType());
+		dto.setCost(process.getCost());
+		return dto;
+	}
 }

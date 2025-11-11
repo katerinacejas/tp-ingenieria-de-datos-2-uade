@@ -1,14 +1,10 @@
 package com.poliglota.controller;
 
-import com.poliglota.DTO.request.LoginRequestDTO;
-import com.poliglota.DTO.request.RegistroRequestDTO;
-import com.poliglota.DTO.response.JwtResponseDTO;
 import com.poliglota.DTO.response.UsuarioResponseDTO;
 import com.poliglota.service.UsuarioService;
 import com.poliglota.exception.UsuarioNotFoundException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
