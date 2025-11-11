@@ -57,8 +57,6 @@ public class ProcessService {
         return false;
     }
 
-	
-
 	private Process toEntity(ProcessDTO dto) {
 		Process process = new Process();
 		process.setName(dto.getName());
