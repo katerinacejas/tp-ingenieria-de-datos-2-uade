@@ -1,11 +1,12 @@
 package com.poliglota.service.mongo;
 
+import com.poliglota.model.mongo.Group;
 import com.poliglota.model.mongo.Message;
+import com.poliglota.repository.mongo.GroupRepository;
 import com.poliglota.repository.mongo.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,42 +15,61 @@ import java.util.Optional;
 public class MessageService {
 
     private final MessageRepository messageRepository;
+    private final GroupRepository groupRepository;
 
     // 🔹 Obtener todos los mensajes
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
     }
 
-    // 🔹 Buscar mensaje por ID
-    public Optional<Message> getMessageById(Long id) {
+    // 🔹 Obtener mensaje por ID
+    public Optional<Message> getMessageById(String id) {
         return messageRepository.findById(id);
     }
 
-    // 🔹 Buscar mensajes enviados por un usuario
+    // 🔹 Obtener mensajes enviados por usuario
     public List<Message> getMessagesBySender(Long senderId) {
         return messageRepository.findBySenderId(senderId);
     }
 
-    // 🔹 Buscar mensajes recibidos por un usuario
+    // 🔹 Obtener mensajes recibidos (privados)
     public List<Message> getMessagesByRecipient(Long recipientId) {
-        return messageRepository.findByRecipientId(recipientId);
+        return messageRepository.findByRecipientIdAndRecipientType(recipientId, "user");
     }
 
-    // 🔹 Buscar conversación entre dos usuarios
+    // 🔹 Obtener conversación entre dos usuarios
     public List<Message> getConversation(Long senderId, Long recipientId) {
-        return messageRepository.findBySenderIdAndRecipientId(senderId, recipientId);
+        return messageRepository.findConversationBetweenUsers(senderId, recipientId);
     }
 
-    // 🔹 Crear o actualizar un mensaje
-    public Message saveMessage(Message message) {
-        if (message.getTimestamp() == null) {
-            message.setTimestamp(LocalDateTime.now());
+    // 🔹 Obtener mensajes de grupo
+    public List<Message> getMessagesByGroup(Long groupId) {
+        return messageRepository.findByRecipientTypeAndRecipientId("group", groupId);
+    }
+
+    // 🔹 Enviar mensaje
+    public Message sendMessage(Long senderId, Long recipientId, String recipientType, String content) {
+        if ("group".equalsIgnoreCase(recipientType)) {
+            groupRepository.findById(recipientId)
+                    .orElseThrow(() -> new IllegalArgumentException("Grupo no encontrado con ID: " + recipientId));
         }
+
+        Message message = new Message();
+        message.setSenderId(senderId);
+        message.setRecipientId(recipientId);
+        message.setRecipientType(recipientType);
+        message.setContent(content);
+
         return messageRepository.save(message);
     }
 
-    // 🔹 Eliminar mensaje por ID
-    public void deleteMessage(Long id) {
+    // 🔹 Guardar o actualizar mensaje (manual)
+    public Message saveMessage(Message message) {
+        return messageRepository.save(message);
+    }
+
+    // 🔹 Eliminar mensaje
+    public void deleteMessage(String id) {
         messageRepository.deleteById(id);
     }
 }

@@ -8,7 +8,7 @@ import com.poliglota.DTO.request.RegistroRequestDTO;
 import com.poliglota.DTO.response.JwtResponseDTO;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
 
     @Autowired

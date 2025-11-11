@@ -14,8 +14,8 @@ public class Message {
     @Id
     private Long id;
     private Long senderId;
-    private Long recipientId;
+    private Long recipientId; // puede ser ID de usuario o de grupo
     private LocalDateTime timestamp = LocalDateTime.now();
     private String content;
-    private String type; 
+    private String recipienttype;  // "user" o "group"
 }
