@@ -1,10 +1,10 @@
-package com.poliglota.service.mysql;
+package com.poliglota.service;
 
 import com.poliglota.model.mysql.Invoice;
 import com.poliglota.model.mysql.ProcessRequest;
 import com.poliglota.model.mysql.User;
-import com.poliglota.repository.mysql.InvoiceRepository;
-import com.poliglota.repository.mysql.UserRepository;
+import com.poliglota.repository.InvoiceRepository;
+import com.poliglota.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

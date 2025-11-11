@@ -1,7 +1,7 @@
-package com.poliglota.controller.mongo;
+package com.poliglota.controller;
 
 import com.poliglota.model.mongo.Message;
-import com.poliglota.service.mongo.MessageService;
+import com.poliglota.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

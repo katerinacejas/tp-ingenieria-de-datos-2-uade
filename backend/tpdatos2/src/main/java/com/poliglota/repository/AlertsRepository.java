@@ -1,4 +1,4 @@
-package com.poliglota.repository.mongo;
+package com.poliglota.repository;
 
 import com.poliglota.model.mongo.Alerts;
 import org.springframework.data.mongodb.repository.MongoRepository;

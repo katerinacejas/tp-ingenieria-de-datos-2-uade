@@ -20,6 +20,6 @@ public class SensorController {
 
 	@GetMapping
 	public ResponseEntity<List<Sensor>> list() {
-		return ResponseEntity.ok(sensorService.getAll());
+		return ResponseEntity.ok(sensorService.getAllSensors());
 	}
 }
