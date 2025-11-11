@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
+
+import com.poliglota.DTO.ExecutionHistoryDTO;
 import com.poliglota.DTO.ProcessRequestDTO;
 import com.poliglota.DTO.request.ProcessRequestRequestDTO;
 import com.poliglota.service.ProcessRequestService;
@@ -27,6 +29,11 @@ public class ProcessRequestController {
 	@GetMapping
 	public ResponseEntity<List<ProcessRequestDTO>> getAll() {
 		return ResponseEntity.ok(processRequestService.getAllProcessRequests());
+	}
+
+	@GetMapping("/{processRequestId}/execution-history")
+	public ResponseEntity<List<ExecutionHistoryDTO>> getExecutionHistoryByProcessRequestId(@PathVariable String processRequestId) {
+		return ResponseEntity.ok(processRequestService.getExecutionHistoryByProcessRequestId(processRequestId));
 	}
 
 }

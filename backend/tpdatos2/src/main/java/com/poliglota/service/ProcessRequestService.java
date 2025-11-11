@@ -15,6 +15,9 @@ import com.poliglota.model.mysql.Process;
 import com.poliglota.repository.ProcessRepository;
 import com.poliglota.exception.ProcessNotFoundException;
 import com.poliglota.exception.ProcessRequestNotFoundException;
+import com.poliglota.repository.ExecutionHistoryRepository;
+import com.poliglota.model.mysql.ExecutionHistory;
+import com.poliglota.DTO.ExecutionHistoryDTO;
 import java.util.List;
 
 @Service
@@ -23,6 +26,7 @@ public class ProcessRequestService {
 	private final ProcessRequestRepository processRequestRepository;
 	private final UserRepository userRepository;
 	private final ProcessRepository processRepository;
+	private final ExecutionHistoryRepository executionHistoryRepository;
 
 	public ProcessRequestDTO createProcessRequest(ProcessRequestRequestDTO processRequestRequestDTO) {
 		User user = userRepository.findById(Long.parseLong(processRequestRequestDTO.getUserId()))
@@ -57,6 +61,24 @@ public class ProcessRequestService {
 			.map(processRequest -> this.toDtoResponse(processRequest))
 			.toList();
 	}
+
+	public List<ExecutionHistoryDTO> getExecutionHistoryByProcessRequestId(String processRequestId) {
+		return executionHistoryRepository.findByRequestId(processRequestId)
+			.stream()
+			.map(executionHistory -> this.executionToDtoResponse(executionHistory))
+			.toList();
+	}
+
+	private ExecutionHistoryDTO executionToDtoResponse(ExecutionHistory executionHistory) {
+		ExecutionHistoryDTO dto = new ExecutionHistoryDTO();
+		dto.setExecutionId(executionHistory.getExecutionId());
+		dto.setProcessRequestId(executionHistory.getProcessRequest().getRequestId());
+		dto.setExecutionDate(executionHistory.getExecutionDate());
+		dto.setResult(executionHistory.getResult());
+		dto.setStatus(executionHistory.getStatus());
+		return dto;
+	}
+	
 
 	private ProcessRequestRequestDTO toDtoRequest(ProcessRequest processRequest) {
 		ProcessRequestRequestDTO dto = new ProcessRequestRequestDTO();
