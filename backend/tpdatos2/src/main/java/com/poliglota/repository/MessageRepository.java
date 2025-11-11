@@ -1,4 +1,4 @@
-package com.poliglota.repository.mongo;
+package com.poliglota.repository;
 
 import com.poliglota.model.mongo.Message;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MessageRepository extends MongoRepository<Message, String> {
+public interface MessageRepository extends MongoRepository<Message, Long> {
 
     List<Message> findBySenderId(Long senderId);
 

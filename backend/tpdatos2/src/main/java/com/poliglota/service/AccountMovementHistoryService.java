@@ -1,9 +1,9 @@
-package com.poliglota.service.mysql;
+package com.poliglota.service;
 
 import com.poliglota.model.mysql.Account;
 import com.poliglota.model.mysql.AccountMovementHistory;
-import com.poliglota.repository.mysql.AccountMovementHistoryRepository;
-import com.poliglota.repository.mysql.AccountRepository;
+import com.poliglota.repository.AccountMovementHistoryRepository;
+import com.poliglota.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

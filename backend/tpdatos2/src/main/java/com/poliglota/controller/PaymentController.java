@@ -1,7 +1,7 @@
 package com.poliglota.controller;
 
 import com.poliglota.model.mysql.Payment;
-import com.poliglota.service.mysql.PaymentService;
+import com.poliglota.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
