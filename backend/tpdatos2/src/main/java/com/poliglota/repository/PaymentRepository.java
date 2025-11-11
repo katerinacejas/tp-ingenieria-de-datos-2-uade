@@ -7,7 +7,14 @@ import java.util.List;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    List<Payment> findByInvoiceId(String invoiceId);
+     // 🔹 Buscar pagos por factura
+    List<Payment> findByInvoice(Invoice invoice);
+
+    // 🔹 Buscar pagos por método (ej: transferencia, tarjeta)
+    List<Payment> findByPaymentMethod(String paymentMethod);
+
+    // 🔹 Buscar pagos entre fechas
+    List<Payment> findByPaymentDateBetween(LocalDateTime start, LocalDateTime end);
     
     
 }

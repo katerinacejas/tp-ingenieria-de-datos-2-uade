@@ -10,5 +10,11 @@ import java.util.List;
 @Repository
 public interface MaintenanceCheckRepository extends CassandraRepository<MaintenanceCheck, String> {
 
-    List<MaintenanceCheck> findBySensorId(String sensorId);
+     List<MaintenanceCheck> findBySensorId(String sensorId);
+
+    // Buscar revisiones dentro de un rango de fechas
+    List<MaintenanceCheck> findByReviewDateBetween(LocalDateTime start, LocalDateTime end);
+
+    // Buscar por estado del sensor
+    List<MaintenanceCheck> findBySensorStatus(String sensorStatus);
 }
