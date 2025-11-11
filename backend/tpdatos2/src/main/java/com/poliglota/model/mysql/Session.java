@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.cassandra.core.mapping.Table;
-
 @Entity
 @Table(name = "sessions")
 @Data
@@ -20,9 +17,18 @@ public class Session {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Usuario user;
+    private User user;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rol_id", nullable = false)
+    private RolEntity rol;
+
+	@Column(nullable = false)
     private LocalDateTime startTime = LocalDateTime.now();
+
+	@Column(nullable = false)
     private LocalDateTime endTime;
-    private String status = "ACTIVE"; // ACTIVE / INACTIVE
+
+	@Column(nullable = false)
+    private String status;
 }

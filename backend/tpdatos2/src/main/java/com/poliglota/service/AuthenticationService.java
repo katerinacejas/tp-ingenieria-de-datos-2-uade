@@ -7,12 +7,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.poliglota.DTO.request.LoginRequestDTO;
 import com.poliglota.DTO.request.RegistroRequestDTO;
 import com.poliglota.DTO.response.JwtResponseDTO;
+import com.poliglota.model.mysql.RolEntity;
 import com.poliglota.model.mysql.Rol;
 import com.poliglota.model.mysql.User;
+import com.poliglota.repository.RolRepository;
+import com.poliglota.repository.UserRepository;
+import com.poliglota.security.JwtUtil;
 
 @Service
 public class AuthenticationService {
@@ -21,13 +24,16 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UserRepository usuarioRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+	@Autowired
+    private RolRepository rolRepository;
 
     public JwtResponseDTO authenticate(LoginRequestDTO request) {
         try {
@@ -57,17 +63,16 @@ public class AuthenticationService {
                 throw new RuntimeException("Ya existe un usuario con ese email");
             }
 
-            User nuevoUsuario = new Usuario();
-            nuevoUsuario.setNombreCompleto(request.getNombreCompleto());
-            nuevoUsuario.setDireccion(request.getDireccion());
-            nuevoUsuario.setTelefono(request.getTelefono());
-            nuevoUsuario.setFechaNacimiento(request.getFechaNacimiento());
+            User nuevoUsuario = new User();
+            nuevoUsuario.setFullName(request.getNombreCompleto());
             nuevoUsuario.setEmail(request.getEmail());
 
             String encryptedPassword = passwordEncoder.encode(request.getPassword());
             nuevoUsuario.setPassword(encryptedPassword);
 
-            nuevoUsuario.setRol(Rol.USUARIO);
+            RolEntity rolUsuario = rolRepository.findByCode(Rol.USUARIO)
+                .orElseThrow(() -> new IllegalStateException("Rol USUARIO no configurado"));
+            nuevoUsuario.setRolEntity(rolUsuario);
 
             System.out.println("Rol asignado al usuario: " + nuevoUsuario.getRol());
 

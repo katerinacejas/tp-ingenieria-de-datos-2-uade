@@ -1,37 +1,55 @@
 package com.poliglota.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.poliglota.model.mysql.RolEntity;
+import com.poliglota.model.mysql.Rol;
+import com.poliglota.model.mysql.User;
+import com.poliglota.repository.RolRepository;
+import com.poliglota.repository.UserRepository;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
-import java.sql.Date;
-import java.util.Optional;
+@Configuration
+public class DataInitializer {
 
-@Component
-public class DataInitializer implements CommandLineRunner {
+    @Bean
+    CommandLineRunner seedData(
+            RolRepository roleRepo,
+            UserRepository userRepo,
+            PasswordEncoder passwordEncoder
+    ) {
+        return args -> {
+            ensureRole(roleRepo, Rol.USUARIO,        "Usuario cliente");
+            ensureRole(roleRepo, Rol.MANTENIMIENTO,  "Personal de mantenimiento");
+            ensureRole(roleRepo, Rol.ADMIN,          "Administrador");
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+            final String adminEmail = "admin@tpdatos2.com";
+            if (!userRepo.existsByEmail(adminEmail)) {
+                RolEntity roleAdmin = roleRepo.findByCode(Rol.ADMIN)
+                        .orElseThrow(() -> new IllegalStateException("Rol ADMIN no configurado"));
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+                User admin = new User();
+                admin.setFullName("Administrador");
+                admin.setEmail(adminEmail);
+                admin.setPassword(passwordEncoder.encode("Admin123!"));
+                // asignar la entidad de rol (no el enum directo)
+                admin.setRolEntity(roleAdmin);
 
-    @Override
-    public void run(String... args) throws Exception {
+                userRepo.save(admin);
+                System.out.println("Usuario ADMIN creado: " + adminEmail + " / Admin123!");
+            }
+        };
+    }
 
-        String adminEmail = "admin@tpdatos2.com";
-        if (!usuarioRepository.existsByEmail(adminEmail)) {
-            Usuario admin = new Usuario();
-            admin.setNombreCompleto("Administrador");
-            admin.setEmail(adminEmail);
-            admin.setPassword(passwordEncoder.encode("Admin123!"));
-            admin.setRol(Rol.ADMIN);
-            admin.setDireccion("Dirección Admin");
-            admin.setTelefono(0);
-            admin.setFechaNacimiento(Date.valueOf("2000-08-10"));
-            usuarioRepository.save(admin);
-            System.out.println("Usuario ADMIN creado: " + adminEmail + " / Admin123!");
-        }
+    private void ensureRole(RolRepository repo, Rol code, String descripcion) {
+        repo.findByCode(code).orElseGet(() -> {
+            RolEntity r = new RolEntity();
+            r.setCode(code);
+            r.setDescripcion(descripcion);
+            return repo.save(r);
+        });
     }
 }

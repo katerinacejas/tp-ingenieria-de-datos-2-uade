@@ -1,16 +1,24 @@
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+package com.poliglota.model.mongo;
+
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Table("alertas")
+@Data
+@Document(collection = "alerts")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Alerts {
-    @PrimaryKey
+	@Id
     private String alertId;
-    private String type; // sensor / climática
-    private String sensorId; // opcional
+
+    private String type;
+	private String state;
+    private String sensorId; 
     private LocalDateTime datetime;
     private String descripction;
-    private String state; // activa/resuelta
+
 
     
 }

@@ -1,5 +1,6 @@
 
 package com.poliglota.exception;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,21 +14,9 @@ public class GlobalExceptionHandler {
 
     public record ErrorResponse(String message) {}
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleResourceNotFound(ResourceNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleRuntime(RuntimeException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ExceptionHandler(ResourceAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleResourceAlreadyExists(ResourceAlreadyExistsException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
@@ -40,6 +29,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsuarioNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUsuarioNotFound(UsuarioNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+	@ExceptionHandler(UsuarioNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleProcessNotFount(ProcessNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+	@ExceptionHandler(UsuarioNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleProcessRequestNotFount(ProcessRequestNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 

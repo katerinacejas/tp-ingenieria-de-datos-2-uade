@@ -1,7 +1,8 @@
-package com.project.service;
+package com.poliglota.service;
 
-import com.project.model.mongodb.Payment;
-import com.project.repository.mongodb.PaymentRepository;
+import com.poliglota.model.mysql.Payment;
+import com.poliglota.repository.PaymentRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -24,9 +25,14 @@ public class PaymentService {
     }
 
     public boolean deletePayment(String id) {
-        if (paymentRepository.existsById(id)) {
-            paymentRepository.deleteById(id);
-            return true;
+        try {
+            Long paymentId = Long.parseLong(id);
+            if (paymentRepository.existsById(paymentId)) {
+                paymentRepository.deleteById(paymentId);
+                return true;
+            }
+        } catch (NumberFormatException e) {
+            // Handle invalid id format if needed
         }
         return false;
     }

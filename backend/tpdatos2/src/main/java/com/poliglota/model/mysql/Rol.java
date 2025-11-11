@@ -1,13 +1,7 @@
-package com.poliglota.model;
-
-
-@Entity
-@Table(name = "roles")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+package com.poliglota.model.mysql;
 
 public enum Rol {
     USUARIO,
+	MANTENIMIENTO,
     ADMIN
 }

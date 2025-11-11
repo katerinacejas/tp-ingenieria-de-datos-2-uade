@@ -1,7 +1,8 @@
-package com.project.service;
+package com.poliglota.service;
 
-import com.project.model.mongodb.Session;
-import com.project.repository.mongodb.SessionRepository;
+import com.poliglota.model.mysql.Session;
+import com.poliglota.repository.SessionRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -24,9 +25,14 @@ public class SessionService {
     }
 
     public boolean deleteSession(String id) {
-        if (sessionRepository.existsById(id)) {
-            sessionRepository.deleteById(id);
-            return true;
+        try {
+            Long sessionId = Long.parseLong(id);
+            if (sessionRepository.existsById(sessionId)) {
+                sessionRepository.deleteById(sessionId);
+                return true;
+            }
+        } catch (NumberFormatException e) {
+            // Handle invalid id format if needed
         }
         return false;
     }

@@ -1,7 +1,8 @@
-package com.poliglota.service.sql;
+package com.poliglota.service;
 
-import com.poliglota.model.sql.Message;
-import com.poliglota.repository.sql.MessageRepository;
+import com.poliglota.model.mongo.Message;
+import com.poliglota.repository.MessageRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

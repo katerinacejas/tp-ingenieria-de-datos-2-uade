@@ -1,10 +1,10 @@
-package com.project.service;
+package com.poliglota.service;
 
-import com.project.model.mongodb.Account;
-import com.project.repository.mongodb.AccountRepository;
+import com.poliglota.model.mysql.Account;
+import com.poliglota.repository.AccountRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
