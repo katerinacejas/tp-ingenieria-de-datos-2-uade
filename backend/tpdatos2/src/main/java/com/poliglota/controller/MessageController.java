@@ -23,7 +23,7 @@ public class MessageController {
 
     // 🔹 Obtener mensaje por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Message> getMessageById(@PathVariable Long id) {
+    public ResponseEntity<Message> getMessageById(@PathVariable String id) {
         return messageService.getMessageById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -49,15 +49,27 @@ public class MessageController {
         return ResponseEntity.ok(messageService.getConversation(senderId, recipientId));
     }
 
-    // 🔹 Crear o actualizar un mensaje
-    @PostMapping
-    public ResponseEntity<Message> saveMessage(@RequestBody Message message) {
-        return ResponseEntity.ok(messageService.saveMessage(message));
+    // 🔹 Obtener mensajes grupales
+    @GetMapping("/group/{groupId}")
+    public ResponseEntity<List<Message>> getMessagesByGroup(@PathVariable Long groupId) {
+        return ResponseEntity.ok(messageService.getMessagesByGroup(groupId));
+    }
+
+    // 🔹 Enviar mensaje (usuario o grupo)
+    @PostMapping("/send")
+    public ResponseEntity<Message> sendMessage(
+            @RequestParam Long senderId,
+            @RequestParam Long recipientId,
+            @RequestParam String recipientType, // "user" o "group"
+            @RequestParam String content) {
+        return ResponseEntity.ok(
+                messageService.sendMessage(senderId, recipientId, recipientType, content)
+        );
     }
 
     // 🔹 Eliminar mensaje
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMessage(@PathVariable String id) {
         messageService.deleteMessage(id);
         return ResponseEntity.noContent().build();
     }
