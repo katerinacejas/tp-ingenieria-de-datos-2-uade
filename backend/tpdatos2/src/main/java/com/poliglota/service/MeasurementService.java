@@ -2,7 +2,6 @@ package com.poliglota.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import com.poliglota.DTO.MeasurementDTO;
 import com.poliglota.model.cassandra.Measurement;
 import com.poliglota.model.cassandra.MeasurementKey;
