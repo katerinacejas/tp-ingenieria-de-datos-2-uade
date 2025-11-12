@@ -12,7 +12,7 @@ public class Process {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long processId;
 
     @Column(nullable = false)
     private String name;

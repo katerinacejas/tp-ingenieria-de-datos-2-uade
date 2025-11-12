@@ -14,7 +14,7 @@ public class AccountMovementHistory {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long accountMovementHistoryId;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "account_id", nullable = false)

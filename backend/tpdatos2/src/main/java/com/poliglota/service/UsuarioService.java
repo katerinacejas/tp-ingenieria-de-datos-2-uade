@@ -63,7 +63,7 @@ public class UsuarioService {
 	// 🔹 DTO mapper
 	private UsuarioResponseDTO mapToResponseDTO(User usuario) {
 		UsuarioResponseDTO dto = new UsuarioResponseDTO();
-		dto.setId(usuario.getId());
+		dto.setUserId(usuario.getUserId());
 		dto.setNombreCompleto(usuario.getFullName());
 		dto.setEmail(usuario.getEmail());
 		if(usuario.getRol() == Rol.USUARIO){

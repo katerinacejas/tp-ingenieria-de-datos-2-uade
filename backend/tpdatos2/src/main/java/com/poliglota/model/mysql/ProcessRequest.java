@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 public class ProcessRequest {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String requestId;
+	private String processRequestId;
 
 	@ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

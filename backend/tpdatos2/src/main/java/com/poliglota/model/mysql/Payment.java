@@ -13,7 +13,7 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long paymentId;
 
 	@ManyToOne(optional = false)
     @JoinColumn(name = "invoice_id", nullable = false)

@@ -11,10 +11,14 @@ import com.poliglota.DTO.request.LoginRequestDTO;
 import com.poliglota.DTO.request.RegistroRequestDTO;
 import com.poliglota.DTO.response.JwtResponseDTO;
 import com.poliglota.model.mysql.RolEntity;
+import com.poliglota.model.mysql.Account;
 import com.poliglota.model.mysql.Rol;
 import com.poliglota.model.mysql.User;
+import com.poliglota.repository.AccountRepository;
 import com.poliglota.repository.RolRepository;
 import com.poliglota.repository.UserRepository;
+import com.poliglota.exception.UsuarioNotFoundException;
+import com.poliglota.exception.AccountNotFoundException;
 import com.poliglota.security.JwtUtil;
 
 @Service
@@ -34,6 +38,9 @@ public class AuthenticationService {
 
 	@Autowired
     private RolRepository rolRepository;
+
+	@Autowired
+	private AccountRepository accountRepository;
 
     public JwtResponseDTO authenticate(LoginRequestDTO request) {
         try {
@@ -66,6 +73,11 @@ public class AuthenticationService {
             User nuevoUsuario = new User();
             nuevoUsuario.setFullName(request.getNombreCompleto());
             nuevoUsuario.setEmail(request.getEmail());
+
+			Account account = new Account();
+			account.setUserId(nuevoUsuario);
+			account.setCurrentBalance(0.0);
+			accountRepository.save(account);
 
             String encryptedPassword = passwordEncoder.encode(request.getPassword());
             nuevoUsuario.setPassword(encryptedPassword);

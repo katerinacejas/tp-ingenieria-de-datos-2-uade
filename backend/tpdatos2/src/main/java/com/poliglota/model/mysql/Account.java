@@ -12,7 +12,7 @@ public class Account {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long accountId;
 
 	@OneToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false, unique = true)

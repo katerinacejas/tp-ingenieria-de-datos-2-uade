@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 public class Group {
 
     @Id
-    private Long id;
+    private Long groupId;
 
 	@Indexed(unique = true)
     private String name;
