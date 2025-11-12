@@ -6,6 +6,7 @@ import lombok.*;
 @Entity
 @Table(name = "roles")
 @Data
+@NoArgsConstructor
 public class RolEntity {
 
 	@Id
@@ -19,5 +20,13 @@ public class RolEntity {
 
 	@Column(name = "descripcion", nullable = false, length = 100)
 	private String descripcion;
+
+
+	public RolEntity(Long rolEntityId, Rol code, String descripcion) {
+    this.rolEntityId = rolEntityId;
+    this.code = code;
+    this.descripcion = descripcion;
+
+}
 
 }

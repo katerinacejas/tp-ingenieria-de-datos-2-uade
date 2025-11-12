@@ -4,24 +4,29 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.poliglota.model.mysql.Process;
+
+
 import com.poliglota.model.mysql.*;
 import com.poliglota.model.mongo.*;
 import com.poliglota.model.cassandra.*;
-import com.poliglota.repository.mysql.*;
-import com.poliglota.repository.mongo.*;
-import com.poliglota.repository.cassandra.*;
+import com.poliglota.repository.*;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import java.time.ZoneOffset;
+
+
 @Configuration
 public class DataInitializer {
 
     @Bean
     CommandLineRunner seedAllData(
-            RolEntityRepository rolEntityRepository,
+            RolRepository rolRepository,
             UserRepository userRepository,
             AccountRepository accountRepository,
             AccountMovementHistoryRepository movementRepository,
@@ -42,7 +47,7 @@ public class DataInitializer {
         return args -> {
             System.out.println("🚀 Inicializando datos de MySQL, MongoDB y Cassandra...");
 
-            seedMySQL(rolEntityRepository, userRepository, accountRepository,
+            seedMySQL(rolRepository, userRepository, accountRepository,
                     movementRepository, invoiceRepository, paymentRepository,
                     processRepository, sessionRepository, passwordEncoder);
 
@@ -59,7 +64,7 @@ public class DataInitializer {
     // 🗄️ MySQL (Relacional)
     // ============================================================
     private void seedMySQL(
-            RolEntityRepository rolRepo,
+            RolRepository rolRepo,
             UserRepository userRepo,
             AccountRepository accountRepo,
             AccountMovementHistoryRepository movRepo,
@@ -82,20 +87,28 @@ public class DataInitializer {
         RolEntity rolTech = rolRepo.findByCode(Rol.MANTENIMIENTO).orElseThrow();
 
         if (!userRepo.existsByEmail("admin@tpdatos2.com")) {
-            User admin = new User(null, "Administrador", "admin@tpdatos2.com",
-                    encoder.encode("Admin123!"), rolAdmin, LocalDateTime.now());
+           User admin = new User(
+                    null,
+                    "Administrador",
+                    "admin@tpdatos2.com",
+                    encoder.encode("Admin123!"),
+                    "ACTIVO",
+                    LocalDateTime.now(),
+                    rolAdmin
+                );
+
             userRepo.save(admin);
         }
 
         if (!userRepo.existsByEmail("juan@correo.com")) {
             User user = new User(null, "Juan Pérez", "juan@correo.com",
-                    encoder.encode("User123!"), rolUser, LocalDateTime.now());
+                    encoder.encode("User123!"), "ACTIVO", LocalDateTime.now(), rolUser);
             userRepo.save(user);
         }
 
         if (!userRepo.existsByEmail("tecnico@tpdatos2.com")) {
             User tech = new User(null, "Técnico de Mantenimiento", "tecnico@tpdatos2.com",
-                    encoder.encode("Tech123!"), rolTech, LocalDateTime.now());
+                    encoder.encode("Tech123!"), "ACTIVO",LocalDateTime.now(), rolTech);
             userRepo.save(tech);
         }
 
@@ -104,7 +117,9 @@ public class DataInitializer {
         Account account = new Account(null, user, 15000.00);
         accountRepo.save(account);
 
-        movRepo.save(new AccountMovementHistory(null, account, new BigDecimal("2000.00"), LocalDateTime.now()));
+        movRepo.save(new AccountMovementHistory(null, account, 2000.00,"DEPOSIT",
+    0.0,
+    1000.0, LocalDateTime.now()));
 
         Process process = new Process(null, "Mantenimiento Preventivo", "Chequeo técnico general", "SERVICE", 1200.00);
         processRepo.save(process);
@@ -161,16 +176,14 @@ public class DataInitializer {
         if (measurementRepo.count() > 0) return;
 
         Measurement m1 = new Measurement();
-        m1.setKey(new MeasurementKey("SENSOR_001", LocalDateTime.now()));
+        m1.setKey(new MeasurementKey("SENSOR_001", LocalDateTime.now().toInstant(ZoneOffset.UTC)));
         m1.setTemperature(23.5);
         m1.setHumidity(60.0);
-        m1.setPressure(1013.0);
 
         Measurement m2 = new Measurement();
-        m2.setKey(new MeasurementKey("SENSOR_002", LocalDateTime.now()));
+        m2.setKey(new MeasurementKey("SENSOR_002", LocalDateTime.now().toInstant(ZoneOffset.UTC)));
         m2.setTemperature(19.2);
         m2.setHumidity(72.0);
-        m2.setPressure(1010.8);
 
         measurementRepo.saveAll(List.of(m1, m2));
 
