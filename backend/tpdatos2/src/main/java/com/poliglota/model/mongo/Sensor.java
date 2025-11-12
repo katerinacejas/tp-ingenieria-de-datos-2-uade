@@ -16,6 +16,6 @@ public class Sensor {
 	private String type;
 	private String city;
 	private String country;
-	private boolean active = true;
-	private LocalDateTime startDate = LocalDateTime.now();
+	private boolean active;
+	private LocalDateTime startDate;
 }

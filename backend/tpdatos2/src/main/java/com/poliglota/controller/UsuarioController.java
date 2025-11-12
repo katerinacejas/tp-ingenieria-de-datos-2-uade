@@ -17,7 +17,7 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 
 	@GetMapping("/me")
-	@PreAuthorize("hasAnyRole('USUARIO', 'ADMIN')")
+	@PreAuthorize("hasAnyRole('USUARIO', 'MANTENIMIENTO', 'ADMIN')")
 	public UsuarioResponseDTO getPerfilUsuarioAutenticado(Authentication auth) {
 		String email = auth.getName();
 		return usuarioService.getUsuarioPorMail(email)
