@@ -49,8 +49,8 @@ public class AuthenticationService {
 	@Autowired
 	private SessionRepository sessionRepository;
 
-    public JwtResponseDTO authenticate(LoginRequestDTO request) {
-        try {
+    public String authenticate(LoginRequestDTO request) {
+       /* try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                     request.getEmail(),
@@ -72,9 +72,19 @@ public class AuthenticationService {
         } catch (AuthenticationException ex) {
             throw new RuntimeException("Credenciales inválidas");
         }
+			*/
+
+		User usuario = usuarioRepository.findByEmail(request.getEmail()).orElse(null);
+		if (usuario != null) {
+			return "existe ese mail en la base";
+		}
+		else {
+			return "no existe ese mail en la base";
+		}
+		
     }
 
-    public JwtResponseDTO register(RegistroRequestDTO request) {
+    public String register(RegistroRequestDTO request) {
         try {
             if (usuarioRepository.existsByEmail(request.getEmail())) {
                 throw new RuntimeException("Ya existe un usuario con ese email");
@@ -100,15 +110,15 @@ public class AuthenticationService {
 			nuevoUsuario.setStatus("activo");
 			nuevoUsuario.setRegisteredAt(LocalDateTime.now());
 
-            usuarioRepository.save(nuevoUsuario);
+			nuevoUsuario.setRolEntity(rolUsuario);
+			nuevoUsuario.setRol(Rol.USUARIO);
+			usuarioRepository.save(nuevoUsuario);
 			System.out.println("guarde un usuario");
 			
 			accountRepository.save(account);
 			System.out.println("guarde una cuenta");
 
-
-            String token = jwtUtil.generateToken(nuevoUsuario.getEmail(), Rol.USUARIO.name());
-            return new JwtResponseDTO(token, Rol.USUARIO);
+            return "Usuario registrado con éxito";
 
         } catch (Exception e) {
             throw new RuntimeException("Error al registrar usuario: " + e.getMessage());

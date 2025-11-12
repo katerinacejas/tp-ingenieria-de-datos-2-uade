@@ -39,6 +39,8 @@ public class SecurityConfig {
 				.csrf(CsrfConfigurer::disable) ///CSRF gestionado selectivamente (stateless API)
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
+					.requestMatchers("/api/**").permitAll()
+				/*
 						//Público solo auth
 						.requestMatchers("/api/auth/**").permitAll()
 
@@ -109,6 +111,7 @@ public class SecurityConfig {
 
 						//Todo lo demás autenticado
 						.anyRequest().authenticated()
+						*/
 					)
 
 				.authenticationProvider(authenticationProvider())

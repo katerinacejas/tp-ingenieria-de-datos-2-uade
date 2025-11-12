@@ -30,6 +30,20 @@ public class AuthenticationController {
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody LoginRequestDTO request) {
 		try {
+			String ok = authenticationService.authenticate(request);
+			if (ok == null) {
+				return ResponseEntity.status(401).body("Credenciales inválidas");
+			}
+			else {
+				return ResponseEntity.status(401).body(ok);
+			}
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().body("Error en autenticación: " + e.getMessage());
+		}
+	}
+/*
+	public ResponseEntity<String> login(@RequestBody LoginRequestDTO request) {
+		try {
 			JwtResponseDTO jwtResponseDTO = authenticationService.authenticate(request);
 			if (jwtResponseDTO == null) {
 				return ResponseEntity.status(401).body("Credenciales inválidas");
@@ -48,7 +62,7 @@ public class AuthenticationController {
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().body("Error en autenticación: " + e.getMessage());
 		}
-	}
+	}*/
 
 	@PostMapping("/logout")
     public ResponseEntity<String> logout(Authentication auth) {
@@ -59,19 +73,25 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public JwtResponseDTO register(@RequestBody RegistroRequestDTO request) {
-		JwtResponseDTO jwtResponseDTO = authenticationService.register(request);
-		if (jwtResponseDTO != null) {
-			UsuarioResponseDTO usuarioResponseDTO = usuarioService.getUsuarioPorMail(request.getEmail()).orElse(null);
-			SessionDTO sessionDTO = new SessionDTO();
-			sessionDTO.setUserId(usuarioResponseDTO.getUserId().toString());
-			sessionDTO.setRolId(usuarioResponseDTO.getRol());
-			sessionDTO.setStartTime(LocalDateTime.now());
-			sessionDTO.setEndTime(null);
-			sessionDTO.setStatus("activa");
-			sessionService.createSession(sessionDTO);
-			return jwtResponseDTO;
+    public ResponseEntity<String> register(@RequestBody RegistroRequestDTO request) {
+		try {
+			String ok = authenticationService.register(request);
+			if (ok == null) {
+				UsuarioResponseDTO usuarioResponseDTO = usuarioService.getUsuarioPorMail(request.getEmail()).orElse(null);
+				SessionDTO sessionDTO = new SessionDTO();
+				sessionDTO.setUserId(usuarioResponseDTO.getUserId().toString());
+				sessionDTO.setRolId(usuarioResponseDTO.getRol());
+				sessionDTO.setStartTime(LocalDateTime.now());
+				sessionDTO.setEndTime(null);
+				sessionDTO.setStatus("activa");
+				sessionService.createSession(sessionDTO);
+				return ResponseEntity.status(401).body("Credenciales inválidas");
+			}
+			else {
+				return ResponseEntity.status(401).body(ok);
+			}
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().body("Error en registro de usuario: " + e.getMessage());
 		}
-        return null;
     }
 }
