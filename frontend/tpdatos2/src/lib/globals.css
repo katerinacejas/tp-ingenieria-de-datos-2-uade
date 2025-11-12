@@ -90,8 +90,8 @@
 
 .tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 14px;
+    gap: 12px;
+    margin-bottom: 20px;
 }
 
 .tab {
@@ -99,6 +99,36 @@
     border-radius: 8px;
     border: 1px solid var(--card-border);
     cursor: pointer;
+}
+
+.btn.ghost:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--primary);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+    background: var(--primary);
+}
+
+.btn.sm {
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.input:focus,
+.select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.tab:hover {
+    background: rgba(59, 130, 246, 0.1);
 }
 
 .tab.active {

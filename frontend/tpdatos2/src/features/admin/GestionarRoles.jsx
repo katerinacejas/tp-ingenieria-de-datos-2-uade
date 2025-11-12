@@ -19,42 +19,90 @@ export default function GestionarRoles(){
   const [loading, setLoading] = useState(true)
   const [form, setForm] = useState({ nombre:'', email:'', password:'', password2:'' })
   const [msg, setMsg] = useState(null)
+  const [msgType, setMsgType] = useState('success') 
 
   const load = async () => {
     setLoading(true)
-    const [sol, tech] = await Promise.all([
-      listarSolicitudesTecnico(),
-      listarTecnicos()
-    ])
-    setSolicitudes(sol)
-    setTecnicos(tech)
-    setLoading(false)
+    try {
+      const [sol, tech] = await Promise.all([
+        listarSolicitudesTecnico(),
+        listarTecnicos()
+      ])
+      setSolicitudes(sol)
+      setTecnicos(tech)
+    } catch (error) {
+      setMsg('Error al cargar los datos.')
+      setMsgType('error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(()=>{ load() },[])
 
+  // Auto-ocultar mensajes después de 5 segundos
+  useEffect(() => {
+    if (msg) {
+      const timer = setTimeout(() => {
+        setMsg(null)
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [msg])
+
   const aprobar = async (id) => {
-    await aprobarSolicitud(id)
-    setMsg('Solicitud aprobada y técnico creado.')
-    load()
+    try {
+      await aprobarSolicitud(id)
+      setMsg('Solicitud aprobada y técnico creado correctamente.')
+      setMsgType('success')
+      load()
+    } catch (error) {
+      setMsg('Error al aprobar la solicitud.')
+      setMsgType('error')
+    }
   }
+
   const rechazar = async (id) => {
-    await rechazarSolicitud(id)
-    setMsg('Solicitud rechazada.')
-    load()
+    if (!window.confirm('¿Estás seguro de que deseas rechazar esta solicitud?')) {
+      return
+    }
+    try {
+      await rechazarSolicitud(id)
+      setMsg('Solicitud rechazada correctamente.')
+      setMsgType('success')
+      load()
+    } catch (error) {
+      setMsg('Error al rechazar la solicitud.')
+      setMsgType('error')
+    }
   }
 
   const submit = async (e) => {
     e.preventDefault()
     setMsg(null)
+    
     if(form.password !== form.password2){
       setMsg('Las contraseñas no coinciden.')
+      setMsgType('error')
       return
     }
-    await crearTecnico({ nombre: form.nombre.trim(), email: form.email.trim(), password: form.password })
-    setForm({ nombre:'', email:'', password:'', password2:'' })
-    setMsg('Técnico creado correctamente.')
-    load()
+
+    if(form.password.length < 6){
+      setMsg('La contraseña debe tener al menos 6 caracteres.')
+      setMsgType('error')
+      return
+    }
+
+    try {
+      await crearTecnico({ nombre: form.nombre.trim(), email: form.email.trim(), password: form.password })
+      setForm({ nombre:'', email:'', password:'', password2:'' })
+      setMsg('Técnico creado correctamente.')
+      setMsgType('success')
+      load()
+    } catch (error) {
+      setMsg('Error al crear el técnico. Verifica los datos.')
+      setMsgType('error')
+    }
   }
 
   const colsSolicitudes = [
@@ -81,7 +129,7 @@ export default function GestionarRoles(){
         {/* Alta manual de técnico */}
         <section className="card panel">
           <h3>Alta de usuario de mantenimiento</h3>
-          <p className="muted">Crear un técnico directamente (rol = técnico).</p>
+          <p className="panel-description">Crear un técnico directamente (rol = técnico).</p>
 
           <form className="grid-form" onSubmit={submit}>
             <div className="form-group">
@@ -106,21 +154,21 @@ export default function GestionarRoles(){
                 <input id="pass" className="input" type="password"
                        value={form.password}
                        onChange={e=>setForm(f=>({...f,password:e.target.value}))}
-                       placeholder="••••••••" required />
+                       placeholder="••••••••" required minLength={6} />
               </div>
               <div className="form-group">
-                <label className="label" htmlFor="pass2">Repetir</label>
+                <label className="label" htmlFor="pass2">Repetir contraseña</label>
                 <input id="pass2" className="input" type="password"
                        value={form.password2}
                        onChange={e=>setForm(f=>({...f,password2:e.target.value}))}
-                       placeholder="••••••••" required />
+                       placeholder="••••••••" required minLength={6} />
               </div>
             </div>
 
             <div className="form-actions">
               <button className="btn" type="submit">Crear técnico</button>
             </div>
-            {msg && <div className="info">{msg}</div>}
+            {msg && <div className={`info info-${msgType}`}>{msg}</div>}
           </form>
         </section>
 
@@ -128,8 +176,10 @@ export default function GestionarRoles(){
         <section className="card panel">
           <h3>Solicitudes para rol Técnico</h3>
           {loading
-            ? <div className="muted">Cargando…</div>
-            : <DataTable columns={colsSolicitudes} data={solicitudes} />
+            ? <div className="loading-state">Cargando…</div>
+            : solicitudes.length === 0 
+              ? <div className="empty-state">No hay solicitudes pendientes</div>
+              : <DataTable columns={colsSolicitudes} data={solicitudes} />
           }
         </section>
 
@@ -137,8 +187,10 @@ export default function GestionarRoles(){
         <section className="card panel">
           <h3>Técnicos activos</h3>
           {loading
-            ? <div className="muted">Cargando…</div>
-            : <DataTable columns={colsTecnicos} data={tecnicos} />
+            ? <div className="loading-state">Cargando…</div>
+            : tecnicos.length === 0
+              ? <div className="empty-state">No hay técnicos registrados</div>
+              : <DataTable columns={colsTecnicos} data={tecnicos} />
           }
         </section>
       </div>

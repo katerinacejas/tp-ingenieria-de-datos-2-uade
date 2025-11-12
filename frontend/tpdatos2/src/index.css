@@ -35,6 +35,18 @@ body {
 
 main {
   grid-area: main;
-  padding: 24px;
+  padding: 32px;
   overflow: auto;
+}
+
+@media (max-width: 900px) {
+  main {
+    padding: 24px 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  main {
+    padding: 20px 12px;
+  }
 }

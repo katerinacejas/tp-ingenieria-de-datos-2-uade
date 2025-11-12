@@ -11,12 +11,42 @@ export default function SensoresList() {
 
     useEffect(() => { (async () => { setLoading(true); setRows(await getSensores()); setLoading(false) })() }, [])
 
+    const handleAgregarDatos = (sensorId) => {
+        console.log('Agregar datos del sensor:', sensorId)
+
+    }
+
+    const handleVerAlertas = (sensorId) => {
+        console.log('Ver alertas del sensor:', sensorId)
+
+    }
+
     const columns = [
         { key: 'id', header: 'ID' },
         { key: 'nombre', header: 'Nombre', render: (v, row) => <Link to={`/sensores/${row.id}`}>{v}</Link> },
         { key: 'ciudad', header: 'Ciudad' },
         { key: 'pais', header: 'País' },
         { key: 'estado', header: 'Estado' },
+        { 
+            key: 'acciones', 
+            header: 'Acciones', 
+            render: (_, row) => (
+                <div className="hstack">
+                    <button 
+                        className="btn sm" 
+                        onClick={() => handleAgregarDatos(row.id)}
+                    >
+                        Agregar datos
+                    </button>
+                    <button 
+                        className="btn ghost sm" 
+                        onClick={() => handleVerAlertas(row.id)}
+                    >
+                        Alertas
+                    </button>
+                </div>
+            )
+        },
     ]
 
     return (

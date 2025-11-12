@@ -1,74 +1,111 @@
 .msg-layout {
     display: grid;
     grid-template-columns: 320px 1fr;
-    gap: 16px;
+    gap: 20px;
 }
 
 @media (max-width: 1000px) {
     .msg-layout {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
 }
 
 .msg-left {
-    padding: 8px;
+    padding: 20px;
 }
 
 .msg-right {
     display: grid;
-    grid-template-rows: 64px 1fr 64px;
+    grid-template-rows: 72px 1fr 72px;
     overflow: hidden;
+    min-height: 500px;
 }
 
 .msg-header {
     display: flex;
     align-items: center;
-    padding: 12px 16px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--card-border);
+    background: rgba(16, 24, 38, 0.5);
 }
 
 .h-title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .circle {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
     display: grid;
     place-items: center;
-    background: #0e1623;
-    border: 1px solid var(--card-border);
-    color: #dbeafe;
+    background: linear-gradient(135deg, var(--primary), var(--primary-700));
+    border: 1px solid var(--primary);
+    color: white;
     font-weight: 800;
+    font-size: 16px;
+    flex-shrink: 0;
 }
 
 .h-name {
     font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
 }
 
 .h-sub {
     color: var(--muted);
     font-size: 12px;
+    margin-top: 2px;
 }
 
 .msg-box {
-    padding: 16px;
+    padding: 20px;
     overflow-y: auto;
     background: linear-gradient(180deg, #0c1117, #0a0f15);
+    scroll-behavior: smooth;
+}
+
+.msg-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.msg-box::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.msg-box::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 3px;
+}
+
+.msg-box::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
 }
 
 .msg-input {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 10px;
-    padding: 12px;
+    gap: 12px;
+    padding: 16px 20px;
     border-top: 1px solid var(--card-border);
+    background: rgba(16, 24, 38, 0.5);
+}
+
+.msg-input .input {
+    width: 100%;
 }
 
 .msg-empty {
-    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
     color: var(--muted);
+    font-style: italic;
+    text-align: center;
+    padding: 40px;
 }
