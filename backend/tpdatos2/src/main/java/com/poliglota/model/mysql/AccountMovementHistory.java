@@ -1,6 +1,5 @@
 package com.poliglota.model.mysql;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,6 +13,7 @@ public class AccountMovementHistory {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "account_movement_history_id")
     private Long accountMovementHistoryId;
 
     @ManyToOne(optional = false)

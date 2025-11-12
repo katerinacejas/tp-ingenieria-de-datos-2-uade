@@ -10,6 +10,7 @@ public class RolEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "rol_entity_id")
 	private Long rolEntityId;
 
 	@Enumerated(EnumType.STRING)

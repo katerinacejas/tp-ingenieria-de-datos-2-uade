@@ -67,8 +67,4 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    //  Eliminar mensaje
-    public void deleteMessage(String id) {
-        messageRepository.deleteById(id);
-    }
 }

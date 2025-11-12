@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class ExecutionHistory {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "execution_id")
 	private String executionId;
 
 	@ManyToOne

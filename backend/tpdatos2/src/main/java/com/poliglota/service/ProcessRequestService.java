@@ -40,6 +40,7 @@ public class ProcessRequestService {
 		processRequest.setUser(user);
         processRequest.setRequestDate(LocalDateTime.now());
 		processRequest.setStatus("pendiente");
+		processRequest.setInvoice(null);
 
         return toDtoResponse(processRequestRepository.save(processRequest));
 	}
@@ -78,15 +79,6 @@ public class ProcessRequestService {
 		dto.setStatus(executionHistory.getStatus());
 		return dto;
 	}
-	
-
-	private ProcessRequestRequestDTO toDtoRequest(ProcessRequest processRequest) {
-		ProcessRequestRequestDTO dto = new ProcessRequestRequestDTO();
-		dto.setProcessId(processRequest.getUser().getUserId().toString());
-		dto.setProcessId(processRequest.getProcess().getProcessId().toString());
-		dto.setStatus(processRequest.getStatus());
-		return dto;
-	}
 
 	private ProcessRequestDTO toDtoResponse(ProcessRequest processRequest) {
 		ProcessRequestDTO dto = new ProcessRequestDTO();
@@ -95,6 +87,11 @@ public class ProcessRequestService {
 		dto.setProcessId(processRequest.getProcess().getProcessId().toString());
 		dto.setRequestDate(processRequest.getRequestDate());
 		dto.setStatus(processRequest.getStatus());
+		if (processRequest.getInvoice() != null) {
+			dto.setInvoiceId(processRequest.getInvoice().getInvoiceId().toString());
+		} else {
+			dto.setInvoiceId(null);
+		}
 		return dto;
 	}
 

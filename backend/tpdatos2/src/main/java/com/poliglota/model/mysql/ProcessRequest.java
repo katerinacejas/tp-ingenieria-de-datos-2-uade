@@ -12,6 +12,7 @@ import jakarta.persistence.*;
 public class ProcessRequest {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "process_request_id")
 	private String processRequestId;
 
 	@ManyToOne
@@ -27,5 +28,9 @@ public class ProcessRequest {
 
 	@Column(nullable = false)
     private String status; 
+
+	@ManyToOne
+    @JoinColumn(name = "invoice_id")
+    private Invoice invoice;
 
 }

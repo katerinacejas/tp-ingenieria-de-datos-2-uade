@@ -67,10 +67,4 @@ public class MessageController {
         );
     }
 
-    //  Eliminar mensaje
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMessage(@PathVariable String id) {
-        messageService.deleteMessage(id);
-        return ResponseEntity.noContent().build();
-    }
 }

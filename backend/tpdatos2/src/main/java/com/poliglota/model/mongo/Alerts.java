@@ -11,14 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Alerts {
 	@Id
-    private String alertId;
+	private String alertId;
 
-    private String type;
+	private String type;
 	private String state;
-    private String sensorId; 
-    private LocalDateTime datetime;
-    private String descripction;
+	private String sensorId;
+	private LocalDateTime datetime;
+	private String descripction;
 
-
-    
 }
