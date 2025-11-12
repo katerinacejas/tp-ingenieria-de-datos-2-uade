@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class MessageDTO {
-	private String messageId;
+	private String id;
     private String senderId; 
     private String recipientId; 
     private LocalDateTime timestamp;

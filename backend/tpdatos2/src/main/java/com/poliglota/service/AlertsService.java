@@ -99,7 +99,7 @@ public class AlertsService {
 			dto.setType("climatica");
 			dto.setSensorId(null);
 		}
-		dto.setAlertId(alert.getAlertId());
+		dto.setAlertId(alert.getId());
 		dto.setState(alert.getState());
 		dto.setDatetime(alert.getDatetime());
 		dto.setDescripction(alert.getDescripction());
