@@ -107,13 +107,17 @@ POST http://localhost:8080/api/measurements
 
 ### 🗄️ MySQL (Transaccional)
 
-- `users`: información y roles
-- `accounts`: cuenta corriente de usuario
-- `invoices`: facturas emitidas
-- `payments`: pagos asociados
-- `account_movements_histories`: historial de movimientos
+- `User`: información y roles
+- `Account`: cuenta corriente de usuario
+- `Account_movements_histories`: registra los movimientos financieros (créditos y débitos) de cada cuenta.
+- `Invoice`: facturas emitidas
+- `Payments`: pagos asociados
 - `processes`: servicios facturables
 - `sessions`: control de sesiones activas
+- `rol / rol_entity`: define los permisos y tipos de rol disponibles en el sistema.
+- `Processes`: lista los procesos o servicios facturables que los usuarios pueden ejecutar.
+- `ProcessRequest`: detalla las solicitudes específicas de ejecución de procesos vinculadas a facturas.
+- `ExecutionHistory`: almacena el historial de ejecución de procesos con fecha, estado y duración.
 
 ### 🍃 MongoDB (Documental)
 
@@ -149,15 +153,32 @@ Tablas:
 CREATE DATABASE poliglota_db;
 USE poliglota_db;
 
+-- ===========================================
+-- Tabla de Roles
+-- ===========================================
+CREATE TABLE rol_entity (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL UNIQUE,
+  descripcion VARCHAR(255)
+);
+
+-- ===========================================
+-- Tabla de Usuarios
+-- ===========================================
 CREATE TABLE users (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   full_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
-  role ENUM('USER','ADMIN') DEFAULT 'USER',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  status Bool Not NULL,
+  rol_id BIGINT,
+  registeredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (rol_id) REFERENCES rol_entity(id)
 );
 
+-- ===========================================
+-- Tabla de Cuentas Corrientes
+-- ===========================================
 CREATE TABLE accounts (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   user_id BIGINT NOT NULL,
@@ -165,6 +186,56 @@ CREATE TABLE accounts (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+-- ===========================================
+-- Tabla de Movimientos de Cuenta
+-- ===========================================
+CREATE TABLE account_movements_histories (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  account_id BIGINT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  movement_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (account_id) REFERENCES accounts(id)
+);
+
+-- ===========================================
+-- Tabla de Procesos (Servicios Facturables)
+-- ===========================================
+CREATE TABLE processes (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  process_type VARCHAR(100),
+  cost DECIMAL(10,2) NOT NULL
+);
+
+-- ===========================================
+-- Tabla de Solicitudes de Proceso
+-- ===========================================
+CREATE TABLE process_requests (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  process_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  request_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (process_id) REFERENCES processes(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- ===========================================
+-- Historial de Ejecuciones de Procesos
+-- ===========================================
+CREATE TABLE execution_history (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  process_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  execution_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  status VARCHAR(50),
+  FOREIGN KEY (process_id) REFERENCES processes(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- ===========================================
+-- Tabla de Facturas
+-- ===========================================
 CREATE TABLE invoices (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   user_id BIGINT NOT NULL,
@@ -173,6 +244,9 @@ CREATE TABLE invoices (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+-- ===========================================
+-- Tabla de Pagos
+-- ===========================================
 CREATE TABLE payments (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   invoice_id BIGINT NOT NULL,
@@ -181,6 +255,21 @@ CREATE TABLE payments (
   payment_method VARCHAR(100),
   FOREIGN KEY (invoice_id) REFERENCES invoices(id)
 );
+
+-- ===========================================
+-- Tabla de Sesiones de Usuario
+-- ===========================================
+CREATE TABLE sessions (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  rol_id BIGINT,
+  start_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+  end_time DATETIME NULL,
+  status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE',
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (rol_id) REFERENCES rol_entity(id)
+);
+
 ```
 
 ### 🍃 MongoDB
