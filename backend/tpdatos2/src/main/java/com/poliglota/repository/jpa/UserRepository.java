@@ -1,5 +1,6 @@
-package com.poliglota.repository;
+package com.poliglota.repository.jpa;
 
+import com.poliglota.model.mysql.Account;
 import com.poliglota.model.mysql.Rol;
 import com.poliglota.model.mysql.User;
 import java.util.Optional;
@@ -13,8 +14,6 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByEmail(String email);
-
-	Optional<User> findById(Long id);
 
 	@Query("select u from User u where u.rolEntity.code = :code")
 	List<User> findByRol(@Param("code") Rol code);

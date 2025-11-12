@@ -1,4 +1,4 @@
-package com.poliglota.repository;
+package com.poliglota.repository.jpa;
 
 import com.poliglota.model.mysql.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface SessionRepository extends JpaRepository<Session, Long> {
-    List<Session> findByUserIdAndStatus(String userId, String status);
+     List<Session> findByUser_UserIdAndStatus(Long userId, String status);
 }

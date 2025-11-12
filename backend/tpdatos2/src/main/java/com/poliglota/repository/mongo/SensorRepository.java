@@ -1,4 +1,4 @@
-package com.poliglota.repository;
+package com.poliglota.repository.mongo;
 
 import com.poliglota.model.mongo.Sensor;
 import org.springframework.data.mongodb.repository.MongoRepository;

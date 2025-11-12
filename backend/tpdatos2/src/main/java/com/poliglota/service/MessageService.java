@@ -2,8 +2,9 @@ package com.poliglota.service;
 
 import com.poliglota.model.mongo.Group;
 import com.poliglota.model.mongo.Message;
-import com.poliglota.repository.GroupRepository;
-import com.poliglota.repository.MessageRepository;
+import com.poliglota.repository.mongo.GroupRepository;
+import com.poliglota.repository.mongo.MessageRepository;
+
 import lombok.RequiredArgsConstructor;
 import com.poliglota.DTO.MessageDTO;
 import org.springframework.data.domain.*;

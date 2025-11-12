@@ -28,9 +28,13 @@ public class AuthenticationController {
 	private SessionService sessionService;
 
 	@PostMapping("/login")
-	public JwtResponseDTO login(@RequestBody LoginRequestDTO request) {
-		JwtResponseDTO jwtResponseDTO = authenticationService.authenticate(request);
-		if (jwtResponseDTO != null) {
+	public ResponseEntity<String> login(@RequestBody LoginRequestDTO request) {
+		try {
+			JwtResponseDTO jwtResponseDTO = authenticationService.authenticate(request);
+			if (jwtResponseDTO == null) {
+				return ResponseEntity.status(401).body("Credenciales inválidas");
+			}
+
 			UsuarioResponseDTO usuarioResponseDTO = usuarioService.getUsuarioPorMail(request.getEmail()).orElse(null);
 			SessionDTO sessionDTO = new SessionDTO();
 			sessionDTO.setUserId(usuarioResponseDTO.getUserId().toString());
@@ -39,9 +43,11 @@ public class AuthenticationController {
 			sessionDTO.setEndTime(null);
 			sessionDTO.setStatus("activa");
 			sessionService.createSession(sessionDTO);
-			return jwtResponseDTO;
+
+			return ResponseEntity.ok(jwtResponseDTO.getToken());
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().body("Error en autenticación: " + e.getMessage());
 		}
-		return null;
 	}
 
 	@PostMapping("/logout")

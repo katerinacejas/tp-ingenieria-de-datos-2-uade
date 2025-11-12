@@ -1,13 +1,15 @@
 package com.poliglota.service;
 
 import com.poliglota.model.mysql.Payment;
-import com.poliglota.repository.PaymentRepository;
+import com.poliglota.repository.jpa.InvoiceRepository;
+import com.poliglota.repository.jpa.PaymentRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.poliglota.DTO.PaymentDTO;
 import com.poliglota.model.mysql.Invoice;
-import com.poliglota.repository.InvoiceRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;

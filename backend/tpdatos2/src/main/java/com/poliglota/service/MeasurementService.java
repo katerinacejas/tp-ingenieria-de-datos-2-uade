@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.poliglota.DTO.MeasurementDTO;
 import com.poliglota.model.cassandra.Measurement;
 import com.poliglota.model.cassandra.MeasurementKey;
-import com.poliglota.repository.MeasurementRepository;
+import com.poliglota.repository.cassandra.MeasurementRepository;
 
 import java.util.List;
 

@@ -1,7 +1,8 @@
 package com.poliglota.service;
 
 import com.poliglota.model.mongo.Sensor;
-import com.poliglota.repository.SensorRepository;
+import com.poliglota.repository.mongo.SensorRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

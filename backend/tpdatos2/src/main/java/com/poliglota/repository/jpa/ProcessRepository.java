@@ -1,4 +1,4 @@
-package com.poliglota.repository;
+package com.poliglota.repository.jpa;
 
 import com.poliglota.model.mysql.Process;
 import org.springframework.data.jpa.repository.JpaRepository;

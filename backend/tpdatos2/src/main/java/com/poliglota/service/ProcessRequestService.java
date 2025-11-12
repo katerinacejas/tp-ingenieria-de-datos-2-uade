@@ -7,15 +7,15 @@ import org.springframework.stereotype.Service;
 import com.poliglota.DTO.ProcessRequestDTO;
 import com.poliglota.DTO.request.ProcessRequestRequestDTO;
 import com.poliglota.model.mysql.ProcessRequest;
-import com.poliglota.repository.ProcessRequestRepository;
-import com.poliglota.repository.UserRepository;
+import com.poliglota.repository.jpa.ExecutionHistoryRepository;
+import com.poliglota.repository.jpa.ProcessRepository;
+import com.poliglota.repository.jpa.ProcessRequestRepository;
+import com.poliglota.repository.jpa.UserRepository;
 import com.poliglota.model.mysql.User;
 import com.poliglota.exception.UsuarioNotFoundException;
 import com.poliglota.model.mysql.Process;
-import com.poliglota.repository.ProcessRepository;
 import com.poliglota.exception.ProcessNotFoundException;
 import com.poliglota.exception.ProcessRequestNotFoundException;
-import com.poliglota.repository.ExecutionHistoryRepository;
 import com.poliglota.model.mysql.ExecutionHistory;
 import com.poliglota.DTO.ExecutionHistoryDTO;
 import java.util.List;
@@ -46,7 +46,7 @@ public class ProcessRequestService {
 	}
 
 	public ProcessRequestDTO updateStatusProcessRequest(ProcessRequestRequestDTO processRequestRequestDTO) {
-		ProcessRequest processRequest = processRequestRepository.findById(processRequestRequestDTO.getProcessId())
+		ProcessRequest processRequest = processRequestRepository.findById(Long.parseLong(processRequestRequestDTO.getProcessId()))
 				.orElseThrow(() -> new ProcessRequestNotFoundException("Process Request not found: " + processRequestRequestDTO.getProcessId()));
 
 		if (processRequestRequestDTO.getStatus() == "pendiente") {
@@ -64,7 +64,7 @@ public class ProcessRequestService {
 	}
 
 	public List<ExecutionHistoryDTO> getExecutionHistoryByProcessRequestId(String processRequestId) {
-		return executionHistoryRepository.findByRequestId(processRequestId)
+		return executionHistoryRepository.findByProcessRequest_ProcessRequestId(Long.parseLong(processRequestId))
 			.stream()
 			.map(executionHistory -> this.executionToDtoResponse(executionHistory))
 			.toList();

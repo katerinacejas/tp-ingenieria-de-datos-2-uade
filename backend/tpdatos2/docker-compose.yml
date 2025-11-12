@@ -60,20 +60,19 @@ services:
     depends_on:
       cassandra:
         condition: service_healthy
-    entrypoint: ["/bin/sh","-c"]
+    entrypoint: ["/bin/sh","-lc"]
     command: >
-      "
       echo 'Esperando a Cassandra...';
       for i in `seq 1 30`; do
         cqlsh cassandra 9042 -e 'DESCRIBE KEYSPACES' && break || sleep 3;
       done;
       echo 'Creando keyspace poliglota si no existe...';
-      cqlsh cassandra 9042 -e \"
+      cqlsh cassandra 9042 -e "
         CREATE KEYSPACE IF NOT EXISTS poliglota
-        WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':1};
-      \";
-      echo 'Listo.';
-      "
+        WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':1}
+        AND durable_writes = true;
+      ";
+      echo 'Keyspace listo.';
     restart: "no"
 
   backend:
@@ -93,6 +92,8 @@ services:
         condition: service_completed_successfully
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      SPRING_JPA_SHOW_SQL: "true"
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/poliglota?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: app
       SPRING_DATASOURCE_PASSWORD: app123

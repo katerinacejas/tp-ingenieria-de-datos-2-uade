@@ -2,7 +2,8 @@ package com.poliglota.service;
 
 import com.poliglota.DTO.GroupDTO;
 import com.poliglota.model.mongo.Group;
-import com.poliglota.repository.GroupRepository;
+import com.poliglota.repository.mongo.GroupRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
