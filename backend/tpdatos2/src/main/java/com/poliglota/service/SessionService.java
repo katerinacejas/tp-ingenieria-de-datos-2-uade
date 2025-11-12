@@ -30,7 +30,7 @@ public class SessionService {
     }
 
 	public void closeSession(SessionDTO sessionDTO) {
-		Session session = sessionRepository.findById(Long.parseLong(sessionDTO.getUserId())).orElse(null);
+		Session session = sessionRepository.findByUserIdAndStatus(sessionDTO.getUserId(), "activa").get(0);
 		session.setStatus("inactiva");
 		session.setEndTime(LocalDateTime.now());
 		sessionRepository.save(session);

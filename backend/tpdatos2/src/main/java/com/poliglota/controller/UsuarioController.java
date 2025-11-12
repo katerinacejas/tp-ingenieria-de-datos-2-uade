@@ -37,11 +37,4 @@ public class UsuarioController {
 				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + mail));
 	}
 
-	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
-	public String eliminarUsuario(@PathVariable Long id) {
-		usuarioService.eliminarUsuario(id);
-		return "Usuario eliminado con éxito.";
-	}
-
 }
