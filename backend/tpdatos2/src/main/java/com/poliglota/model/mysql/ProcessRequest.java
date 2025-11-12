@@ -33,4 +33,7 @@ public class ProcessRequest {
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
+	public double getCostProcess() {
+		return process.getCost();
+	}
 }

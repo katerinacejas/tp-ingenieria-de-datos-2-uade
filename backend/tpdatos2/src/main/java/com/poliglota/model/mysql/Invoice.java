@@ -29,4 +29,10 @@ public class Invoice {
 
 	@Column(nullable = false)
 	private String status; 
+
+	public double calculateTotalAmount() {
+		return billedProcesses.stream()
+			.mapToDouble(processRequest -> processRequest.getCostProcess())
+			.sum();
+	}
 }
