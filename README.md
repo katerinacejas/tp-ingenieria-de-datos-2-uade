@@ -343,6 +343,7 @@ db.groups.insertOne({
 ```
 
 ### ⚡ Cassandra
+```
 -- Crear el keyspace
 CREATE KEYSPACE IF NOT EXISTS poliglota_cassandra
 WITH REPLICATION = {
