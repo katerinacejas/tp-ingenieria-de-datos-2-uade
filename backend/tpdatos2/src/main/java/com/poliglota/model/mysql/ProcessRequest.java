@@ -13,7 +13,7 @@ public class ProcessRequest {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "process_request_id")
-	private String processRequestId;
+	private Long processRequestId;
 
 	@ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

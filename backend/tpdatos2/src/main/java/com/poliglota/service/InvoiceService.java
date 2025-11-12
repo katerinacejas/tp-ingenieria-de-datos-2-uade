@@ -83,15 +83,15 @@ public class InvoiceService {
         return toDto(invoiceRepository.save(invoice));
     }
 
-	private InvoiceDTO toDto(Invoice invoice) {
-		InvoiceDTO dto = new InvoiceDTO();
-		dto.setInvoiceId(invoice.getInvoiceId().toString());
-		dto.setUserId(invoice.getUser().getUserId().toString());
-		dto.setIssueDate(invoice.getIssueDate());
-		dto.setBilledProcessesIds(invoice.getBilledProcesses().stream()
-				.map(pr -> pr.getProcessRequestId())
-				.toList());
-		dto.setStatus(invoice.getStatus());
-		return dto;
-	}
+    private InvoiceDTO toDto(Invoice invoice) {
+        InvoiceDTO dto = new InvoiceDTO();
+        dto.setInvoiceId(invoice.getInvoiceId().toString());
+        dto.setUserId(invoice.getUser().getUserId().toString());
+        dto.setIssueDate(invoice.getIssueDate());
+        dto.setBilledProcessesIds(invoice.getBilledProcesses().stream()
+                .map(pr -> pr.getProcessRequestId().toString())
+                .toList());
+        dto.setStatus(invoice.getStatus());
+        return dto;
+    }
 }

@@ -93,6 +93,14 @@ services:
         condition: service_completed_successfully
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/poliglota?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: app
+      SPRING_DATASOURCE_PASSWORD: app123
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/poliglota
+      SPRING_CASSANDRA_CONTACT_POINTS: cassandra
+      SPRING_CASSANDRA_PORT: 9042
+      SPRING_CASSANDRA_KEYSPACE_NAME: poliglota
+      SPRING_CASSANDRA_LOCAL_DATACENTER: datacenter1
     ports:
       - "8080:8080"
 
