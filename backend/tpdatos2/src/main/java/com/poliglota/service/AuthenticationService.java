@@ -119,7 +119,12 @@ public class AuthenticationService {
 			usuarioRepository.save(user);
 			SessionDTO sessionDTO = new SessionDTO();
 			Session session = sessionRepository.findByUserIdAndStatus(user.getUserId().toString(), "activa").get(0);
+			sessionDTO.setSessionId(session.getSessionId().toString());
 			sessionDTO.setUserId(user.getUserId().toString());
+			sessionDTO.setRolId(session.getRol().toString());
+			sessionDTO.setStartTime(session.getStartTime());
+			sessionDTO.setEndTime(LocalDateTime.now());
+			sessionDTO.setStatus("inactiva");
 			return sessionDTO;
 		} 
 		return null;

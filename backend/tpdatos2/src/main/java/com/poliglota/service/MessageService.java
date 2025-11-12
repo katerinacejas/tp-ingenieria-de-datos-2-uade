@@ -5,9 +5,13 @@ import com.poliglota.model.mongo.Message;
 import com.poliglota.repository.GroupRepository;
 import com.poliglota.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
+import com.poliglota.DTO.MessageDTO;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,55 +20,70 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final GroupRepository groupRepository;
 
-    //  Obtener todos los mensajes
-    public List<Message> getAllMessages() {
-        return messageRepository.findAll();
+    public MessageDTO sendDirectMessage(Long senderId, Long recipientUserId, String content) {
+        validateContent(content);
+
+        Message msg = new Message();
+        msg.setSenderId(senderId);
+        msg.setRecipientId(recipientUserId.toString());
+        msg.setType("user");
+        msg.setTimestamp(LocalDateTime.now());
+        msg.setContent(content.trim());
+
+        return toDTO(messageRepository.save(msg));
     }
 
-    //  Obtener mensaje por ID
-    public Optional<Message> getMessageById(String id) {
-        return messageRepository.findById(Long.parseLong(id));
-    }
+    public MessageDTO sendGroupMessage(Long senderId, String groupId, String content) {
+        validateContent(content);
 
-    //  Obtener mensajes enviados por usuario
-    public List<Message> getMessagesBySender(Long senderId) {
-        return messageRepository.findBySenderId(senderId);
-    }
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Grupo no encontrado: " + groupId));
 
-    //  Obtener mensajes recibidos (privados)
-    public List<Message> getMessagesByRecipient(Long recipientId) {
-        return messageRepository.findByRecipientIdAndRecipientType(recipientId, "user");
-    }
-
-    //  Obtener conversación entre dos usuarios
-    public List<Message> getConversation(Long senderId, Long recipientId) {
-        return messageRepository.findConversationBetweenUsers(senderId, recipientId);
-    }
-
-    //  Obtener mensajes de grupo
-    public List<Message> getMessagesByGroup(Long groupId) {
-        return messageRepository.findByRecipientTypeAndRecipientId("group", groupId);
-    }
-
-    //  Enviar mensaje
-    public Message sendMessage(Long senderId, Long recipientId, String recipientType, String content) {
-        if ("group".equalsIgnoreCase(recipientType)) {
-            groupRepository.findById(recipientId)
-                    .orElseThrow(() -> new IllegalArgumentException("Grupo no encontrado con ID: " + recipientId));
+        // Validar pertenencia del remitente al grupo
+        if (group.getMemberIds() == null || !group.getMemberIds().contains(senderId)) {
+            throw new IllegalStateException("El usuario " + senderId + " no pertenece al grupo " + groupId);
         }
 
-        Message message = new Message();
-        message.setSenderId(senderId);
-        message.setRecipientId(recipientId);
-        message.setRecipientType(recipientType);
-        message.setContent(content);
+        Message msg = new Message();
+        msg.setSenderId(senderId);
+        msg.setRecipientId(groupId);
+        msg.setType("group");
+        msg.setTimestamp(LocalDateTime.now());
+        msg.setContent(content.trim());
 
-        return messageRepository.save(message);
+        return toDTO(messageRepository.save(msg));
     }
 
-    //  Guardar o actualizar mensaje (manual)
-    public Message saveMessage(Message message) {
-        return messageRepository.save(message);
+    public List<MessageDTO> getDirectConversation(Long userA, Long userB) {
+        List<Message> messages = messageRepository.findDirectConversation(
+                userA, userB.toString(), userB, userA.toString(),
+                Sort.by(Sort.Direction.ASC, "timestamp")
+        );
+        return messages.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    public List<MessageDTO> getGroupMessages(String groupId) {
+        List<Message> messages = messageRepository.findByGroupId(
+                groupId,
+                Sort.by(Sort.Direction.ASC, "timestamp")
+        );
+        return messages.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private void validateContent(String content) {
+        if (!StringUtils.hasText(content)) {
+            throw new IllegalArgumentException("El contenido del mensaje no puede estar vacío.");
+        }
+    }
+
+    private MessageDTO toDTO(Message m) {
+        MessageDTO dto = new MessageDTO();
+        dto.setId(m.getId());
+        dto.setSenderId(m.getSenderId().toString());
+        dto.setRecipientId(m.getRecipientId());
+        dto.setTimestamp(m.getTimestamp());
+        dto.setContent(m.getContent());
+        dto.setType(m.getType());
+        return dto;
+    }
 }

@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Sensor {
 	@Id
-	private String sensorId;
+	private String id;
 	private String name;
 	private String type;
 	private String city;
 	private String country;
-	private boolean active = true;
-	private LocalDateTime startDate = LocalDateTime.now();
+	private boolean active;
+	private LocalDateTime startDate;
 }

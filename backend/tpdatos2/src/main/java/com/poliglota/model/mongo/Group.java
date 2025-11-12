@@ -6,7 +6,6 @@ import org.springframework.data.annotation.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import org.springframework.data.mongodb.core.index.Indexed;
 
 @Data
@@ -16,10 +15,11 @@ import org.springframework.data.mongodb.core.index.Indexed;
 public class Group {
 
     @Id
-    private Long groupId;
+    private String id;
 
 	@Indexed(unique = true)
     private String name;
 
-    private List<Long> memberIds = new ArrayList<>();
+	@Indexed(name = "member_ids_idx")
+    private List<Long> memberIds; // IDs de usuarios
 }
