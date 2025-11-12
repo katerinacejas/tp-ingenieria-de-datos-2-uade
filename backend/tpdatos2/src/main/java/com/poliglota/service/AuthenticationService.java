@@ -17,8 +17,6 @@ import com.poliglota.model.mysql.User;
 import com.poliglota.repository.AccountRepository;
 import com.poliglota.repository.RolRepository;
 import com.poliglota.repository.UserRepository;
-import com.poliglota.exception.UsuarioNotFoundException;
-import com.poliglota.exception.AccountNotFoundException;
 import com.poliglota.security.JwtUtil;
 
 @Service

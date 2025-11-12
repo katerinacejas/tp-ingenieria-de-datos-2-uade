@@ -42,6 +42,11 @@ public class UsuarioService {
 				.map(this::mapToResponseDTO);
 	}
 
+	public Optional<UsuarioResponseDTO> getUsuarioPorId(Long id) {
+		return usuarioRepository.findById(id)
+				.map(this::mapToResponseDTO);
+	}
+
 	//  Cerrar sesión
 	public void cerrarSesion(Long userId) {
 		sessionRepository.findByUserIdAndStatus(userId.toString(), "active")
