@@ -72,8 +72,10 @@ public class ProcessRequestService {
 
 	private ExecutionHistoryDTO executionToDtoResponse(ExecutionHistory executionHistory) {
 		ExecutionHistoryDTO dto = new ExecutionHistoryDTO();
-		dto.setExecutionId(executionHistory.getExecutionId());
-		dto.setProcessRequestId(executionHistory.getProcessRequest().getProcessRequestId());
+		dto.setExecutionId(executionHistory.getExecutionId() != null ? executionHistory.getExecutionId().toString() : null);
+		dto.setProcessRequestId(executionHistory.getProcessRequest() != null && executionHistory.getProcessRequest().getProcessRequestId() != null
+			? executionHistory.getProcessRequest().getProcessRequestId().toString()
+			: null);
 		dto.setExecutionDate(executionHistory.getExecutionDate());
 		dto.setResult(executionHistory.getResult());
 		dto.setStatus(executionHistory.getStatus());
@@ -82,7 +84,7 @@ public class ProcessRequestService {
 
 	private ProcessRequestDTO toDtoResponse(ProcessRequest processRequest) {
 		ProcessRequestDTO dto = new ProcessRequestDTO();
-		dto.setRequestId(processRequest.getProcessRequestId());
+		dto.setRequestId(processRequest.getProcessRequestId() != null ? processRequest.getProcessRequestId().toString() : null);
 		dto.setUserId(processRequest.getUser().getUserId().toString());
 		dto.setProcessId(processRequest.getProcess().getProcessId().toString());
 		dto.setRequestDate(processRequest.getRequestDate());

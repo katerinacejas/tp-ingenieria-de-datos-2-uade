@@ -15,7 +15,7 @@ public class ExecutionHistory {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "execution_id")
-	private String executionId;
+	private Long executionId;
 
 	@ManyToOne
     @JoinColumn(name = "request_id")

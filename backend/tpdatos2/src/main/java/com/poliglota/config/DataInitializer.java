@@ -3,19 +3,15 @@ package com.poliglota.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import com.poliglota.model.mysql.Process;
-
-
 import com.poliglota.model.mysql.*;
 import com.poliglota.model.mongo.*;
 import com.poliglota.model.cassandra.*;
 import com.poliglota.repository.*;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import java.time.ZoneOffset;
@@ -45,7 +41,7 @@ public class DataInitializer {
             PasswordEncoder passwordEncoder
     ) {
         return args -> {
-            System.out.println("🚀 Inicializando datos de MySQL, MongoDB y Cassandra...");
+            System.out.println("Inicializando datos de MySQL, MongoDB y Cassandra...");
 
             seedMySQL(rolRepository, userRepository, accountRepository,
                     movementRepository, invoiceRepository, paymentRepository,
@@ -56,12 +52,12 @@ public class DataInitializer {
 
             seedCassandra(measurementRepository);
 
-            System.out.println("✅ Todas las bases de datos fueron pobladas correctamente.");
+            System.out.println("Todas las bases de datos fueron pobladas correctamente.");
         };
     }
 
     // ============================================================
-    // 🗄️ MySQL (Relacional)
+    //  MySQL (Relacional)
     // ============================================================
     private void seedMySQL(
             RolRepository rolRepo,
@@ -87,28 +83,20 @@ public class DataInitializer {
         RolEntity rolTech = rolRepo.findByCode(Rol.MANTENIMIENTO).orElseThrow();
 
         if (!userRepo.existsByEmail("admin@tpdatos2.com")) {
-           User admin = new User(
-                    null,
-                    "Administrador",
-                    "admin@tpdatos2.com",
-                    encoder.encode("Admin123!"),
-                    "ACTIVO",
-                    LocalDateTime.now(),
-                    rolAdmin
-                );
-
+            User admin = new User(null, "Administrador", "admin@tpdatos2.com",
+                    encoder.encode("Admin123!"), "activo", LocalDateTime.now(), rolAdmin);
             userRepo.save(admin);
         }
 
         if (!userRepo.existsByEmail("juan@correo.com")) {
             User user = new User(null, "Juan Pérez", "juan@correo.com",
-                    encoder.encode("User123!"), "ACTIVO", LocalDateTime.now(), rolUser);
+                    encoder.encode("User123!"), "activo", LocalDateTime.now(), rolUser);
             userRepo.save(user);
         }
 
         if (!userRepo.existsByEmail("tecnico@tpdatos2.com")) {
             User tech = new User(null, "Técnico de Mantenimiento", "tecnico@tpdatos2.com",
-                    encoder.encode("Tech123!"), "ACTIVO",LocalDateTime.now(), rolTech);
+                    encoder.encode("Tech123!"), "activo", LocalDateTime.now(), rolTech);
             userRepo.save(tech);
         }
 
@@ -116,12 +104,9 @@ public class DataInitializer {
 
         Account account = new Account(null, user, 15000.00);
         accountRepo.save(account);
+        movRepo.save(new AccountMovementHistory(null, account, 2000.00, "DEPOSIT", 0.00, 2000.00, LocalDateTime.now()));
 
-        movRepo.save(new AccountMovementHistory(null, account, 2000.00,"DEPOSIT",
-    0.0,
-    1000.0, LocalDateTime.now()));
-
-        Process process = new Process(null, "Mantenimiento Preventivo", "Chequeo técnico general", "SERVICE", 1200.00);
+        com.poliglota.model.mysql.Process process = new com.poliglota.model.mysql.Process(null, "Mantenimiento Preventivo", "Chequeo técnico general", "SERVICE", 1200.00);
         processRepo.save(process);
 
         Invoice invoice = new Invoice(null, user, LocalDateTime.now(), List.of(), "PENDING");
@@ -133,11 +118,11 @@ public class DataInitializer {
         Session session = new Session(null, user, rolUser, LocalDateTime.now(), null, "ACTIVE");
         sessionRepo.save(session);
 
-        System.out.println("🟢 Datos MySQL cargados.");
+        System.out.println(" Datos MySQL cargados.");
     }
 
     // ============================================================
-    // 🍃 MongoDB (Documental)
+    //  MongoDB (Documental)
     // ============================================================
     private void seedMongo(
             SensorRepository sensorRepo,
@@ -159,34 +144,25 @@ public class DataInitializer {
         Alerts alert = new Alerts("ALERT-001", "TEMPERATURE_WARNING", "ACTIVE", sensor1.getId(), LocalDateTime.now(), "Temperatura elevada detectada");
         alertsRepo.save(alert);
 
-        Group group = new Group(1L, "Equipo Mantenimiento Zona Sur", List.of(1L, 2L, 3L));
-        groupRepo.save(group);
-
-        Message msg1 = new Message(1L, 1L, 2L, LocalDateTime.now(), "Revisión completada correctamente", "private");
-        Message msg2 = new Message(2L, 2L, 3L, LocalDateTime.now(), "Sensor 002 reportando datos normales", "group");
-        messageRepo.saveAll(List.of(msg1, msg2));
-
-        System.out.println("🟢 Datos MongoDB cargados.");
+        System.out.println(" Datos MongoDB cargados.");
     }
 
     // ============================================================
-    // ⚡ Cassandra (Columnar)
+    //  Cassandra (Columnar)
     // ============================================================
     private void seedCassandra(MeasurementRepository measurementRepo) {
         if (measurementRepo.count() > 0) return;
-
         Measurement m1 = new Measurement();
-        m1.setKey(new MeasurementKey("SENSOR_001", LocalDateTime.now().toInstant(ZoneOffset.UTC)));
+        m1.setKey(new MeasurementKey("SENSOR_001", Instant.now()));
         m1.setTemperature(23.5);
         m1.setHumidity(60.0);
-
         Measurement m2 = new Measurement();
-        m2.setKey(new MeasurementKey("SENSOR_002", LocalDateTime.now().toInstant(ZoneOffset.UTC)));
+        m2.setKey(new MeasurementKey("SENSOR_002", Instant.now()));
         m2.setTemperature(19.2);
         m2.setHumidity(72.0);
 
         measurementRepo.saveAll(List.of(m1, m2));
 
-        System.out.println("🟢 Datos Cassandra cargados.");
+        System.out.println(" Datos Cassandra cargados.");
     }
 }

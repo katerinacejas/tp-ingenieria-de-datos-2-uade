@@ -1,25 +1,110 @@
-version: '3.8'
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: tp_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: poliglota
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app123
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   mongo:
     image: mongo:6
     container_name: tp_mongo
+    restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   cassandra:
     image: cassandra:4
     container_name: tp_cassandra
+    restart: unless-stopped
+    environment:
+      CASSANDRA_CLUSTER_NAME: poliglota-cluster
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      MAX_HEAP_SIZE: 512M
+      HEAP_NEWSIZE: 128M
     ports:
       - "9042:9042"
-    environment:
-      - CASSANDRA_CLUSTER_NAME=poliglota-cluster
-      - CASSANDRA_DC=datacenter1
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    volumes:
+      - cassandra_data:/var/lib/cassandra
     healthcheck:
-      test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES'"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
+      test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+
+  # Inicializa el keyspace y termina (one-shot)
+  cassandra-init:
+    image: cassandra:4
+    container_name: tp_cassandra_init
+    depends_on:
+      cassandra:
+        condition: service_healthy
+    entrypoint: ["/bin/sh","-c"]
+    command: >
+      "
+      echo 'Esperando a Cassandra...';
+      for i in `seq 1 30`; do
+        cqlsh cassandra 9042 -e 'DESCRIBE KEYSPACES' && break || sleep 3;
+      done;
+      echo 'Creando keyspace poliglota si no existe...';
+      cqlsh cassandra 9042 -e \"
+        CREATE KEYSPACE IF NOT EXISTS poliglota
+        WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':1};
+      \";
+      echo 'Listo.';
+      "
+    restart: "no"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tp_backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      cassandra:
+        condition: service_healthy
+      cassandra-init:
+        condition: service_completed_successfully
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/poliglota?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: app
+      SPRING_DATASOURCE_PASSWORD: app123
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/poliglota
+      SPRING_CASSANDRA_CONTACT_POINTS: cassandra
+      SPRING_CASSANDRA_PORT: 9042
+      SPRING_CASSANDRA_KEYSPACE_NAME: poliglota
+      SPRING_CASSANDRA_LOCAL_DATACENTER: datacenter1
+    ports:
+      - "8080:8080"
+
 volumes:
+  mysql_data:
   mongo_data:
+  cassandra_data:

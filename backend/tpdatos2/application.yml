@@ -1,46 +1,92 @@
 server:
   port: 8080
 
+# ===== PERFIL LOCAL (default) =====
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/poliglota_sql?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/poliglota_sql?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update        # crea/actualiza las tablas automáticamente
-    show-sql: true            # muestra las queries en consola
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
-  # --- Configuración MongoDB ---
   data:
     mongodb:
+      # Para local, usá localhost y la DB poliglota_mongo
       uri: mongodb://localhost:27017/poliglota_mongo
-      database : poliglota_mongo
 
-  # --- Configuración Cassandra ---
-  cassandra:
-    contact-points: localhost
-    port: 9042
-    keyspace-name: poliglota_keyspace
-    local-datacenter: datacenter1
-    schema-action: create_if_not_exists
-    request:
-      timeout: 10s
-    connection:
-      connect-timeout: 10s
-      init-query-timeout: 10s
+# Spring Boot 3 usa 'spring.cassandra.*'
+cassandra:
+  contact-points: localhost
+  port: 9042
+  keyspace-name: poliglota_keyspace
+  local-datacenter: datacenter1
+  schema-action: create_if_not_exists
+  request:
+    timeout: 10s
+  connection:
+    connect-timeout: 10s
+    init-query-timeout: 10s
 
-# --- Configuración de logs ---
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     org.springframework.web: INFO
     com.poliglota: DEBUG
+    org.springframework.data.cassandra: INFO
+
+# ===== PERFIL DOCKER =====
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/poliglota?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: app
+    password: app123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  data:
+    mongodb:
+      # En docker, conectamos al servicio 'mongo' y usamos base poliglota
+      uri: mongodb://mongo:27017/poliglota
+
+cassandra:
+  contact-points: cassandra
+  port: 9042
+  keyspace-name: poliglota
+  local-datacenter: datacenter1
+  schema-action: create_if_not_exists
+  request:
+    timeout: 10s
+  connection:
+    connect-timeout: 10s
+    init-query-timeout: 10s
+
+logging:
+  level:
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+    org.springframework.web: INFO
+    com.poliglota: INFO
     org.springframework.data.cassandra: INFO
