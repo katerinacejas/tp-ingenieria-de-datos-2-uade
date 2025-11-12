@@ -101,51 +101,7 @@ POST http://localhost:8080/api/measurements
 }
 ```
 
----
 
-## ⚙️ **Configuración de `application.yml`**
-
-```yaml
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/poliglota_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: tu_password
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/poliglota_mongo
-      database: poliglota_mongo
-
-    cassandra:
-      contact-points: localhost
-      port: 9042
-      keyspace-name: poliglota_cassandra
-      schema-action: create_if_not_exists
-      local-datacenter: datacenter1
-
-  main:
-    allow-bean-definition-overriding: true
-
-server:
-  port: 8080
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-```
-
----
 
 ## 📊 **Modelo de Base de Datos**
 
