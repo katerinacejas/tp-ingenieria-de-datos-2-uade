@@ -1,11 +1,11 @@
 package com.poliglota.controller;
 
+import com.poliglota.DTO.GroupDTO;
 import com.poliglota.model.mongo.Group;
 import com.poliglota.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -17,44 +17,38 @@ public class GroupController {
 
     //  Crear grupo
     @PostMapping
-    public ResponseEntity<Group> createGroup(@RequestBody Group group) {
-        return ResponseEntity.ok(groupService.createGroup(group));
+    public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupDTO groupDTO) {
+        return ResponseEntity.ok(groupService.createGroup(groupDTO));
     }
 
-    //  Obtener todos los grupos
+    //  Obtener todos los grupos de un usuario
     @GetMapping
-    public ResponseEntity<List<Group>> getAllGroups() {
-        return ResponseEntity.ok(groupService.getAllGroups());
+    public ResponseEntity<List<GroupDTO>> getAllGroupsByMemberId(@RequestParam Long memberId) {
+        return ResponseEntity.ok(groupService.getAllGroupsByMemberId(memberId));
     }
 
     //  Buscar grupo por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Group> getGroupById(@PathVariable Long id) {
+    public ResponseEntity<GroupDTO> getGroupById(@PathVariable String id) {
         return ResponseEntity.ok(groupService.getGroupById(id));
     }
 
     //  Buscar grupo por nombre
     @GetMapping("/name/{name}")
-    public ResponseEntity<Group> getGroupByName(@PathVariable String name) {
+    public ResponseEntity<GroupDTO> getGroupByName(@PathVariable String name) {
         return ResponseEntity.ok(groupService.getGroupByName(name));
     }
 
     //  Agregar un miembro al grupo
     @PostMapping("/{groupId}/add-member/{userId}")
-    public ResponseEntity<Group> addMember(@PathVariable Long groupId, @PathVariable Long userId) {
+    public ResponseEntity<GroupDTO> addMember(@PathVariable String groupId, @PathVariable Long userId) {
         return ResponseEntity.ok(groupService.addMember(groupId, userId));
     }
 
     //  Eliminar un miembro del grupo
     @PostMapping("/{groupId}/remove-member/{userId}")
-    public ResponseEntity<Group> removeMember(@PathVariable Long groupId, @PathVariable Long userId) {
+    public ResponseEntity<GroupDTO> removeMember(@PathVariable String groupId, @PathVariable Long userId) {
         return ResponseEntity.ok(groupService.removeMember(groupId, userId));
     }
 
-    //  Eliminar un grupo
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
-        groupService.deleteGroup(id);
-        return ResponseEntity.noContent().build();
-    }
 }
