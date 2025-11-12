@@ -4,13 +4,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.poliglota.model.mysql.RolEntity;
-import com.poliglota.model.mysql.Rol;
-import com.poliglota.model.mysql.User;
-import com.poliglota.repository.RolRepository;
-import com.poliglota.repository.UserRepository;
-
+import com.poliglota.model.mysql.*;
+import com.poliglota.model.mongo.*;
+import com.poliglota.model.cassandra.*;
+import com.poliglota.repository.mysql.*;
+import com.poliglota.repository.mongo.*;
+import com.poliglota.repository.cassandra.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Configuration
 public class DataInitializer {
