@@ -122,17 +122,17 @@ POST http://localhost:8080/api/measurements
 ### 🍃 MongoDB (Documental)
 
 Colecciones principales:
-- `messages`: mensajes privados o grupales
-- `groups`: grupos de usuarios
-- `sensors`: dispositivos IoT
-- `maintenance_checks`: revisiones
-- `alerts`: alertas generadas
+- `Message`: mensajes privados o grupales
+- `Group`: grupos de usuarios
+- `Sensor`: dispositivos IoT
+- `Maintenance_checks`: revisiones
+- `Alerts`: alertas generadas
 
 ### ⚡ Cassandra (Columnar)
 
 Tablas:
-- `process_logs`: logs de ejecución de procesos
-- `message_audit`: auditoría de mensajes
+- `Measurement`: Permite consultas rápidas por sensor.
+- `MeasurementKey`: Mantiene un historial de acciones sobre cada sensor.
 
 ---
 
@@ -282,7 +282,10 @@ db.createCollection('sensors');
 db.createCollection('maintenance_checks');
 db.createCollection('alerts');
 
-// Ejemplo de inserción inicial
+// ===========================================
+// Colección de Sensores (IoT)
+// ===========================================
+db.createCollection("sensors");
 db.sensors.insertOne({
   name: "Sensor BA-001",
   type: "TEMPERATURE",
@@ -291,31 +294,87 @@ db.sensors.insertOne({
   active: true,
   startDate: new Date()
 });
+
+// ===========================================
+// Colección de Revisiones de Mantenimiento
+// ===========================================
+db.createCollection("maintenance_checks");
+db.maintenance_checks.insertOne({
+  checkId: "CHK-001",
+  sensorId: "Sensor BA-001",
+  reviewDate: new Date(),
+  sensorStatus: "OK",
+  notes: "Revisión preventiva completada sin incidentes"
+});
+
+// ===========================================
+// Colección de Alertas
+// ===========================================
+db.createCollection("alerts");
+db.alerts.insertOne({
+  alertId: "ALERT-001",
+  type: "TEMPERATURE_WARNING",
+  state: "ACTIVE",
+  sensorId: "Sensor BA-001",
+  datetime: new Date(),
+  description: "Temperatura superior al umbral permitido"
+});
+
+// ===========================================
+// Colección de Mensajes (Privados o Grupales)
+// ===========================================
+db.createCollection("messages");
+db.messages.insertOne({
+  senderId: 101,
+  recipientId: 202,
+  timestamp: new Date(),
+  content: "Revisión del sensor completada",
+  type: "private"
+});
+
+// ===========================================
+// Colección de Grupos de Usuarios
+// ===========================================
+db.createCollection("groups");
+db.groups.insertOne({
+  name: "Equipo Mantenimiento Zona Sur",
+  memberIds: [101, 102, 103]
+});
 ```
 
 ### ⚡ Cassandra
-```sql
-CREATE KEYSPACE IF NOT EXISTS poliglota_cassandra WITH REPLICATION = {
+-- Crear el keyspace
+CREATE KEYSPACE IF NOT EXISTS poliglota_cassandra
+WITH REPLICATION = {
   'class': 'SimpleStrategy',
   'replication_factor': 1
 };
 
 USE poliglota_cassandra;
 
-CREATE TABLE process_logs (
-  process_id UUID PRIMARY KEY,
-  name TEXT,
-  executed_at TIMESTAMP,
-  status TEXT
-);
+-- ===========================================
+-- Tabla de mediciones de sensores (IoT)
+-- ===========================================
+CREATE TABLE IF NOT EXISTS measurements (
+    sensor_id TEXT,
+    timestamp TIMESTAMP,
+    temperature DOUBLE,
+    humidity DOUBLE,
+    pressure DOUBLE,
+    PRIMARY KEY ((sensor_id), timestamp)
+) WITH CLUSTERING ORDER BY (timestamp DESC);
 
-CREATE TABLE message_audit (
-  message_id UUID PRIMARY KEY,
-  sender_id TEXT,
-  recipient_id TEXT,
-  timestamp TIMESTAMP,
-  content TEXT
-);
+-- ===========================================
+-- Tabla de auditoría o respaldo de mediciones
+-- ===========================================
+CREATE TABLE IF NOT EXISTS measurements_audit (
+    sensor_id TEXT,
+    timestamp TIMESTAMP,
+    action TEXT,
+    user_id TEXT,
+    notes TEXT,
+    PRIMARY KEY ((sensor_id), timestamp)
+) WITH CLUSTERING ORDER BY (timestamp DESC);
 ```
 
 ---
@@ -376,32 +435,33 @@ db.alerts.insertOne({
 ---
 
 ### ⚡ **Cassandra – Modelo Columnar**
-- **Tablas:** `process_logs`, `message_audit`.  
+- **Tablas:** `Measurement`, `MeasurementKey`.  
 - **Estructura:**  
-  - `process_logs` indexa procesos por ID con timestamp.  
-  - `message_audit` almacena auditoría de mensajes enviados/recibidos.  
+ - `Measurement`: Permite consultas rápidas por sensor.
+ - `MeasurementKey`: Mantiene un historial de acciones sobre cada sensor.
 - **Justificación:**  
   Cassandra es ideal para escenarios de escritura intensiva y series temporales, asegurando alta disponibilidad y escalabilidad horizontal.
 
 **Queries Cassandra de ejemplo:**
-```sql
--- Insertar log de proceso
-INSERT INTO process_logs (process_id, name, executed_at, status)
-VALUES (uuid(), 'SyncService', toTimestamp(now()), 'SUCCESS');
+-- Insertar nueva medición
+INSERT INTO measurements (sensor_id, timestamp, temperature, humidity, pressure)
+VALUES ('SENSOR_001', toTimestamp(now()), 23.5, 58.0, 1013.2);
 
--- Obtener logs por fecha reciente
-SELECT * FROM process_logs WHERE executed_at > toTimestamp(now()) - 86400000;
+-- Obtener las últimas mediciones de un sensor
+SELECT * FROM measurements WHERE sensor_id = 'SENSOR_001' LIMIT 10;
 
--- Insertar registro de auditoría de mensaje
-INSERT INTO message_audit (message_id, sender_id, recipient_id, timestamp, content)
-VALUES (uuid(), '101', '202', toTimestamp(now()), 'Mensaje auditado');
-```
+-- Registrar auditoría
+INSERT INTO measurements_audit (sensor_id, timestamp, action, user_id, notes)
+VALUES ('SENSOR_001', toTimestamp(now()), 'INSERT', '101', 'Nueva lectura registrada');
+
+-- Consultar auditoría reciente
+SELECT * FROM measurements_audit WHERE sensor_id = 'SENSOR_001';
+
 
 ---
 
 ## 👨‍💻 **Autor**
 
-**Maximiliano Lovato**  
 EQUIPO 7- TP Persistencia Políglota  
 UADE - Universidad Argentina de la Empresa
 
