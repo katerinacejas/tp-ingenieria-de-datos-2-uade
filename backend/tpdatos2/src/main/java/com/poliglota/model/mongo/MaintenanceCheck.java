@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MaintenanceCheck {
 	@Id
-	private String checkId;
+	private String id;
 	private String sensorId;
 	private LocalDateTime reviewDate;
 	private String sensorStatus;

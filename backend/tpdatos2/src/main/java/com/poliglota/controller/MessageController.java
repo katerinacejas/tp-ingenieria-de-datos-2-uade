@@ -1,11 +1,13 @@
 package com.poliglota.controller;
 
-import com.poliglota.model.mongo.Message;
+import com.poliglota.DTO.MessageDTO;
+import com.poliglota.DTO.request.SendDirectRequestDTO;
+import com.poliglota.DTO.request.SendGroupRequestDTO;
 import com.poliglota.service.MessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
@@ -13,58 +15,42 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageController {
 
-    private final MessageService messageService;
+	private final MessageService messageService;
 
-    //  Obtener todos los mensajes
-    @GetMapping
-    public ResponseEntity<List<Message>> getAllMessages() {
-        return ResponseEntity.ok(messageService.getAllMessages());
-    }
+	// Enviar mensaje directo A -> B
+	@PostMapping("/direct")
+	public MessageDTO sendDirect(@RequestBody SendDirectRequestDTO req) {
+		try {
+			return messageService.sendDirectMessage(req.getSenderId(), req.getRecipientUserId(), req.getContent());
+		} catch (IllegalArgumentException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		} catch (IllegalStateException e) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+		}
+	}
 
-    //  Obtener mensaje por ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Message> getMessageById(@PathVariable String id) {
-        return messageService.getMessageById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+	// Enviar mensaje a un grupo
+	@PostMapping("/group")
+	public MessageDTO sendToGroup(@RequestBody SendGroupRequestDTO req) {
+		try {
+			return messageService.sendGroupMessage(req.getSenderId(), req.getGroupId(), req.getContent());
+		} catch (IllegalArgumentException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		} catch (IllegalStateException e) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+		}
+	}
 
-    //  Obtener mensajes enviados por un usuario
-    @GetMapping("/sent/{senderId}")
-    public ResponseEntity<List<Message>> getMessagesBySender(@PathVariable Long senderId) {
-        return ResponseEntity.ok(messageService.getMessagesBySender(senderId));
-    }
+	// Obtener toda la conversación directa (A <-> B) ordenada por timestamp asc
+	@GetMapping("/direct/{userA}/{userB}")
+	public List<MessageDTO> getDirect(@PathVariable Long userA, @PathVariable Long userB) {
+		return messageService.getDirectConversation(userA, userB);
+	}
 
-    //  Obtener mensajes recibidos por un usuario
-    @GetMapping("/received/{recipientId}")
-    public ResponseEntity<List<Message>> getMessagesByRecipient(@PathVariable Long recipientId) {
-        return ResponseEntity.ok(messageService.getMessagesByRecipient(recipientId));
-    }
-
-    //  Obtener conversación entre dos usuarios
-    @GetMapping("/conversation")
-    public ResponseEntity<List<Message>> getConversation(
-            @RequestParam Long senderId,
-            @RequestParam Long recipientId) {
-        return ResponseEntity.ok(messageService.getConversation(senderId, recipientId));
-    }
-
-    //  Obtener mensajes grupales
-    @GetMapping("/group/{groupId}")
-    public ResponseEntity<List<Message>> getMessagesByGroup(@PathVariable Long groupId) {
-        return ResponseEntity.ok(messageService.getMessagesByGroup(groupId));
-    }
-
-    //  Enviar mensaje (usuario o grupo)
-    @PostMapping("/send")
-    public ResponseEntity<Message> sendMessage(
-            @RequestParam Long senderId,
-            @RequestParam Long recipientId,
-            @RequestParam String recipientType, // "user" o "group"
-            @RequestParam String content) {
-        return ResponseEntity.ok(
-                messageService.sendMessage(senderId, recipientId, recipientType, content)
-        );
-    }
+	// Mensajes de un grupo
+	@GetMapping("/group/{groupId}")
+	public List<MessageDTO> getGroupMessages(@PathVariable String groupId) {
+		return messageService.getGroupMessages(groupId);
+	}
 
 }

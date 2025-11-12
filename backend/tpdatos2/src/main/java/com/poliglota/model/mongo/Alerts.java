@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Alerts {
 	@Id
-	private String alertId;
+	private String id;
 
 	private String type;
 	private String state;

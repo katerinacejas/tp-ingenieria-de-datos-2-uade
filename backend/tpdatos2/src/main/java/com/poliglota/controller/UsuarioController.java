@@ -17,7 +17,7 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 
 	@GetMapping("/me")
-	@PreAuthorize("hasAnyRole('USUARIO', 'ADMIN')")
+	@PreAuthorize("hasAnyRole('USUARIO', 'MANTENIMIENTO', 'ADMIN')")
 	public UsuarioResponseDTO getPerfilUsuarioAutenticado(Authentication auth) {
 		String email = auth.getName();
 		return usuarioService.getUsuarioPorMail(email)
@@ -35,13 +35,6 @@ public class UsuarioController {
 	public UsuarioResponseDTO getUsuarioPorMail(@RequestParam String mail) {
 		return usuarioService.getUsuarioPorMail(mail)
 				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + mail));
-	}
-
-	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
-	public String eliminarUsuario(@PathVariable Long id) {
-		usuarioService.eliminarUsuario(id);
-		return "Usuario eliminado con éxito.";
 	}
 
 }

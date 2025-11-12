@@ -29,85 +29,121 @@ import com.poliglota.security.CustomUserDetailsService;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomUserDetailsService customUserDetailsService;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final CustomUserDetailsService customUserDetailsService;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(Customizer.withDefaults()) // Aplica configuración CORS
-            .csrf(CsrfConfigurer::disable)   // CSRF gestionado selectivamente (stateless API)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http
+				.cors(Customizer.withDefaults()) // Aplica configuración CORS
+				.csrf(CsrfConfigurer::disable) // CSRF gestionado selectivamente (stateless API)
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(auth -> auth
+						// Público solo auth
+						.requestMatchers("/auth/**").permitAll()
 
-                // HAY QUE TOCAR ESTO Y CAMBIARLO TODO
-                
-				// TODO EL MUNDO
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/api/images/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
+						// Dashboard (resumen)
+						.requestMatchers(HttpMethod.GET, "/dashboard/**")
+							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
 
-				// SOLO COMPRADOR
-				.requestMatchers("/api/usuarios/solicitudVendedor").hasRole("COMPRADOR")
+						// Facturación / pagos / cuentas / movimientos: lectura para todos los roles autenticados
+						.requestMatchers(HttpMethod.GET,
+							"/api/invoices/**", "/api/payments/**",
+							"/api/accounts/**", "/api/account-movements/**")
+							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
+						// Registrar pago
+						.requestMatchers(HttpMethod.POST, "/api/payments/**")
+							.hasAnyRole("USUARIO","MANTENIMIENTO")
 
-                // SOLO COMPRADOR_VENDEDOR O ADMIN
-                .requestMatchers(HttpMethod.POST, "/api/productos/**").hasAnyRole("COMPRADOR_VENDEDOR", "ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasAnyRole("COMPRADOR_VENDEDOR", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasAnyRole("COMPRADOR_VENDEDOR", "ADMIN")
+						// Sensores / mediciones
+						.requestMatchers(HttpMethod.GET, "/api/measurements/**", "/api/sensors/**")
+							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
+						.requestMatchers(HttpMethod.POST, "/api/measurements/**", "/api/sensors/**")
+							.hasRole("MANTENIMIENTO")
+						.requestMatchers(HttpMethod.PUT, "/api/measurements/**", "/api/sensors/**")
+							.hasRole("MANTENIMIENTO")
+						.requestMatchers(HttpMethod.PATCH, "/api/measurements/**", "/api/sensors/**")
+							.hasRole("MANTENIMIENTO")
+						.requestMatchers(HttpMethod.DELETE, "/api/measurements/**", "/api/sensors/**")
+							.hasRole("MANTENIMIENTO")
 
-				.requestMatchers(HttpMethod.POST, "/api/categorias/**").hasAnyRole("COMPRADOR_VENDEDOR", "ADMIN")
+						// Alertas
+						.requestMatchers(HttpMethod.GET, "/api/alerts/**")
+							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
+						.requestMatchers(HttpMethod.POST, "/api/alerts/**")
+							.hasRole("MANTENIMIENTO")
+						.requestMatchers(HttpMethod.PUT, "/api/alerts/**")
+							.hasRole("MANTENIMIENTO")
+						.requestMatchers(HttpMethod.PATCH, "/api/alerts/**")
+							.hasRole("MANTENIMIENTO")
+						.requestMatchers(HttpMethod.DELETE, "/api/alerts/**")
+							.hasRole("MANTENIMIENTO")
 
+						// Procesos
+						.requestMatchers(HttpMethod.GET, "/api/processes/**")
+							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
+						.requestMatchers(HttpMethod.POST, "/api/processes/**")
+							.hasAnyRole("USUARIO","MANTENIMIENTO")
+						.requestMatchers(HttpMethod.PUT, "/api/processes/**")
+							.hasRole("MANTENIMIENTO")
+						.requestMatchers(HttpMethod.PATCH, "/api/processes/**")
+							.hasRole("MANTENIMIENTO")
+						.requestMatchers(HttpMethod.DELETE, "/api/processes/**")
+							.hasRole("MANTENIMIENTO")
 
-                // SOLO COMPRADOR O COMPRADOR_VENDEDOR
-                .requestMatchers("/api/carrito/**").hasAnyRole("COMPRADOR", "COMPRADOR_VENDEDOR")
+						// Mensajes y grupos
+						.requestMatchers("/api/messages/**", "/api/groups/**")
+							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
 
-                .requestMatchers("/api/usuarios/me").hasAnyRole("COMPRADOR", "COMPRADOR_VENDEDOR")
+						// Administración (alta de personal de mantenimiento, etc.)
+						.requestMatchers("/admin/**", "/accounts/**/maintenance/**", "/users/**/maintenance/**")
+							.hasRole("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/accounts/**", "/users/**")
+							.hasRole("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/accounts/**", "/users/**")
+							.hasRole("ADMIN")
+						.requestMatchers(HttpMethod.PATCH, "/accounts/**", "/users/**")
+							.hasRole("ADMIN")
+						.requestMatchers(HttpMethod.DELETE, "/accounts/**", "/users/**")
+							.hasRole("ADMIN")
 
+						// Todo lo demás autenticado
+						.anyRequest().authenticated()
+					)
 
-                // SOLO ADMIN
-                .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
+				.authenticationProvider(authenticationProvider())
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-				.requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMIN")
+		return http.build();
+	}
 
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+		provider.setUserDetailsService(customUserDetailsService);
+		provider.setPasswordEncoder(passwordEncoder());
+		return provider;
+	}
 
-                .anyRequest().authenticated()
-            ) 
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+		return config.getAuthenticationManager();
+	}
 
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-        return http.build();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(customUserDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:8080"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOrigins(List.of("http://localhost:8080"));
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		config.setAllowedHeaders(List.of("*"));
+		config.setAllowCredentials(true);
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return source;
+	}
 }

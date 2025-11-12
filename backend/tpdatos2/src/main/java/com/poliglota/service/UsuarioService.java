@@ -47,15 +47,6 @@ public class UsuarioService {
 				.map(this::mapToResponseDTO);
 	}
 
-	//  Eliminar usuario
-	public void eliminarUsuario(Long id) {
-		if (!usuarioRepository.existsById(id)) {
-			throw new EntityNotFoundException("Usuario no encontrado con id: " + id);
-		}
-		usuarioRepository.deleteById(id);
-	}
-
-	//  DTO mapper
 	private UsuarioResponseDTO mapToResponseDTO(User usuario) {
 		UsuarioResponseDTO dto = new UsuarioResponseDTO();
 		dto.setUserId(usuario.getUserId());
