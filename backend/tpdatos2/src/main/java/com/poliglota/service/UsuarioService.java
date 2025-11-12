@@ -47,16 +47,6 @@ public class UsuarioService {
 				.map(this::mapToResponseDTO);
 	}
 
-	//  Cerrar sesión
-	public void cerrarSesion(Long userId) {
-		sessionRepository.findByUserIdAndStatus(userId.toString(), "active")
-				.forEach(s -> {
-					s.setStatus("inactive");
-					s.setEndTime(LocalDateTime.now());
-					sessionRepository.save(s);
-				});
-	}
-
 	//  Eliminar usuario
 	public void eliminarUsuario(Long id) {
 		if (!usuarioRepository.existsById(id)) {

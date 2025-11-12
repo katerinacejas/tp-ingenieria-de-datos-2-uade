@@ -2,6 +2,7 @@ package com.poliglota.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import com.poliglota.service.AuthenticationService;
 import com.poliglota.service.SessionService;
@@ -44,7 +45,9 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestBody SessionDTO sessionDTO) {
+    public ResponseEntity<String> logout(Authentication auth) {
+		String email = auth.getName();
+		SessionDTO sessionDTO = authenticationService.closeSession(email);
         sessionService.closeSession(sessionDTO);
         return ResponseEntity.ok("Sesión cerrada");
     }

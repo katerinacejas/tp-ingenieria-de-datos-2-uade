@@ -32,7 +32,7 @@ public class User implements UserDetails{
     private String password;
 
 	@Column(nullable = false)
-    private boolean status;
+    private String status;
 
 	@Column(nullable = false)
     private LocalDateTime registeredAt;
