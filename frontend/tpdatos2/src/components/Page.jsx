@@ -6,7 +6,7 @@ export default function Page({ title, actions, children }) {
         <div className="page">
             <div className="page-head">
                 <h1>{title}</h1>
-                <div className="page-actions">{actions}</div>
+                {actions && <div className="page-actions">{actions}</div>}
             </div>
             {children}
         </div>

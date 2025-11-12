@@ -1,0 +1,31 @@
+.kpi {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.kpi .label {
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+
+.kpi .value {
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.kpi .hint {
+    font-size: 12px;
+    margin-top: auto;
+    padding-top: 8px;
+    flex-shrink: 0;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    color: var(--muted);
+}
+
+.kpi .hint.hint-empty {
+    visibility: hidden;
+}
+

@@ -1,7 +1,19 @@
 .bubble-row {
     display: grid;
-    margin-bottom: 10px;
-    max-width: 80%;
+    margin-bottom: 16px;
+    max-width: 75%;
+    animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .bubble-row.me {
@@ -12,28 +24,46 @@
 .bubble-name {
     color: var(--muted);
     font-size: 12px;
-    margin: 0 0 4px 6px;
+    margin: 0 0 6px 8px;
+    font-weight: 600;
+}
+
+.bubble-row.me .bubble-name {
+    margin: 0 8px 6px 0;
 }
 
 .bubble {
     background: #0f1722;
     border: 1px solid var(--card-border);
-    border-radius: 14px;
-    padding: 10px 12px;
+    border-radius: 16px;
+    padding: 12px 16px;
     box-shadow: var(--shadow);
+    transition: transform 0.1s ease;
+}
+
+.bubble:hover {
+    transform: translateY(-1px);
 }
 
 .bubble-row.me .bubble {
-    background: #132544;
+    background: linear-gradient(135deg, #132544, #1a2f5c);
     border-color: #234778;
 }
 
 .bubble-text {
     white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text);
 }
 
 .bubble-time {
     color: var(--muted);
     font-size: 11px;
-    margin-top: 4px;
+    margin-top: 6px;
+    text-align: right;
+}
+
+.bubble-row.me .bubble-time {
+    text-align: right;
 }

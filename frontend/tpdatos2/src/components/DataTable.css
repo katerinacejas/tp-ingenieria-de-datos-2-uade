@@ -1,0 +1,33 @@
+.data-table {
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.card .table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.card .table thead {
+    background: transparent;
+}
+
+.card .table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.card .table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.card .table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 32px !important;
+    font-style: italic;
+}
+

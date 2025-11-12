@@ -1,12 +1,12 @@
 .conv-list {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
 .conv-item {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
     width: 100%;
     text-align: left;
@@ -14,26 +14,37 @@
     background: transparent;
     color: var(--text);
     border: 1px solid var(--card-border);
-    border-radius: 10px;
-    padding: 10px 12px;
+    border-radius: 12px;
+    padding: 12px;
+    transition: all 0.15s ease;
 }
 
 .conv-item:hover {
-    background: #0e1623;
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--primary);
+    transform: translateX(2px);
 }
 
 .conv-item.active {
     border-color: var(--primary);
-    background: #101826;
+    background: rgba(59, 130, 246, 0.15);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
 .conv-icon {
+    color: var(--primary);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.conv-item.active .conv-icon {
     color: #93c5fd;
-    font-size: 18px;
 }
 
 .conv-main {
     overflow: hidden;
+    flex: 1;
+    min-width: 0;
 }
 
 .conv-name {
@@ -41,6 +52,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-bottom: 4px;
+    font-size: 14px;
 }
 
 .conv-last {
@@ -53,6 +66,7 @@
 
 .conv-empty {
     color: var(--muted);
-    padding: 10px;
+    padding: 20px;
     text-align: center;
+    font-style: italic;
 }
