@@ -1,9 +1,9 @@
-package com.poliglota.service.mysql;
+package com.poliglota.service;
 
 import com.poliglota.model.mysql.Account;
 import com.poliglota.model.mysql.User;
-import com.poliglota.repository.mysql.AccountRepository;
-import com.poliglota.repository.mysql.UserRepository;
+import com.poliglota.repository.AccountRepository;
+import com.poliglota.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,8 +34,7 @@ public class AccountService {
     public Account getAccountByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + userId));
-        return accountRepository.findByUserId(user)
-                .orElseThrow(() -> new EntityNotFoundException("No se encontró cuenta para el usuario: " + userId));
+        return accountRepository.findByUserId(user.getId());
     }
 
     // 🔹 Crear cuenta nueva para un usuario
@@ -43,7 +42,7 @@ public class AccountService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + userId));
 
-        if (accountRepository.findByUserId(user).isPresent()) {
+        if (accountRepository.findByUserId(user.getId()) != null) {
             throw new IllegalStateException("El usuario ya tiene una cuenta asociada.");
         }
 

@@ -2,7 +2,7 @@ package com.poliglota.controller;
 
 import com.poliglota.model.mysql.Invoice;
 import com.poliglota.model.mysql.ProcessRequest;
-import com.poliglota.service.mysql.InvoiceService;
+import com.poliglota.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

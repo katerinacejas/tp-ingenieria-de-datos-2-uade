@@ -7,5 +7,7 @@ import com.poliglota.model.mongo.Group;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
-    Group findByGroupbyName(String name);
+
+    // 🔹 Buscar Grupos  por Nombre
+    Group findByName(String name);
 }

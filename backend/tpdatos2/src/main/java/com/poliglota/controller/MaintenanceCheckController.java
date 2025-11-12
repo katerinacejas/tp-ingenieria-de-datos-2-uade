@@ -1,7 +1,7 @@
-package com.poliglota.controller.mongo;
+package com.poliglota.controller;
 
 import com.poliglota.model.mongo.MaintenanceCheck;
-import com.poliglota.service.mongo.MaintenanceCheckService;
+import com.poliglota.service.MaintenanceCheckService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

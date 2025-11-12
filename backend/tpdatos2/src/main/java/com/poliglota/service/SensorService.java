@@ -1,7 +1,7 @@
-package com.poliglota.service.mongo;
+package com.poliglota.service;
 
 import com.poliglota.model.mongo.Sensor;
-import com.poliglota.repository.mongo.SensorRepository;
+import com.poliglota.repository.SensorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,10 @@ public class SensorService {
     public List<Sensor> getAllSensors() {
         return sensorRepository.findAll();
     }
+
+	public Sensor create(Sensor sensor) {
+		return sensorRepository.save(sensor);
+	}
 
     // 🔹 Obtener sensor por ID
     public Optional<Sensor> getSensorById(String id) {

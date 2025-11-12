@@ -1,16 +1,24 @@
+package com.poliglota.repository;
 
-import com.poliglota.model.mongo.Sensor;
+import com.poliglota.model.mongo.Message;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
-public interface MessageRepository extends JpaRepository<Message, Long> {
-	List<Message> findByRecipientId(Long recipientId);
+@Repository
+public interface MessageRepository extends MongoRepository<Message, Long> {
 
-	List<Message> findBySenderId(Long senderId);
+    List<Message> findBySenderId(Long senderId);
 
-	List<Message> findBySenderIdAndRecipientId(Long senderId, Long recipientId);
+    List<Message> findByRecipientIdAndRecipientType(Long recipientId, String recipientType);
 
-	List<Message> findByType(String type);
+    List<Message> findByRecipientTypeAndRecipientId(String recipientType, Long groupId);
+
+    // Conversación entre dos usuarios
+    List<Message> findBySenderIdAndRecipientIdOrSenderIdAndRecipientId(
+            Long sender1, Long recipient1, Long sender2, Long recipient2);
+
+    default List<Message> findConversationBetweenUsers(Long userA, Long userB) {
+        return findBySenderIdAndRecipientIdOrSenderIdAndRecipientId(userA, userB, userB, userA);
+    }
 }
