@@ -21,7 +21,16 @@ public class AccountMovementHistory {
     private Account account;
 
     @Column(nullable = false)
-    private BigDecimal amount;
+    private double amount;
+
+	@Column(nullable = false)
+	private String movementType;
+
+	@Column(nullable = false)
+	private double balanceAfterMovement;
+
+	@Column(nullable = false)
+	private double balanceBeforeMovement;
 
     @Column(nullable = false)
     private LocalDateTime movementDate;

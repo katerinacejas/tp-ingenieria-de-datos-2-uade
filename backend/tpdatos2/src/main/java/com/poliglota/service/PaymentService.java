@@ -17,35 +17,35 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final InvoiceRepository invoiceRepository;
 
-    // 🔹 Obtener todos los pagos
+    //  Obtener todos los pagos
     public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
     }
 
-    // 🔹 Obtener pago por ID
+    //  Obtener pago por ID
     public Payment getPaymentById(Long id) {
         return paymentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pago no encontrado con ID: " + id));
     }
 
-    // 🔹 Obtener pagos por factura
+    //  Obtener pagos por factura
     public List<Payment> getPaymentsByInvoice(Long invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada con ID: " + invoiceId));
         return paymentRepository.findByInvoice(invoice);
     }
 
-    // 🔹 Obtener pagos por método
+    //  Obtener pagos por método
     public List<Payment> getPaymentsByMethod(String paymentMethod) {
         return paymentRepository.findByPaymentMethod(paymentMethod);
     }
 
-    // 🔹 Buscar pagos entre fechas
+    //  Buscar pagos entre fechas
     public List<Payment> getPaymentsByDateRange(LocalDateTime start, LocalDateTime end) {
         return paymentRepository.findByPaymentDateBetween(start, end);
     }
 
-    // 🔹 Registrar un nuevo pago
+    //  Registrar un nuevo pago
     public Payment registerPayment(Long invoiceId, double amount, String paymentMethod) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada con ID: " + invoiceId));
@@ -69,7 +69,7 @@ public class PaymentService {
         return paymentRepository.save(payment);
     }
 
-    // 🔹 Eliminar pago
+    //  Eliminar pago
     public void deletePayment(Long id) {
         paymentRepository.deleteById(id);
     }

@@ -15,25 +15,25 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    // 🔹 Obtener todas las cuentas
+    //  Obtener todas las cuentas
     @GetMapping
     public ResponseEntity<List<AccountDTO>> getAllAccounts() {
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
 
-    // 🔹 Obtener una cuenta por ID
+    //  Obtener una cuenta por ID
     @GetMapping("/{id}")
     public ResponseEntity<AccountDTO> getAccountById(@PathVariable Long id) {
         return ResponseEntity.ok(accountService.getAccountById(id));
     }
 
-    // 🔹 Obtener una cuenta por ID de usuario
+    //  Obtener una cuenta por ID de usuario
     @GetMapping("/user/{userId}")
     public ResponseEntity<AccountDTO> getAccountByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(accountService.getAccountByUserId(userId));
     }
 
-    // 🔹 Acreditar saldo
+    //  Acreditar saldo
     @PutMapping("/{id}/deposit")
     public ResponseEntity<AccountDTO> deposit(
             @PathVariable Long id,
@@ -41,12 +41,12 @@ public class AccountController {
         return ResponseEntity.ok(accountService.deposit(id, amount));
     }
 
-    // 🔹 Debitar saldo
+    //  Debitar saldo
     @PutMapping("/{id}/withdraw")
     public ResponseEntity<Account> withdraw(
             @PathVariable Long id,
             @RequestParam double amount) {
         return ResponseEntity.ok(accountService.withdraw(id, amount));
     }
-	
+
 }

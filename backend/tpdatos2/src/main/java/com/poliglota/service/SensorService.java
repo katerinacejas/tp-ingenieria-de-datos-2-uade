@@ -15,7 +15,7 @@ public class SensorService {
 
     private final SensorRepository sensorRepository;
 
-    // 🔹 Obtener todos los sensores
+    //  Obtener todos los sensores
     public List<Sensor> getAllSensors() {
         return sensorRepository.findAll();
     }
@@ -24,32 +24,32 @@ public class SensorService {
 		return sensorRepository.save(sensor);
 	}
 
-    // 🔹 Obtener sensor por ID
+    //  Obtener sensor por ID
     public Optional<Sensor> getSensorById(String id) {
         return sensorRepository.findById(id);
     }
 
-    // 🔹 Buscar por tipo
+    //  Buscar por tipo
     public List<Sensor> getSensorsByType(String type) {
         return sensorRepository.findByType(type);
     }
 
-    // 🔹 Buscar por país
+    //  Buscar por país
     public List<Sensor> getSensorsByCountry(String country) {
         return sensorRepository.findByCountry(country);
     }
 
-    // 🔹 Buscar por ciudad
+    //  Buscar por ciudad
     public List<Sensor> getSensorsByCity(String city) {
         return sensorRepository.findByCity(city);
     }
 
-    // 🔹 Buscar por estado (activo/inactivo)
+    //  Buscar por estado (activo/inactivo)
     public List<Sensor> getSensorsByActive(boolean active) {
         return sensorRepository.findByActive(active);
     }
 
-    // 🔹 Crear o actualizar un sensor
+    //  Crear o actualizar un sensor
     public Sensor saveSensor(Sensor sensor) {
         if (sensor.getStartDate() == null) {
             sensor.setStartDate(LocalDateTime.now());
@@ -57,7 +57,7 @@ public class SensorService {
         return sensorRepository.save(sensor);
     }
 
-    // 🔹 Activar o desactivar un sensor
+    //  Activar o desactivar un sensor
     public Sensor toggleSensorStatus(String id, boolean active) {
         Sensor sensor = sensorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sensor no encontrado con ID: " + id));
@@ -65,7 +65,7 @@ public class SensorService {
         return sensorRepository.save(sensor);
     }
 
-    // 🔹 Eliminar sensor
+    //  Eliminar sensor
     public void deleteSensor(String id) {
         sensorRepository.deleteById(id);
     }

@@ -17,31 +17,31 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    // 🔹 Obtener todos los pagos
+    //  Obtener todos los pagos
     @GetMapping
     public ResponseEntity<List<Payment>> getAllPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());
     }
 
-    // 🔹 Obtener pago por ID
+    //  Obtener pago por ID
     @GetMapping("/{id}")
     public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
         return ResponseEntity.ok(paymentService.getPaymentById(id));
     }
 
-    // 🔹 Obtener pagos por factura
+    //  Obtener pagos por factura
     @GetMapping("/invoice/{invoiceId}")
     public ResponseEntity<List<Payment>> getPaymentsByInvoice(@PathVariable Long invoiceId) {
         return ResponseEntity.ok(paymentService.getPaymentsByInvoice(invoiceId));
     }
 
-    // 🔹 Obtener pagos por método
+    //  Obtener pagos por método
     @GetMapping("/method/{paymentMethod}")
     public ResponseEntity<List<Payment>> getPaymentsByMethod(@PathVariable String paymentMethod) {
         return ResponseEntity.ok(paymentService.getPaymentsByMethod(paymentMethod));
     }
 
-    // 🔹 Obtener pagos entre fechas
+    //  Obtener pagos entre fechas
     @GetMapping("/between")
     public ResponseEntity<List<Payment>> getPaymentsByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
@@ -49,7 +49,7 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.getPaymentsByDateRange(start, end));
     }
 
-    // 🔹 Registrar nuevo pago
+    //  Registrar nuevo pago
     @PostMapping
     public ResponseEntity<Payment> registerPayment(
             @RequestParam Long invoiceId,
@@ -58,7 +58,7 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.registerPayment(invoiceId, amount, paymentMethod));
     }
 
-    // 🔹 Eliminar pago
+    //  Eliminar pago
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
         paymentService.deletePayment(id);

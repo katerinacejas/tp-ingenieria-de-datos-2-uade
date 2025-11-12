@@ -21,30 +21,30 @@ public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final UserRepository userRepository;
 
-    // 🔹 Obtener todas las facturas
+    //  Obtener todas las facturas
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
     }
 
-    // 🔹 Obtener factura por ID
+    //  Obtener factura por ID
     public Invoice getInvoiceById(Long id) {
         return invoiceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada con ID: " + id));
     }
 
-    // 🔹 Obtener facturas por usuario
+    //  Obtener facturas por usuario
     public List<Invoice> getInvoicesByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + userId));
         return invoiceRepository.findByUser(user);
     }
 
-    // 🔹 Obtener facturas por estado
+    //  Obtener facturas por estado
     public List<Invoice> getInvoicesByStatus(String status) {
         return invoiceRepository.findByStatus(status);
     }
 
-    // 🔹 Crear factura nueva
+    //  Crear factura nueva
     public Invoice createInvoice(Long userId, List<ProcessRequest> processes) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + userId));
@@ -58,14 +58,14 @@ public class InvoiceService {
         return invoiceRepository.save(invoice);
     }
 
-    // 🔹 Cambiar estado de factura
+    //  Cambiar estado de factura
     public Invoice updateStatus(Long id, String newStatus) {
         Invoice invoice = getInvoiceById(id);
         invoice.setStatus(newStatus);
         return invoiceRepository.save(invoice);
     }
 
-    // 🔹 Eliminar factura
+    //  Eliminar factura
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
     }
