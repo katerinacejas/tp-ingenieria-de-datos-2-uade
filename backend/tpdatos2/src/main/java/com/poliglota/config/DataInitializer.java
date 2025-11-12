@@ -3,6 +3,7 @@ package com.poliglota.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.poliglota.model.mysql.Process;
 import com.poliglota.model.mysql.*;
 import com.poliglota.model.mongo.*;
 import com.poliglota.model.cassandra.*;
@@ -12,6 +13,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Instant;
 import java.util.List;
+
+import java.time.ZoneOffset;
+
 
 @Configuration
 public class DataInitializer {
@@ -100,7 +104,6 @@ public class DataInitializer {
 
         Account account = new Account(null, user, 15000.00);
         accountRepo.save(account);
-
         movRepo.save(new AccountMovementHistory(null, account, 2000.00, "DEPOSIT", 0.00, 2000.00, LocalDateTime.now()));
 
         com.poliglota.model.mysql.Process process = new com.poliglota.model.mysql.Process(null, "Mantenimiento Preventivo", "Chequeo técnico general", "SERVICE", 1200.00);

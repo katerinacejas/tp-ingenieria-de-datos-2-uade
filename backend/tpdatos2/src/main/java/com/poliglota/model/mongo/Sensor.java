@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Sensor {
 	@Id
-	private String id;
+
+	private String Id;
+
 	private String name;
 	private String type;
 	private String city;
