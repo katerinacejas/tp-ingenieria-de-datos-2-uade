@@ -1,4 +1,4 @@
-package com.poliglota.repository.mysql;
+package com.poliglota.repository;
 
 import com.poliglota.model.mysql.Account;
 import com.poliglota.model.mysql.AccountMovementHistory;

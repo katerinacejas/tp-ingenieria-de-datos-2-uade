@@ -1,7 +1,7 @@
 package com.poliglota.controller;
 
 import com.poliglota.model.mongo.Group;
-import com.poliglota.service.mongo.GroupService;
+import com.poliglota.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

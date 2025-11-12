@@ -3,6 +3,8 @@ package com.poliglota.repository;
 import com.poliglota.model.mysql.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import com.poliglota.model.mysql.Invoice;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository

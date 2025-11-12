@@ -2,7 +2,7 @@ package com.poliglota.repository;
 
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
-
+import java.time.LocalDateTime;
 import com.poliglota.model.mongo.MaintenanceCheck;
 
 import java.util.List;

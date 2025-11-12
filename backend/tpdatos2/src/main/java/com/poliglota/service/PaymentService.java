@@ -2,9 +2,12 @@ package com.poliglota.service;
 
 import com.poliglota.model.mysql.Payment;
 import com.poliglota.repository.PaymentRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.poliglota.model.mysql.Invoice;
+import com.poliglota.repository.InvoiceRepository;
+import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service

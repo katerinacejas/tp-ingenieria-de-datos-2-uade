@@ -1,7 +1,7 @@
-package com.poliglota.controller.mongo;
+package com.poliglota.controller;
 
 import com.poliglota.model.mongo.Alerts;
-import com.poliglota.service.mongo.AlertsService;
+import com.poliglota.service.AlertsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
