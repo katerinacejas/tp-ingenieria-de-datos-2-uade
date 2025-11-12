@@ -29,7 +29,7 @@ public class UsuarioService {
 		this.sessionRepository = sessionRepository;
 	}
 
-	// 🔹 Obtener todos los usuarios
+	//  Obtener todos los usuarios
 	public List<UsuarioResponseDTO> getTodosLosUsuarios() {
 		return usuarioRepository.findAll()
 				.stream()
@@ -42,17 +42,12 @@ public class UsuarioService {
 				.map(this::mapToResponseDTO);
 	}
 
-	// 🔹 Cerrar sesión
-	public void cerrarSesion(Long userId) {
-		sessionRepository.findByUserIdAndStatus(userId.toString(), "active")
-				.forEach(s -> {
-					s.setStatus("inactive");
-					s.setEndTime(LocalDateTime.now());
-					sessionRepository.save(s);
-				});
+	public Optional<UsuarioResponseDTO> getUsuarioPorId(Long id) {
+		return usuarioRepository.findById(id)
+				.map(this::mapToResponseDTO);
 	}
 
-	// 🔹 Eliminar usuario
+	//  Eliminar usuario
 	public void eliminarUsuario(Long id) {
 		if (!usuarioRepository.existsById(id)) {
 			throw new EntityNotFoundException("Usuario no encontrado con id: " + id);
@@ -60,10 +55,10 @@ public class UsuarioService {
 		usuarioRepository.deleteById(id);
 	}
 
-	// 🔹 DTO mapper
+	//  DTO mapper
 	private UsuarioResponseDTO mapToResponseDTO(User usuario) {
 		UsuarioResponseDTO dto = new UsuarioResponseDTO();
-		dto.setId(usuario.getId());
+		dto.setUserId(usuario.getUserId());
 		dto.setNombreCompleto(usuario.getFullName());
 		dto.setEmail(usuario.getEmail());
 		if(usuario.getRol() == Rol.USUARIO){

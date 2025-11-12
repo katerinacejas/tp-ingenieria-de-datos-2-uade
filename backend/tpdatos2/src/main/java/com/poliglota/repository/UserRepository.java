@@ -11,6 +11,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByEmail(String email);
 
+	Optional<User> findById(Long id);
+
 	List<User> findByRol(String rol);
 
 	// Método para verificar si un usuario existe por su email

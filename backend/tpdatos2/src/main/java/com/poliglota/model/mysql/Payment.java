@@ -13,14 +13,14 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Column(name = "payment_id")
+    private Long paymentId;
 
-	@ManyToOne(optional = false)
-    @JoinColumn(name = "invoice_id", nullable = false)
+	@OneToOne(optional = false)
     private Invoice invoice;
 
 	@Column(nullable = false)
-    private LocalDateTime paymentDate = LocalDateTime.now();
+    private LocalDateTime paymentDate;
 
 	@Column(nullable = false)
     private double amount;

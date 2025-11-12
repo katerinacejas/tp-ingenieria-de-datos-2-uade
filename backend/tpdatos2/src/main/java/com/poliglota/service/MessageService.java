@@ -16,37 +16,37 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final GroupRepository groupRepository;
 
-    // 🔹 Obtener todos los mensajes
+    //  Obtener todos los mensajes
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
     }
 
-    // 🔹 Obtener mensaje por ID
+    //  Obtener mensaje por ID
     public Optional<Message> getMessageById(String id) {
         return messageRepository.findById(Long.parseLong(id));
     }
 
-    // 🔹 Obtener mensajes enviados por usuario
+    //  Obtener mensajes enviados por usuario
     public List<Message> getMessagesBySender(Long senderId) {
         return messageRepository.findBySenderId(senderId);
     }
 
-    // 🔹 Obtener mensajes recibidos (privados)
+    //  Obtener mensajes recibidos (privados)
     public List<Message> getMessagesByRecipient(Long recipientId) {
         return messageRepository.findByRecipientIdAndRecipientType(recipientId, "user");
     }
 
-    // 🔹 Obtener conversación entre dos usuarios
+    //  Obtener conversación entre dos usuarios
     public List<Message> getConversation(Long senderId, Long recipientId) {
         return messageRepository.findConversationBetweenUsers(senderId, recipientId);
     }
 
-    // 🔹 Obtener mensajes de grupo
+    //  Obtener mensajes de grupo
     public List<Message> getMessagesByGroup(Long groupId) {
         return messageRepository.findByRecipientTypeAndRecipientId("group", groupId);
     }
 
-    // 🔹 Enviar mensaje
+    //  Enviar mensaje
     public Message sendMessage(Long senderId, Long recipientId, String recipientType, String content) {
         if ("group".equalsIgnoreCase(recipientType)) {
             groupRepository.findById(recipientId)
@@ -62,13 +62,9 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    // 🔹 Guardar o actualizar mensaje (manual)
+    //  Guardar o actualizar mensaje (manual)
     public Message saveMessage(Message message) {
         return messageRepository.save(message);
     }
 
-    // 🔹 Eliminar mensaje
-    public void deleteMessage(String id) {
-        messageRepository.deleteById(id);
-    }
 }

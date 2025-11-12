@@ -12,10 +12,10 @@ import org.springframework.data.annotation.Id;
 public class Message {
 
     @Id
-    private Long id;
+    private Long messageId;
     private Long senderId;
     private Long recipientId; // puede ser ID de usuario o de grupo
     private LocalDateTime timestamp = LocalDateTime.now();
     private String content;
-    private String recipienttype;  // "user" o "group"
+    private String recipientType;  // "user" o "group"
 }

@@ -12,7 +12,8 @@ public class Account {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Column(name = "account_id")
+	private Long accountId;
 
 	@OneToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false, unique = true)

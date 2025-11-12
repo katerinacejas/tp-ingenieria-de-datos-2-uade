@@ -1,5 +1,7 @@
 package com.poliglota.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -7,15 +9,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.poliglota.DTO.SessionDTO;
 import com.poliglota.DTO.request.LoginRequestDTO;
 import com.poliglota.DTO.request.RegistroRequestDTO;
 import com.poliglota.DTO.response.JwtResponseDTO;
 import com.poliglota.model.mysql.RolEntity;
+import com.poliglota.model.mysql.Account;
 import com.poliglota.model.mysql.Rol;
 import com.poliglota.model.mysql.User;
+import com.poliglota.repository.AccountRepository;
 import com.poliglota.repository.RolRepository;
 import com.poliglota.repository.UserRepository;
 import com.poliglota.security.JwtUtil;
+import com.poliglota.model.mysql.Session;
+import com.poliglota.repository.SessionRepository;
 
 @Service
 public class AuthenticationService {
@@ -35,6 +43,12 @@ public class AuthenticationService {
 	@Autowired
     private RolRepository rolRepository;
 
+	@Autowired
+	private AccountRepository accountRepository;
+
+	@Autowired
+	private SessionRepository sessionRepository;
+
     public JwtResponseDTO authenticate(LoginRequestDTO request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -49,6 +63,9 @@ public class AuthenticationService {
 			String rolString = usuario.getRol().name();
             String jwt = jwtUtil.generateToken(usuario.getEmail(), rolString);
 			Rol rol = usuario.getRol();
+
+			usuario.setStatus("activo");
+			usuarioRepository.save(usuario);
 
             return new JwtResponseDTO(jwt, rol);
 
@@ -67,6 +84,11 @@ public class AuthenticationService {
             nuevoUsuario.setFullName(request.getNombreCompleto());
             nuevoUsuario.setEmail(request.getEmail());
 
+			Account account = new Account();
+			account.setUserId(nuevoUsuario);
+			account.setCurrentBalance(0.0);
+			accountRepository.save(account);
+
             String encryptedPassword = passwordEncoder.encode(request.getPassword());
             nuevoUsuario.setPassword(encryptedPassword);
 
@@ -75,6 +97,9 @@ public class AuthenticationService {
             nuevoUsuario.setRolEntity(rolUsuario);
 
             System.out.println("Rol asignado al usuario: " + nuevoUsuario.getRol());
+
+			nuevoUsuario.setStatus("activo");
+			nuevoUsuario.setRegisteredAt(LocalDateTime.now());
 
             usuarioRepository.save(nuevoUsuario);
 			System.out.println("guarde un usuario");
@@ -86,4 +111,17 @@ public class AuthenticationService {
             throw new RuntimeException("Error al registrar usuario: " + e.getMessage());
         }
     }
+
+	public SessionDTO closeSession(String email) {
+		User user = usuarioRepository.findByEmail(email).orElse(null);
+		if (user != null) {
+			user.setStatus("inactivo");
+			usuarioRepository.save(user);
+			SessionDTO sessionDTO = new SessionDTO();
+			Session session = sessionRepository.findByUserIdAndStatus(user.getUserId().toString(), "activa").get(0);
+			sessionDTO.setUserId(user.getUserId().toString());
+			return sessionDTO;
+		} 
+		return null;
+	}
 }

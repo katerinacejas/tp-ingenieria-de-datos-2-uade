@@ -1,5 +1,6 @@
 package com.poliglota.service;
 
+import com.poliglota.DTO.AccountMovementHistoryDTO;
 import com.poliglota.model.mysql.Account;
 import com.poliglota.model.mysql.AccountMovementHistory;
 import com.poliglota.repository.AccountMovementHistoryRepository;
@@ -8,8 +9,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,49 +20,48 @@ public class AccountMovementHistoryService {
     private final AccountMovementHistoryRepository movementHistoryRepository;
     private final AccountRepository accountRepository;
 
-    // 🔹 Obtener todos los movimientos
-    public List<AccountMovementHistory> getAllMovements() {
-        return movementHistoryRepository.findAll();
+    //  Obtener todos los movimientos
+    public List<AccountMovementHistoryDTO> getAllMovements() {
+        return movementHistoryRepository.findAll()
+			.stream()
+			.map(accountMovementHistory -> this.toDto(accountMovementHistory))
+			.toList();
     }
 
-    // 🔹 Obtener movimiento por ID
-    public AccountMovementHistory getMovementById(Long id) {
+    //  Obtener movimiento por ID
+    public AccountMovementHistoryDTO getMovementById(Long id) {
         return movementHistoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado con ID: " + id));
+			.map(this::toDto)
+            .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado con ID: " + id));
     }
 
-    // 🔹 Movimientos por cuenta
-    public List<AccountMovementHistory> getMovementsByAccount(Long accountId) {
+    //  Movimientos por cuenta
+    public List<AccountMovementHistoryDTO> getMovementsByAccount(Long accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Cuenta no encontrada con ID: " + accountId));
-        return movementHistoryRepository.findByAccount(account);
+        return movementHistoryRepository.findByAccount(account)
+			.stream()
+			.map(accountMovementHistory -> this.toDto(accountMovementHistory))
+			.toList();
     }
 
-    // 🔹 Movimientos entre fechas
-    public List<AccountMovementHistory> getMovementsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return movementHistoryRepository.findByMovementDateBetween(start, end);
+    //  Movimientos entre fechas
+    public List<AccountMovementHistoryDTO> getMovementsByDateRange(LocalDateTime start, LocalDateTime end) {
+        return movementHistoryRepository.findByMovementDateBetween(start, end)
+			.stream()
+			.map(accountMovementHistory -> this.toDto(accountMovementHistory))
+			.toList();
     }
 
-    // 🔹 Registrar un movimiento (depósito o retiro)
-    public AccountMovementHistory registerMovement(Long accountId, BigDecimal amount) {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new EntityNotFoundException("Cuenta no encontrada con ID: " + accountId));
-
-        AccountMovementHistory movement = new AccountMovementHistory();
-        movement.setAccount(account);
-        movement.setAmount(amount);
-        movement.setMovementDate(LocalDateTime.now());
-
-        // 🔸 Actualizamos saldo de la cuenta
-        double newBalance = account.getCurrentBalance() + amount.doubleValue();
-        account.setCurrentBalance(newBalance);
-        accountRepository.save(account);
-
-        return movementHistoryRepository.save(movement);
-    }
-
-    // 🔹 Eliminar un movimiento (solo admins normalmente)
-    public void deleteMovement(Long id) {
-        movementHistoryRepository.deleteById(id);
-    }
+	private AccountMovementHistoryDTO toDto(AccountMovementHistory movement) {
+		AccountMovementHistoryDTO dto = new AccountMovementHistoryDTO();
+		dto.setAccountMovementHistoryId(movement.getAccountMovementHistoryId().toString());
+		dto.setAccountId(movement.getAccount().getAccountId().toString());
+		dto.setAmount(movement.getAmount());
+		dto.setMovementType(movement.getMovementType());
+		dto.setBalanceAfterMovement(movement.getBalanceAfterMovement());
+		dto.setBalanceBeforeMovement(movement.getBalanceBeforeMovement());
+		dto.setMovementDate(movement.getMovementDate());
+		return dto;
+	}
 }

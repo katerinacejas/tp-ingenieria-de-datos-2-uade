@@ -15,37 +15,37 @@ public class AlertsService {
 
     private final AlertsRepository alertsRepository;
 
-    // 🔹 Obtener todas las alertas
+    //  Obtener todas las alertas
     public List<Alerts> getAllAlerts() {
         return alertsRepository.findAll();
     }
 
-    // 🔹 Buscar alerta por ID
+    //  Buscar alerta por ID
     public Optional<Alerts> getAlertById(String id) {
         return alertsRepository.findById(id);
     }
 
-    // 🔹 Buscar alertas por tipo
+    //  Buscar alertas por tipo
     public List<Alerts> getAlertsByType(String type) {
         return alertsRepository.findByType(type);
     }
 
-    // 🔹 Buscar alertas por estado
+    //  Buscar alertas por estado
     public List<Alerts> getAlertsByState(String state) {
         return alertsRepository.findByState(state);
     }
 
-    // 🔹 Buscar alertas por sensor
+    //  Buscar alertas por sensor
     public List<Alerts> getAlertsBySensor(String sensorId) {
         return alertsRepository.findBySensorId(sensorId);
     }
 
-    // 🔹 Buscar alertas en un rango de fechas
+    //  Buscar alertas en un rango de fechas
     public List<Alerts> getAlertsByDateRange(LocalDateTime start, LocalDateTime end) {
         return alertsRepository.findByDatetimeBetween(start, end);
     }
 
-    // 🔹 Crear o actualizar una alerta
+    //  Crear o actualizar una alerta
     public Alerts saveAlert(Alerts alert) {
         if (alert.getDatetime() == null) {
             alert.setDatetime(LocalDateTime.now());
@@ -53,7 +53,7 @@ public class AlertsService {
         return alertsRepository.save(alert);
     }
 
-    // 🔹 Cambiar estado (ej: de activa a resuelta)
+    //  Cambiar estado (ej: de activa a resuelta)
     public Alerts updateAlertState(String id, String newState) {
         Alerts alert = alertsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Alerta no encontrada con ID: " + id));
@@ -61,7 +61,7 @@ public class AlertsService {
         return alertsRepository.save(alert);
     }
 
-    // 🔹 Eliminar una alerta
+    //  Eliminar una alerta
     public void deleteAlert(String id) {
         alertsRepository.deleteById(id);
     }

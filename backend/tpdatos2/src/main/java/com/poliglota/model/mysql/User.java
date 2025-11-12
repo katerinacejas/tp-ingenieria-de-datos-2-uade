@@ -18,8 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
+    private Long userId;
 
     @Column(nullable = false)
     private String fullName;
@@ -31,7 +32,7 @@ public class User implements UserDetails{
     private String password;
 
 	@Column(nullable = false)
-    private boolean status;
+    private String status;
 
 	@Column(nullable = false)
     private LocalDateTime registeredAt;

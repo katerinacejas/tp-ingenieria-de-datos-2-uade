@@ -4,6 +4,8 @@ import com.poliglota.model.mysql.Payment;
 import com.poliglota.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import com.poliglota.DTO.PaymentDTO;
 import com.poliglota.model.mysql.Invoice;
 import com.poliglota.repository.InvoiceRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,61 +19,72 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final InvoiceRepository invoiceRepository;
 
-    // 🔹 Obtener todos los pagos
-    public List<Payment> getAllPayments() {
-        return paymentRepository.findAll();
+    //  Obtener todos los pagos
+    public List<PaymentDTO> getAllPayments() {
+        return paymentRepository.findAll()
+			.stream()
+			.map(this::toDto)
+			.toList();
     }
 
-    // 🔹 Obtener pago por ID
-    public Payment getPaymentById(Long id) {
-        return paymentRepository.findById(id)
+    //  Obtener pago por ID
+    public PaymentDTO getPaymentById(Long id) {
+        Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pago no encontrado con ID: " + id));
-    }
+		return toDto(payment);
+	}
 
-    // 🔹 Obtener pagos por factura
-    public List<Payment> getPaymentsByInvoice(Long invoiceId) {
+    //  Obtener pagos por factura
+    public List<PaymentDTO> getPaymentsByInvoice(Long invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada con ID: " + invoiceId));
-        return paymentRepository.findByInvoice(invoice);
+        return paymentRepository.findByInvoice(invoice)
+			.stream()
+			.map(this::toDto)
+			.toList();
     }
 
-    // 🔹 Obtener pagos por método
-    public List<Payment> getPaymentsByMethod(String paymentMethod) {
-        return paymentRepository.findByPaymentMethod(paymentMethod);
+    //  Obtener pagos por método
+    public List<PaymentDTO> getPaymentsByMethod(String paymentMethod) {
+        return paymentRepository.findByPaymentMethod(paymentMethod)
+			.stream()
+			.map(this::toDto)
+			.toList();
     }
 
-    // 🔹 Buscar pagos entre fechas
-    public List<Payment> getPaymentsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return paymentRepository.findByPaymentDateBetween(start, end);
+    //  Buscar pagos entre fechas
+    public List<PaymentDTO> getPaymentsByDateRange(LocalDateTime start, LocalDateTime end) {
+        return paymentRepository.findByPaymentDateBetween(start, end)
+			.stream()
+			.map(this::toDto)
+			.toList();
     }
 
-    // 🔹 Registrar un nuevo pago
-    public Payment registerPayment(Long invoiceId, double amount, String paymentMethod) {
+    //  Registrar un nuevo pago
+    public PaymentDTO registerPayment(Long invoiceId, String paymentMethod) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada con ID: " + invoiceId));
 
-        // Validar monto
-        if (amount <= 0) {
-            throw new IllegalArgumentException("El monto del pago debe ser mayor a cero.");
-        }
-
-        // Crear el pago
         Payment payment = new Payment();
         payment.setInvoice(invoice);
-        payment.setAmount(amount);
+        payment.setAmount(invoice.calculateTotalAmount());
         payment.setPaymentMethod(paymentMethod);
         payment.setPaymentDate(LocalDateTime.now());
 
-        // Actualizar estado de la factura (opcional)
         invoice.setStatus("pagada");
         invoiceRepository.save(invoice);
 
-        return paymentRepository.save(payment);
+        return toDto(paymentRepository.save(payment));
     }
 
-    // 🔹 Eliminar pago
-    public void deletePayment(Long id) {
-        paymentRepository.deleteById(id);
-    }
+	private PaymentDTO toDto(Payment payment) {
+		PaymentDTO dto = new PaymentDTO();
+		dto.setPaymentId(payment.getPaymentId().toString());
+		dto.setInvoiceId(payment.getInvoice().getInvoiceId().toString());
+		dto.setPaymentDate(payment.getPaymentDate());
+		dto.setAmount(payment.getAmount());
+		dto.setPaymentMethod(payment.getPaymentMethod());
+		return dto;
+	}
 
 }

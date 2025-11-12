@@ -1,12 +1,12 @@
 package com.poliglota.controller;
 
+import com.poliglota.DTO.InvoiceDTO;
 import com.poliglota.model.mysql.Invoice;
 import com.poliglota.model.mysql.ProcessRequest;
 import com.poliglota.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -16,50 +16,43 @@ public class InvoiceController {
 
     private final InvoiceService invoiceService;
 
-    // 🔹 Obtener todas las facturas
+    //  Obtener todas las facturas
     @GetMapping
-    public ResponseEntity<List<Invoice>> getAllInvoices() {
+    public ResponseEntity<List<InvoiceDTO>> getAllInvoices() {
         return ResponseEntity.ok(invoiceService.getAllInvoices());
     }
 
-    // 🔹 Obtener factura por ID
+    //  Obtener factura por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Invoice> getInvoiceById(@PathVariable Long id) {
+    public ResponseEntity<InvoiceDTO> getInvoiceById(@PathVariable Long id) {
         return ResponseEntity.ok(invoiceService.getInvoiceById(id));
     }
 
-    // 🔹 Obtener facturas por usuario
+    //  Obtener facturas por usuario
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Invoice>> getInvoicesByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<InvoiceDTO>> getInvoicesByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(invoiceService.getInvoicesByUser(userId));
     }
 
-    // 🔹 Obtener facturas por estado
+    //  Obtener facturas por estado
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Invoice>> getInvoicesByStatus(@PathVariable String status) {
+    public ResponseEntity<List<InvoiceDTO>> getInvoicesByStatus(@PathVariable String status) {
         return ResponseEntity.ok(invoiceService.getInvoicesByStatus(status));
     }
 
-    // 🔹 Crear una nueva factura
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<Invoice> createInvoice(
+    //  Crear una nueva factura
+    @PostMapping
+    public ResponseEntity<InvoiceDTO> createInvoice(
             @PathVariable Long userId,
             @RequestBody List<ProcessRequest> processes) {
         return ResponseEntity.ok(invoiceService.createInvoice(userId, processes));
     }
 
-    // 🔹 Cambiar estado de una factura
+    //  Cambiar estado de una factura
     @PutMapping("/{id}/status")
-    public ResponseEntity<Invoice> updateStatus(
+    public ResponseEntity<InvoiceDTO> updateStatus(
             @PathVariable Long id,
             @RequestParam String newStatus) {
         return ResponseEntity.ok(invoiceService.updateStatus(id, newStatus));
-    }
-
-    // 🔹 Eliminar factura
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {
-        invoiceService.deleteInvoice(id);
-        return ResponseEntity.noContent().build();
     }
 }

@@ -10,15 +10,15 @@ import java.util.List;
 @Repository
 public interface AlertsRepository extends MongoRepository<Alerts, String> {
 
-    // 🔹 Buscar alertas por tipo (ej: temperatura, sistema, seguridad)
+    //  Buscar alertas por tipo (ej: temperatura, sistema, seguridad)
     List<Alerts> findByType(String type);
 
-    // 🔹 Buscar alertas por estado (ej: activa, resuelta)
+    //  Buscar alertas por estado (ej: activa, resuelta)
     List<Alerts> findByState(String state);
 
-    // 🔹 Buscar alertas de un sensor específico
+    //  Buscar alertas de un sensor específico
     List<Alerts> findBySensorId(String sensorId);
 
-    // 🔹 Buscar alertas entre fechas
+    //  Buscar alertas entre fechas
     List<Alerts> findByDatetimeBetween(LocalDateTime start, LocalDateTime end);
 }

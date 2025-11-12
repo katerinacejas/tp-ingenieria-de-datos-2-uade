@@ -14,7 +14,8 @@ public class Invoice {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Column(name = "invoice_id")
+	private Long invoiceId;
 
 	@ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -23,11 +24,15 @@ public class Invoice {
 	@Column(nullable = false)
 	private LocalDateTime issueDate = LocalDateTime.now();
 
-	@ElementCollection
-	@CollectionTable(name = "invoice_processes", joinColumns = @JoinColumn(name = "invoice_id"))
-	@Column(name = "process_name")
+	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProcessRequest> billedProcesses = new ArrayList<ProcessRequest>();
 
 	@Column(nullable = false)
 	private String status; 
+
+	public double calculateTotalAmount() {
+		return billedProcesses.stream()
+			.mapToDouble(processRequest -> processRequest.getCostProcess())
+			.sum();
+	}
 }

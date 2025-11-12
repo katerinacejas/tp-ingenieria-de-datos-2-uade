@@ -9,18 +9,18 @@ import java.util.List;
 @Repository
 public interface SensorRepository extends MongoRepository<Sensor, String> {
 
-    // 🔹 Buscar sensores por tipo (ej: temperatura, humedad)
+    //  Buscar sensores por tipo (ej: temperatura, humedad)
     List<Sensor> findByType(String type);
 
-    // 🔹 Buscar sensores activos o inactivos
+    //  Buscar sensores activos o inactivos
     List<Sensor> findByActive(boolean active);
 
-    // 🔹 Buscar sensores por país
+    //  Buscar sensores por país
     List<Sensor> findByCountry(String country);
 
-    // 🔹 Buscar sensores por ciudad
+    //  Buscar sensores por ciudad
     List<Sensor> findByCity(String city);
 
-    // 🔹 Buscar sensores por nombre (ignora mayúsculas/minúsculas)
+    //  Buscar sensores por nombre (ignora mayúsculas/minúsculas)
     List<Sensor> findByNameIgnoreCase(String name);
 }
