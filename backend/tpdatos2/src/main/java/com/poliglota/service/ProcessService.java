@@ -1,7 +1,8 @@
 package com.poliglota.service;
 
 import com.poliglota.model.mysql.Process;
-import com.poliglota.repository.ProcessRepository;
+import com.poliglota.repository.jpa.ProcessRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.poliglota.DTO.ProcessDTO;

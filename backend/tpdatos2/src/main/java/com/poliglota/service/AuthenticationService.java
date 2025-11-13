@@ -18,12 +18,12 @@ import com.poliglota.model.mysql.RolEntity;
 import com.poliglota.model.mysql.Account;
 import com.poliglota.model.mysql.Rol;
 import com.poliglota.model.mysql.User;
-import com.poliglota.repository.AccountRepository;
-import com.poliglota.repository.RolRepository;
-import com.poliglota.repository.UserRepository;
+import com.poliglota.repository.jpa.AccountRepository;
+import com.poliglota.repository.jpa.RolRepository;
+import com.poliglota.repository.jpa.SessionRepository;
+import com.poliglota.repository.jpa.UserRepository;
 import com.poliglota.security.JwtUtil;
 import com.poliglota.model.mysql.Session;
-import com.poliglota.repository.SessionRepository;
 
 @Service
 public class AuthenticationService {
@@ -49,8 +49,8 @@ public class AuthenticationService {
 	@Autowired
 	private SessionRepository sessionRepository;
 
-    public JwtResponseDTO authenticate(LoginRequestDTO request) {
-        try {
+    public String authenticate(LoginRequestDTO request) {
+       /* try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                     request.getEmail(),
@@ -72,9 +72,19 @@ public class AuthenticationService {
         } catch (AuthenticationException ex) {
             throw new RuntimeException("Credenciales inválidas");
         }
+			*/
+
+		User usuario = usuarioRepository.findByEmail(request.getEmail()).orElse(null);
+		if (usuario != null) {
+			return "existe ese mail en la base";
+		}
+		else {
+			return "no existe ese mail en la base";
+		}
+		
     }
 
-    public JwtResponseDTO register(RegistroRequestDTO request) {
+    public String register(RegistroRequestDTO request) {
         try {
             if (usuarioRepository.existsByEmail(request.getEmail())) {
                 throw new RuntimeException("Ya existe un usuario con ese email");
@@ -85,9 +95,8 @@ public class AuthenticationService {
             nuevoUsuario.setEmail(request.getEmail());
 
 			Account account = new Account();
-			account.setUserId(nuevoUsuario);
+			account.setUser(nuevoUsuario);
 			account.setCurrentBalance(0.0);
-			accountRepository.save(account);
 
             String encryptedPassword = passwordEncoder.encode(request.getPassword());
             nuevoUsuario.setPassword(encryptedPassword);
@@ -101,24 +110,28 @@ public class AuthenticationService {
 			nuevoUsuario.setStatus("activo");
 			nuevoUsuario.setRegisteredAt(LocalDateTime.now());
 
-            usuarioRepository.save(nuevoUsuario);
+			nuevoUsuario.setRolEntity(rolUsuario);
+			nuevoUsuario.setRol(Rol.USUARIO);
+			usuarioRepository.save(nuevoUsuario);
 			System.out.println("guarde un usuario");
+			
+			accountRepository.save(account);
+			System.out.println("guarde una cuenta");
 
-            String token = jwtUtil.generateToken(nuevoUsuario.getEmail(), Rol.USUARIO.name());
-            return new JwtResponseDTO(token, Rol.USUARIO);
+            return "Usuario registrado con éxito";
 
         } catch (Exception e) {
             throw new RuntimeException("Error al registrar usuario: " + e.getMessage());
         }
     }
 
-	public SessionDTO closeSession(String email) {
-		User user = usuarioRepository.findByEmail(email).orElse(null);
-		if (user != null) {
-			user.setStatus("inactivo");
-			usuarioRepository.save(user);
-			SessionDTO sessionDTO = new SessionDTO();
-			Session session = sessionRepository.findByUserIdAndStatus(user.getUserId().toString(), "activa").get(0);
+    public SessionDTO closeSession(String email) {
+        User user = usuarioRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            user.setStatus("inactivo");
+            usuarioRepository.save(user);
+            SessionDTO sessionDTO = new SessionDTO();
+            Session session = sessionRepository.findByUser_UserIdAndStatus(user.getUserId(), "activa").get(0);
 			sessionDTO.setSessionId(session.getSessionId().toString());
 			sessionDTO.setUserId(user.getUserId().toString());
 			sessionDTO.setRolId(session.getRol().toString());

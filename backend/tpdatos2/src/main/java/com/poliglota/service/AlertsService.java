@@ -2,7 +2,8 @@ package com.poliglota.service;
 
 import com.poliglota.DTO.AlertsDTO;
 import com.poliglota.model.mongo.Alerts;
-import com.poliglota.repository.AlertsRepository;
+import com.poliglota.repository.mongo.AlertsRepository;
+
 import java.util.Optional;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

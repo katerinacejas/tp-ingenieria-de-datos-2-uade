@@ -17,7 +17,7 @@ public class Account {
 
 	@OneToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
-	private User userId;
+	private User user;
 
 	@Column(nullable = false)
 	private double currentBalance;

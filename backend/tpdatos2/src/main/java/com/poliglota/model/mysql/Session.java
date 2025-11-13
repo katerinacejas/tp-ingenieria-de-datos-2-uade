@@ -27,7 +27,6 @@ public class Session {
 	@Column(nullable = false)
     private LocalDateTime startTime = LocalDateTime.now();
 
-	@Column(nullable = false)
     private LocalDateTime endTime;
 
 	@Column(nullable = false)

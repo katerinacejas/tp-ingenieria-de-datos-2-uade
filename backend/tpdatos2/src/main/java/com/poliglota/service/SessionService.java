@@ -2,8 +2,9 @@ package com.poliglota.service;
 
 import com.poliglota.DTO.SessionDTO;
 import com.poliglota.model.mysql.Session;
-import com.poliglota.repository.SessionRepository;
-import com.poliglota.repository.UserRepository;
+import com.poliglota.repository.jpa.SessionRepository;
+import com.poliglota.repository.jpa.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.poliglota.model.mysql.User;
@@ -21,7 +22,7 @@ public class SessionService {
     }
 
     public List<Session> getActiveSessionsByUser(String userId) {
-        return sessionRepository.findByUserIdAndStatus(userId, "active");
+        return sessionRepository.findByUser_UserIdAndStatus(Long.parseLong(userId), "active");
     }
 
     public SessionDTO createSession(SessionDTO sessionDTO) {
@@ -30,7 +31,7 @@ public class SessionService {
     }
 
 	public void closeSession(SessionDTO sessionDTO) {
-		Session session = sessionRepository.findByUserIdAndStatus(sessionDTO.getUserId(), "activa").get(0);
+		Session session = sessionRepository.findByUser_UserIdAndStatus(Long.parseLong(sessionDTO.getUserId()), "activa").get(0);
 		session.setStatus("inactiva");
 		session.setEndTime(LocalDateTime.now());
 		sessionRepository.save(session);

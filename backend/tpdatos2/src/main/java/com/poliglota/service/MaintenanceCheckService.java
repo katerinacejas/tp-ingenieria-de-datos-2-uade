@@ -1,7 +1,8 @@
 package com.poliglota.service;
 
 import com.poliglota.model.mongo.MaintenanceCheck;
-import com.poliglota.repository.MaintenanceCheckRepository;
+import com.poliglota.repository.mongo.MaintenanceCheckRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

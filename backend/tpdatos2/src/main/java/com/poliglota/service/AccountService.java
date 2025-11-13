@@ -4,9 +4,10 @@ import com.poliglota.model.mysql.Account;
 import com.poliglota.model.mysql.AccountMovementHistory;
 import com.poliglota.DTO.AccountDTO;
 import com.poliglota.model.mysql.User;
-import com.poliglota.repository.AccountRepository;
-import com.poliglota.repository.UserRepository;
-import com.poliglota.repository.AccountMovementHistoryRepository;
+import com.poliglota.repository.jpa.AccountMovementHistoryRepository;
+import com.poliglota.repository.jpa.AccountRepository;
+import com.poliglota.repository.jpa.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import com.poliglota.exception.AccountNotFoundException;
 import com.poliglota.exception.UsuarioNotFoundException;
@@ -39,12 +40,13 @@ public class AccountService {
 			.orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada con ID: " + id));
     }
 
-    //  Obtener cuenta por usuario
-    public AccountDTO getAccountByUserId(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con ID: " + userId));
-        return toDto(accountRepository.findByUserId(user.getUserId()));
-    }
+	//  Obtener cuenta por usuario
+	public AccountDTO getAccountByUserId(Long userId) {
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con ID: " + userId));
+		return toDto(accountRepository.findByUser_UserId(user.getUserId())
+				.orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada para el usuario ID: " + userId)));
+	}
 
     //  Acreditar saldo
     public AccountDTO deposit(Long accountId, double amount) {
@@ -94,7 +96,7 @@ public class AccountService {
 	private AccountDTO toDto(Account account) {
 		AccountDTO dto = new AccountDTO();
 		dto.setAccountId(account.getAccountId().toString());
-		dto.setUserId(account.getUserId().getUserId().toString());
+		dto.setUserId(account.getUser().getUserId().toString());
 		dto.setCurrentBalance(account.getCurrentBalance());
 		return dto;
 	}

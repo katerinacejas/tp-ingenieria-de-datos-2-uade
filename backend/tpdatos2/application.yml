@@ -15,26 +15,32 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        # Podés quitar el dialecto para evitar el warning, lo dejo si querés mantenerlo explícito
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
   data:
     mongodb:
-      # Para local, usá localhost y la DB poliglota_mongo
       uri: mongodb://localhost:27017/poliglota_mongo
 
-# Spring Boot 3 usa 'spring.cassandra.*'
-cassandra:
-  contact-points: localhost
-  port: 9042
-  keyspace-name: poliglota_keyspace
-  local-datacenter: datacenter1
-  schema-action: create_if_not_exists
-  request:
-    timeout: 10s
-  connection:
-    connect-timeout: 10s
-    init-query-timeout: 10s
+  # Spring Boot 3: TODAS las props de Cassandra bajo spring.cassandra
+  cassandra:
+    contact-points:
+      - 127.0.0.1
+    port: 9042
+    keyspace-name: poliglota_keyspace
+    local-datacenter: datacenter1
+    schema-action: create_if_not_exists
+    request:
+      timeout: 10s
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+
+management:
+  health:
+    cassandra:
+      enabled: true
 
 logging:
   level:
@@ -59,7 +65,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
@@ -68,20 +74,25 @@ spring:
 
   data:
     mongodb:
-      # En docker, conectamos al servicio 'mongo' y usamos base poliglota
       uri: mongodb://mongo:27017/poliglota
 
-cassandra:
-  contact-points: cassandra
-  port: 9042
-  keyspace-name: poliglota
-  local-datacenter: datacenter1
-  schema-action: create_if_not_exists
-  request:
-    timeout: 10s
-  connection:
-    connect-timeout: 10s
-    init-query-timeout: 10s
+  cassandra:
+    contact-points:
+      - cassandra
+    port: 9042
+    keyspace-name: poliglota
+    local-datacenter: datacenter1
+    schema-action: create_if_not_exists
+    request:
+      timeout: 10s
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+
+management:
+  health:
+    cassandra:
+      enabled: true
 
 logging:
   level:

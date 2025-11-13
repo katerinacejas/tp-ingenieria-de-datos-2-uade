@@ -35,27 +35,29 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-				.cors(Customizer.withDefaults()) // Aplica configuración CORS
-				.csrf(CsrfConfigurer::disable) // CSRF gestionado selectivamente (stateless API)
+				.cors(Customizer.withDefaults()) ///Aplica configuración CORS
+				.csrf(CsrfConfigurer::disable) ///CSRF gestionado selectivamente (stateless API)
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						// Público solo auth
-						.requestMatchers("/auth/**").permitAll()
+					.requestMatchers("/api/**").permitAll()
+				/*
+						//Público solo auth
+						.requestMatchers("/api/auth/**").permitAll()
 
-						// Dashboard (resumen)
-						.requestMatchers(HttpMethod.GET, "/dashboard/**")
+						///Dashboard (resumen)
+						.requestMatchers(HttpMethod.GET, "/api/dashboard/**")
 							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
 
-						// Facturación / pagos / cuentas / movimientos: lectura para todos los roles autenticados
+						///Facturación //pagos //cuentas //movimientos: lectura para todos los roles autenticados
 						.requestMatchers(HttpMethod.GET,
 							"/api/invoices/**", "/api/payments/**",
 							"/api/accounts/**", "/api/account-movements/**")
 							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
-						// Registrar pago
+						//Registrar pago
 						.requestMatchers(HttpMethod.POST, "/api/payments/**")
 							.hasAnyRole("USUARIO","MANTENIMIENTO")
 
-						// Sensores / mediciones
+						//Sensores //mediciones
 						.requestMatchers(HttpMethod.GET, "/api/measurements/**", "/api/sensors/**")
 							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
 						.requestMatchers(HttpMethod.POST, "/api/measurements/**", "/api/sensors/**")
@@ -67,7 +69,7 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.DELETE, "/api/measurements/**", "/api/sensors/**")
 							.hasRole("MANTENIMIENTO")
 
-						// Alertas
+						//Alertas
 						.requestMatchers(HttpMethod.GET, "/api/alerts/**")
 							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
 						.requestMatchers(HttpMethod.POST, "/api/alerts/**")
@@ -79,7 +81,7 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.DELETE, "/api/alerts/**")
 							.hasRole("MANTENIMIENTO")
 
-						// Procesos
+						//Procesos
 						.requestMatchers(HttpMethod.GET, "/api/processes/**")
 							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
 						.requestMatchers(HttpMethod.POST, "/api/processes/**")
@@ -91,24 +93,25 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.DELETE, "/api/processes/**")
 							.hasRole("MANTENIMIENTO")
 
-						// Mensajes y grupos
+						//Mensajes y grupos
 						.requestMatchers("/api/messages/**", "/api/groups/**")
 							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
 
-						// Administración (alta de personal de mantenimiento, etc.)
-						.requestMatchers("/admin/**", "/accounts/**/maintenance/**", "/users/**/maintenance/**")
+						//Administración (alta de personal de mantenimiento, etc.)
+						.requestMatchers("/api/admin/**", "/api/accounts/**", "/api/maintenance/**", "/api/users/**", "/api/maintenance/**")
 							.hasRole("ADMIN")
-						.requestMatchers(HttpMethod.POST, "/accounts/**", "/users/**")
+						.requestMatchers(HttpMethod.POST, "/api/accounts/**", "/api/users/**")
 							.hasRole("ADMIN")
-						.requestMatchers(HttpMethod.PUT, "/accounts/**", "/users/**")
+						.requestMatchers(HttpMethod.PUT, "/api/accounts/**", "/api/users/**")
 							.hasRole("ADMIN")
-						.requestMatchers(HttpMethod.PATCH, "/accounts/**", "/users/**")
+						.requestMatchers(HttpMethod.PATCH, "/api/accounts/**", "/api/users/**")
 							.hasRole("ADMIN")
-						.requestMatchers(HttpMethod.DELETE, "/accounts/**", "/users/**")
+						.requestMatchers(HttpMethod.DELETE, "/api/accounts/**", "/api/users/**")
 							.hasRole("ADMIN")
 
-						// Todo lo demás autenticado
+						//Todo lo demás autenticado
 						.anyRequest().authenticated()
+						*/
 					)
 
 				.authenticationProvider(authenticationProvider())
@@ -138,7 +141,7 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:8080"));
+		config.setAllowedOrigins(List.of("http:/localhost:8080"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);
