@@ -58,10 +58,14 @@ sudo service cassandra start
 
 ## 🧮 **Ejecutar el backend**
 
+1) Build del proyecto con Docker : docker compose up -d --build
+2) ver Estado : docke compose ps
+3) ver logs : docker compose -f  o docker compose logs -f backend
 ```bash
 mvn spring-boot:run
 ```
-
+ejecutar Querys :
+  docker exec-it tip_mysql -uapp -papp123 -e " use poliglota; show tables"
 ---
 
 ## 🧪 **Probar endpoints con Postman**
