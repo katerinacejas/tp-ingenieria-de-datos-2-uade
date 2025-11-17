@@ -64,8 +64,7 @@ sudo service cassandra start
 ```bash
 mvn spring-boot:run
 ```
-ejecutar Querys :
-  docker exec-it tip_mysql -uapp -papp123 -e " use poliglota; show tables"
+
 ---
 
 ## 🧪 **Probar endpoints con Postman**
