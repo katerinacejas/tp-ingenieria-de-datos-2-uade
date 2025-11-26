@@ -17,12 +17,12 @@ public class ProcessRequestController {
 	private final ProcessRequestService processRequestService;
 
 	@PostMapping
-	public ResponseEntity<ProcessRequestDTO> createProcessRequest(@RequestBody ProcessRequestRequestDTO processRequestRequestDTO) {
+	public ResponseEntity<ProcessRequestDTO> createProcessRequest(  ProcessRequestDTO processRequestRequestDTO) {
 		return ResponseEntity.ok(processRequestService.createProcessRequest(processRequestRequestDTO));
 	}
 
 	@PutMapping("/update-status")
-	public ResponseEntity<ProcessRequestDTO> updateStatusProcessRequest(@RequestBody ProcessRequestRequestDTO processRequestRequestDTO) {
+	public ResponseEntity<ProcessRequestDTO> updateStatusProcessRequest(  ProcessRequestRequestDTO processRequestRequestDTO) {
 		return ResponseEntity.ok(processRequestService.updateStatusProcessRequest(processRequestRequestDTO));
 	}
 
@@ -32,7 +32,7 @@ public class ProcessRequestController {
 	}
 
 	@GetMapping("/{processRequestId}/execution-history")
-	public ResponseEntity<List<ExecutionHistoryDTO>> getExecutionHistoryByProcessRequestId(@PathVariable String processRequestId) {
+	public ResponseEntity<List<ExecutionHistoryDTO>> getExecutionHistoryByProcessRequestId(  String processRequestId) {
 		return ResponseEntity.ok(processRequestService.getExecutionHistoryByProcessRequestId(processRequestId));
 	}
 

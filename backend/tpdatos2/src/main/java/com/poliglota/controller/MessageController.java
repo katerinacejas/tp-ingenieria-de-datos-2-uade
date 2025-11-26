@@ -19,7 +19,7 @@ public class MessageController {
 
 	// Enviar mensaje directo A -> B
 	@PostMapping("/direct")
-	public MessageDTO sendDirect(@RequestBody SendDirectRequestDTO req) {
+	public MessageDTO sendDirect(  SendDirectRequestDTO req) {
 		try {
 			return messageService.sendDirectMessage(req.getSenderId(), req.getRecipientUserId(), req.getContent());
 		} catch (IllegalArgumentException e) {
@@ -31,7 +31,7 @@ public class MessageController {
 
 	// Enviar mensaje a un grupo
 	@PostMapping("/group")
-	public MessageDTO sendToGroup(@RequestBody SendGroupRequestDTO req) {
+	public MessageDTO sendToGroup(  SendGroupRequestDTO req) {
 		try {
 			return messageService.sendGroupMessage(req.getSenderId(), req.getGroupId(), req.getContent());
 		} catch (IllegalArgumentException e) {
@@ -43,13 +43,13 @@ public class MessageController {
 
 	// Obtener toda la conversación directa (A <-> B) ordenada por timestamp asc
 	@GetMapping("/direct/{userA}/{userB}")
-	public List<MessageDTO> getDirect(@PathVariable Long userA, @PathVariable Long userB) {
+	public List<MessageDTO> getDirect(  Long userA,   Long userB) {
 		return messageService.getDirectConversation(userA, userB);
 	}
 
 	// Mensajes de un grupo
 	@GetMapping("/group/{groupId}")
-	public List<MessageDTO> getGroupMessages(@PathVariable String groupId) {
+	public List<MessageDTO> getGroupMessages(  String groupId) {
 		return messageService.getGroupMessages(groupId);
 	}
 

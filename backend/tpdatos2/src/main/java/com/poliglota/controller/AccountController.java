@@ -23,29 +23,29 @@ public class AccountController {
 
     //  Obtener una cuenta por ID
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDTO> getAccountById(@PathVariable Long id) {
+    public ResponseEntity<AccountDTO> getAccountById(  Long id) {
         return ResponseEntity.ok(accountService.getAccountById(id));
     }
 
     //  Obtener una cuenta por ID de usuario
     @GetMapping("/user/{userId}")
-    public ResponseEntity<AccountDTO> getAccountByUser(@PathVariable Long userId) {
+    public ResponseEntity<AccountDTO> getAccountByUser(  Long userId) {
         return ResponseEntity.ok(accountService.getAccountByUserId(userId));
     }
 
     //  Acreditar saldo
     @PutMapping("/{id}/deposit")
     public ResponseEntity<AccountDTO> deposit(
-            @PathVariable Long id,
-            @RequestParam double amount) {
+              Long id,
+               double amount) {
         return ResponseEntity.ok(accountService.deposit(id, amount));
     }
 
     //  Debitar saldo
     @PutMapping("/{id}/withdraw")
     public ResponseEntity<Account> withdraw(
-            @PathVariable Long id,
-            @RequestParam double amount) {
+              Long id,
+               double amount) {
         return ResponseEntity.ok(accountService.withdraw(id, amount));
     }
 

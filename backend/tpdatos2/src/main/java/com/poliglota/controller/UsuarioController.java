@@ -32,7 +32,7 @@ public class UsuarioController {
 
 	@GetMapping("/buscar")
 	@PreAuthorize("hasRole('ADMIN')")
-	public UsuarioResponseDTO getUsuarioPorMail(@RequestParam String mail) {
+	public UsuarioResponseDTO getUsuarioPorMail(   String mail) {
 		return usuarioService.getUsuarioPorMail(mail)
 				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + mail));
 	}

@@ -49,8 +49,8 @@ public class AuthenticationService {
 	@Autowired
 	private SessionRepository sessionRepository;
 
-    public String authenticate(LoginRequestDTO request) {
-       /* try {
+    public boolean authenticate(LoginRequestDTO request) {
+        /*try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                     request.getEmail(),
@@ -71,23 +71,23 @@ public class AuthenticationService {
 
         } catch (AuthenticationException ex) {
             throw new RuntimeException("Credenciales inválidas");
-        }
-			*/
+        }*/
+			
 
 		User usuario = usuarioRepository.findByEmail(request.getEmail()).orElse(null);
 		if (usuario != null) {
-			return "existe ese mail en la base";
+			return passwordEncoder.matches(request.getPassword(), usuario.getPassword());
 		}
 		else {
-			return "no existe ese mail en la base";
+			return false;
 		}
 		
     }
 
-    public String register(RegistroRequestDTO request) {
+    public boolean register(RegistroRequestDTO request) {
         try {
             if (usuarioRepository.existsByEmail(request.getEmail())) {
-                throw new RuntimeException("Ya existe un usuario con ese email");
+				return false;
             }
 
             User nuevoUsuario = new User();
@@ -118,10 +118,11 @@ public class AuthenticationService {
 			accountRepository.save(account);
 			System.out.println("guarde una cuenta");
 
-            return "Usuario registrado con éxito";
+            return true;
 
         } catch (Exception e) {
-            throw new RuntimeException("Error al registrar usuario: " + e.getMessage());
+			System.out.println("Error al registrar usuario: " + e.getMessage());
+			return false;
         }
     }
 

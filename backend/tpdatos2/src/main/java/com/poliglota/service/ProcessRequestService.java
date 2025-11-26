@@ -28,19 +28,21 @@ public class ProcessRequestService {
 	private final ProcessRepository processRepository;
 	private final ExecutionHistoryRepository executionHistoryRepository;
 
-	public ProcessRequestDTO createProcessRequest(ProcessRequestRequestDTO processRequestRequestDTO) {
+	public ProcessRequestDTO createProcessRequest(ProcessRequestDTO processRequestRequestDTO) {
 		User user = userRepository.findById(Long.parseLong(processRequestRequestDTO.getUserId()))
 				.orElseThrow(() -> new UsuarioNotFoundException("user not found: " + processRequestRequestDTO.getUserId()));
         
-        Process process = processRepository.findById(Long.parseLong(processRequestRequestDTO.getProcessId()))
-                .orElseThrow(() -> new ProcessNotFoundException("Process not found: " + processRequestRequestDTO.getProcessId()));
+       // Process process = processRepository.findById(Long.parseLong(processRequestRequestDTO.getProcessId()))
+       //         .orElseThrow(() -> new ProcessNotFoundException("Process not found: " + processRequestRequestDTO.getProcessId()));
 
         ProcessRequest processRequest = new ProcessRequest();
-        processRequest.setProcess(process);
+        processRequest.setProcess(null);
 		processRequest.setUser(user);
         processRequest.setRequestDate(LocalDateTime.now());
 		processRequest.setStatus("pendiente");
 		processRequest.setInvoice(null);
+		processRequest.setName(processRequestRequestDTO.getName());
+		processRequest.setDescripcion(processRequestRequestDTO.getDescripcion());
 
         return toDtoResponse(processRequestRepository.save(processRequest));
 	}

@@ -18,6 +18,10 @@ public class Sensor {
 	private String type;
 	private String city;
 	private String country;
-	private boolean active;
+	private String estado;
 	private LocalDateTime startDate;
+
+	public String getEstado(){
+		return this.estado;
+	}
 }

@@ -25,7 +25,7 @@ public class MaintenanceCheckController {
 
     //  Obtener un chequeo por ID
     @GetMapping("/{id}")
-    public ResponseEntity<MaintenanceCheck> getCheckById(@PathVariable String id) {
+    public ResponseEntity<MaintenanceCheck> getCheckById(  String id) {
         return maintenanceCheckService.getCheckById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -33,27 +33,27 @@ public class MaintenanceCheckController {
 
     //  Obtener chequeos por sensor
     @GetMapping("/sensor/{sensorId}")
-    public ResponseEntity<List<MaintenanceCheck>> getBySensor(@PathVariable String sensorId) {
+    public ResponseEntity<List<MaintenanceCheck>> getBySensor(  String sensorId) {
         return ResponseEntity.ok(maintenanceCheckService.getBySensor(sensorId));
     }
 
     //  Obtener chequeos entre fechas
     @GetMapping("/between")
     public ResponseEntity<List<MaintenanceCheck>> getByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         return ResponseEntity.ok(maintenanceCheckService.getByDateRange(start, end));
     }
 
     //  Crear o actualizar un chequeo
     @PostMapping
-    public ResponseEntity<MaintenanceCheck> saveCheck(@RequestBody MaintenanceCheck check) {
+    public ResponseEntity<MaintenanceCheck> saveCheck(  MaintenanceCheck check) {
         return ResponseEntity.ok(maintenanceCheckService.saveCheck(check));
     }
 
     //  Eliminar un chequeo
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCheck(@PathVariable String id) {
+    public ResponseEntity<Void> deleteCheck(  String id) {
         maintenanceCheckService.deleteCheck(id);
         return ResponseEntity.noContent().build();
     }

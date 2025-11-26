@@ -14,7 +14,7 @@ public class SensorController {
 	private final SensorService sensorService;
 
 	@PostMapping
-	public ResponseEntity<Sensor> create(@RequestBody Sensor sensor) {
+	public ResponseEntity<Sensor> create(  Sensor sensor) {
 		return ResponseEntity.ok(sensorService.create(sensor));
 	}
 

@@ -1,8 +1,9 @@
 package com.poliglota.service;
 
 import com.poliglota.model.mysql.Process;
+import com.poliglota.model.mysql.ProcessRequest;
 import com.poliglota.repository.jpa.ProcessRepository;
-
+import com.poliglota.repository.jpa.ProcessRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.poliglota.DTO.ProcessDTO;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class ProcessService {
 
     private final ProcessRepository processRepository;
+	private final ProcessRequestRepository processRequestRepository;
 
 
     public List<ProcessDTO> getAllProcesses() {
@@ -47,7 +49,11 @@ public class ProcessService {
     }
 
     public ProcessDTO saveProcess(ProcessDTO processDTO) {
-        return toDto(processRepository.save(toEntity(processDTO)));
+		ProcessRequest solicitud = processRequestRepository.findByName(processDTO.getName());
+        Process proceso = processRepository.save(toEntity(processDTO));
+		solicitud.setProcess(proceso);
+		processRequestRepository.save(solicitud);
+		return toDto(proceso);
     }
 
     public boolean deleteProcess(Long id) {
@@ -63,7 +69,7 @@ public class ProcessService {
 		process.setName(dto.getName());
 		process.setDescription(dto.getDescription());
 		process.setProcessType(dto.getProcessType());
-		process.setCost(dto.getCost());
+		process.setCost(dto.getCost());                   
 		return process;
 	}
     

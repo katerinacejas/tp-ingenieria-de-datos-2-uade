@@ -13,7 +13,7 @@ public interface SensorRepository extends MongoRepository<Sensor, String> {
     List<Sensor> findByType(String type);
 
     //  Buscar sensores activos o inactivos
-    List<Sensor> findByActive(boolean active);
+    List<Sensor> findByEstado(String estado);
 
     //  Buscar sensores por país
     List<Sensor> findByCountry(String country);

@@ -20,8 +20,13 @@ public class ProcessRequest {
     private User user;
 
 	@ManyToOne(optional = false)
-    @JoinColumn(name = "process_id", nullable = false)
+    @JoinColumn(name = "process_id", nullable = true)
     private Process process;
+
+	@Column(nullable = false)
+    private String name; 
+	@Column(nullable = false)
+    private String descripcion; 
 
 	@Column(nullable = false)
     private LocalDateTime requestDate;

@@ -31,6 +31,7 @@ import java.time.ZoneOffset;
 
 @Configuration
 public class DataInitializer {
+/*
 
     @Bean
     CommandLineRunner seedAllData(
@@ -145,8 +146,8 @@ public class DataInitializer {
     ) {
         if (sensorRepo.count() > 0) return;
 
-        Sensor sensor1 = new Sensor(null, "Sensor BA-001", "TEMPERATURE", "Buenos Aires", "Argentina", true, LocalDateTime.now());
-        Sensor sensor2 = new Sensor(null, "Sensor CBA-002", "HUMIDITY", "Córdoba", "Argentina", true, LocalDateTime.now());
+        Sensor sensor1 = new Sensor(null, "Sensor BA-001", "TEMPERATURE", "Buenos Aires", "Argentina", "inactivo", LocalDateTime.now());
+        Sensor sensor2 = new Sensor(null, "Sensor CBA-002", "HUMIDITY", "Córdoba", "Argentina", "inactivo", LocalDateTime.now());
         sensorRepo.saveAll(List.of(sensor1, sensor2));
 
         MaintenanceCheck check1 = new MaintenanceCheck("CHK-001", sensor1.getId(), LocalDateTime.now(), "OK", "Chequeo general correcto");
@@ -177,4 +178,5 @@ public class DataInitializer {
 
         System.out.println(" Datos Cassandra cargados.");
     }
+		*/
 }

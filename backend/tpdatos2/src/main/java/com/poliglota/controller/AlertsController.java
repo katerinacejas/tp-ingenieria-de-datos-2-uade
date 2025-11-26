@@ -25,7 +25,7 @@ public class AlertsController {
 
     //  Obtener alerta por ID
     @GetMapping("/{id}")
-    public ResponseEntity<AlertsDTO> getAlertById(@PathVariable String id) {
+    public ResponseEntity<AlertsDTO> getAlertById(  String id) {
         return alertsService.getAlertById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -33,41 +33,41 @@ public class AlertsController {
 
     //  Obtener alertas por tipo
     @GetMapping("/type/{type}")
-    public ResponseEntity<List<AlertsDTO>> getAlertsByType(@PathVariable String type) {
+    public ResponseEntity<List<AlertsDTO>> getAlertsByType(  String type) {
         return ResponseEntity.ok(alertsService.getAlertsByType(type));
     }
 
     //  Obtener alertas por estado
     @GetMapping("/state/{state}")
-    public ResponseEntity<List<AlertsDTO>> getAlertsByState(@PathVariable String state) {
+    public ResponseEntity<List<AlertsDTO>> getAlertsByState(  String state) {
         return ResponseEntity.ok(alertsService.getAlertsByState(state));
     }
 
     //  Obtener alertas por sensor
     @GetMapping("/sensor/{sensorId}")
-    public ResponseEntity<List<AlertsDTO>> getAlertsBySensor(@PathVariable String sensorId) {
+    public ResponseEntity<List<AlertsDTO>> getAlertsBySensor(  String sensorId) {
         return ResponseEntity.ok(alertsService.getAlertsBySensor(sensorId));
     }
 
     //  Obtener alertas entre fechas
     @GetMapping("/between")
     public ResponseEntity<List<AlertsDTO>> getAlertsByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         return ResponseEntity.ok(alertsService.getAlertsByDateRange(start, end));
     }
 
     //  Crear o actualizar una alerta
     @PostMapping
-    public ResponseEntity<AlertsDTO> createAlert(@RequestBody AlertsDTO alertDTO) {
+    public ResponseEntity<AlertsDTO> createAlert(  AlertsDTO alertDTO) {
         return ResponseEntity.ok(alertsService.createAlert(alertDTO));
     }
 
     //  Actualizar estado de una alerta
     @PutMapping("/{id}/state")
     public ResponseEntity<AlertsDTO> updateAlertState(
-            @PathVariable String id,
-            @RequestParam String newState) {
+              String id,
+               String newState) {
         return ResponseEntity.ok(alertsService.updateAlertState(id, newState));
     }
 }

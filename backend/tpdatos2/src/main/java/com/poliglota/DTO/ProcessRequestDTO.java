@@ -11,4 +11,7 @@ public class ProcessRequestDTO {
 	private String status;
 	private LocalDateTime requestDate;
 	private String invoiceId;
+	private String name;
+	private String descripcion;
+	private String processType;
 }

@@ -46,8 +46,8 @@ public class SensorService {
     }
 
     //  Buscar por estado (activo/inactivo)
-    public List<Sensor> getSensorsByActive(boolean active) {
-        return sensorRepository.findByActive(active);
+    public List<Sensor> getSensorsByActive(String estado) {
+        return sensorRepository.findByEstado(estado);
     }
 
     //  Crear o actualizar un sensor
@@ -59,10 +59,10 @@ public class SensorService {
     }
 
     //  Activar o desactivar un sensor
-    public Sensor toggleSensorStatus(String id, boolean active) {
+    public Sensor toggleSensorStatus(String id, String estado) {
         Sensor sensor = sensorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sensor no encontrado con ID: " + id));
-        sensor.setActive(active);
+        sensor.setEstado(estado);
         return sensorRepository.save(sensor);
     }
 

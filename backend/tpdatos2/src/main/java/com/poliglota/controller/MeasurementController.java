@@ -14,12 +14,12 @@ public class MeasurementController {
 	private final MeasurementService measurementService;
 
 	@PostMapping
-	public ResponseEntity<MeasurementDTO> create(@RequestBody MeasurementDTO measurementDTO) {
+	public ResponseEntity<MeasurementDTO> create(  MeasurementDTO measurementDTO) {
 		return ResponseEntity.ok(measurementService.save(measurementDTO));
 	}
 
 	@GetMapping("/{sensorId}")
-	public ResponseEntity<List<MeasurementDTO>> getBySensor(@PathVariable String sensorId) {
+	public ResponseEntity<List<MeasurementDTO>> getBySensor(  String sensorId) {
 		return ResponseEntity.ok(measurementService.getBySensor(sensorId));
 	}
 }

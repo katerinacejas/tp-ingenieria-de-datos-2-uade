@@ -13,6 +13,7 @@ import com.poliglota.DTO.response.JwtResponseDTO;
 import com.poliglota.DTO.response.UsuarioResponseDTO;
 import com.poliglota.service.UsuarioService;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,21 +29,32 @@ public class AuthenticationController {
 	private SessionService sessionService;
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody LoginRequestDTO request) {
+	public ResponseEntity<String> login(  LoginRequestDTO request) {
 		try {
-			String ok = authenticationService.authenticate(request);
-			if (ok == null) {
+			boolean ok = authenticationService.authenticate(request);
+			if (ok == false) {
 				return ResponseEntity.status(401).body("Credenciales inválidas");
 			}
 			else {
-				return ResponseEntity.status(401).body(ok);
+				UsuarioResponseDTO usuarioResponseDTO = usuarioService.getUsuarioPorMail(request.getEmail())
+					.orElseThrow(() -> new Exception("Usuario no encontrado con email: " + request.getEmail()));
+				SessionDTO sessionDTO = new SessionDTO();
+				sessionDTO.setUserId(usuarioResponseDTO.getUserId().toString());
+				sessionDTO.setRolId(usuarioResponseDTO.getRol());
+				sessionDTO.setStartTime(LocalDateTime.now());
+				sessionDTO.setEndTime(null);
+				sessionDTO.setStatus("activa");
+				sessionService.createSession(sessionDTO);
+				return ResponseEntity.status(200).body(usuarioResponseDTO.getRol());
 			}
 		} catch (Exception e) {
-			return ResponseEntity.internalServerError().body("Error en autenticación: " + e.getMessage());
+			System.out.println("Error en autenticación: " + e.getMessage());
+			return ResponseEntity.status(500).body("Error");
 		}
 	}
-/*
-	public ResponseEntity<String> login(@RequestBody LoginRequestDTO request) {
+
+	/*
+	public ResponseEntity<String> login(  LoginRequestDTO request) {
 		try {
 			JwtResponseDTO jwtResponseDTO = authenticationService.authenticate(request);
 			if (jwtResponseDTO == null) {
@@ -62,7 +74,8 @@ public class AuthenticationController {
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().body("Error en autenticación: " + e.getMessage());
 		}
-	}*/
+	}
+	*/
 
 	@PostMapping("/logout")
     public ResponseEntity<String> logout(Authentication auth) {
@@ -73,10 +86,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegistroRequestDTO request) {
+    public ResponseEntity<String> register(  RegistroRequestDTO request) {
 		try {
-			String ok = authenticationService.register(request);
-			if (ok == null) {
+			boolean ok = authenticationService.register(request);
+			if (ok == true) {
 				UsuarioResponseDTO usuarioResponseDTO = usuarioService.getUsuarioPorMail(request.getEmail()).orElse(null);
 				SessionDTO sessionDTO = new SessionDTO();
 				sessionDTO.setUserId(usuarioResponseDTO.getUserId().toString());
@@ -85,10 +98,13 @@ public class AuthenticationController {
 				sessionDTO.setEndTime(null);
 				sessionDTO.setStatus("activa");
 				sessionService.createSession(sessionDTO);
-				return ResponseEntity.status(401).body("Credenciales inválidas");
+				return ResponseEntity.status(401).body("ok");
 			}
 			else {
-				return ResponseEntity.status(401).body(ok);
+				if (request.getEmail().equals("admin@admin.com")){
+					return ResponseEntity.status(401).body("usuario admin ya existia");
+				}
+				return ResponseEntity.status(401).body("Credenciales inválidas");
 			}
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().body("Error en registro de usuario: " + e.getMessage());
