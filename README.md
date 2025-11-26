@@ -18,7 +18,6 @@ Implementa un entorno poliglota para gestionar usuarios, cuentas corrientes, fac
 | Base relacional | **MySQL** | Facturación, usuarios, cuentas y pagos (consistencia ACID) |
 | Base documental | **MongoDB** | Mensajería, grupos, sensores, mantenimiento y alertas (flexibilidad y volumen) |
 | Base columnar | **Cassandra** | Logs de procesos y auditoría de mensajes (alta tasa de escritura, series temporales) |
-| Seguridad | **JWT (JSON Web Token)** | Control de autenticación y roles (USER / ADMIN) |
 | ORM / Persistencia | **Spring Data JPA, Spring Data MongoDB, Spring Data Cassandra** | Integración automática con las 3 bases de datos |
 | Build | **Maven** | Gestión de dependencias y empaquetado |
 | Librerías adicionales | **Lombok**, **Jakarta Persistence**, **JJWT** | Simplificación de código y autenticación |
