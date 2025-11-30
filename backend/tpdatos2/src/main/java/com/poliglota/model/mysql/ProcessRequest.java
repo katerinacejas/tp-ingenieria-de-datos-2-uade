@@ -19,7 +19,7 @@ public class ProcessRequest {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = true)
     @JoinColumn(name = "process_id", nullable = true)
     private Process process;
 
@@ -33,6 +33,9 @@ public class ProcessRequest {
 
 	@Column(nullable = false)
     private String status; 
+
+	@Column(nullable = false)
+	private String processType;
 
 	@ManyToOne
     @JoinColumn(name = "invoice_id")

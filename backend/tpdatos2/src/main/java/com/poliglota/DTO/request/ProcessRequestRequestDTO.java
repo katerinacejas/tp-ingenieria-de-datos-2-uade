@@ -7,4 +7,5 @@ public class ProcessRequestRequestDTO {
 	private String userId;
 	private String processId;
 	private String status;
+	private String requestId;
 }

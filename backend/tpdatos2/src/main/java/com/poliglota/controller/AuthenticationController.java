@@ -78,8 +78,7 @@ public class AuthenticationController {
 	*/
 
 	@PostMapping("/logout")
-    public ResponseEntity<String> logout(Authentication auth) {
-		String email = auth.getName();
+    public ResponseEntity<String> logout(String email) {
 		SessionDTO sessionDTO = authenticationService.closeSession(email);
         sessionService.closeSession(sessionDTO);
         return ResponseEntity.ok("Sesión cerrada");

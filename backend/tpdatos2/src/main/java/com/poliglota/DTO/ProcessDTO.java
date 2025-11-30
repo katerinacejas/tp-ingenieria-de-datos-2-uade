@@ -8,4 +8,5 @@ public class ProcessDTO {
     private String description;
     private String processType;
     private double cost;
+    private Long id;
 }

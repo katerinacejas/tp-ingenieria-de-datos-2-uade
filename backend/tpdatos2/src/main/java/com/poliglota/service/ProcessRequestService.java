@@ -43,12 +43,13 @@ public class ProcessRequestService {
 		processRequest.setInvoice(null);
 		processRequest.setName(processRequestRequestDTO.getName());
 		processRequest.setDescripcion(processRequestRequestDTO.getDescripcion());
+		processRequest.setProcessType(processRequestRequestDTO.getProcessType());
 
         return toDtoResponse(processRequestRepository.save(processRequest));
 	}
 
 	public ProcessRequestDTO updateStatusProcessRequest(ProcessRequestRequestDTO processRequestRequestDTO) {
-		ProcessRequest processRequest = processRequestRepository.findById(Long.parseLong(processRequestRequestDTO.getProcessId()))
+		ProcessRequest processRequest = processRequestRepository.findById(Long.parseLong(processRequestRequestDTO.getRequestId()))
 				.orElseThrow(() -> new ProcessRequestNotFoundException("Process Request not found: " + processRequestRequestDTO.getProcessId()));
 
 		if (processRequestRequestDTO.getStatus() == "pendiente") {
@@ -85,18 +86,34 @@ public class ProcessRequestService {
 	}
 
 	private ProcessRequestDTO toDtoResponse(ProcessRequest processRequest) {
-		ProcessRequestDTO dto = new ProcessRequestDTO();
-		dto.setRequestId(processRequest.getProcessRequestId() != null ? processRequest.getProcessRequestId().toString() : null);
-		dto.setUserId(processRequest.getUser().getUserId().toString());
-		dto.setProcessId(processRequest.getProcess().getProcessId().toString());
-		dto.setRequestDate(processRequest.getRequestDate());
-		dto.setStatus(processRequest.getStatus());
-		if (processRequest.getInvoice() != null) {
-			dto.setInvoiceId(processRequest.getInvoice().getInvoiceId().toString());
-		} else {
-			dto.setInvoiceId(null);
-		}
-		return dto;
-	}
+    ProcessRequestDTO dto = new ProcessRequestDTO();
+    dto.setRequestId(processRequest.getProcessRequestId() != null
+            ? processRequest.getProcessRequestId().toString()
+            : null);
+    dto.setUserId(processRequest.getUser().getUserId().toString());
+
+    // ID de proceso si existe
+    if (processRequest.getProcess() == null) {
+        dto.setProcessId(null);
+    } else {
+        dto.setProcessId(processRequest.getProcess().getProcessId().toString());
+    }
+
+    // 🔴 IMPORTANTE: el tipo de proceso SIEMPRE viene de la propia solicitud
+    dto.setProcessType(processRequest.getProcessType());
+
+    dto.setRequestDate(processRequest.getRequestDate());
+    dto.setStatus(processRequest.getStatus());
+
+    if (processRequest.getInvoice() != null) {
+        dto.setInvoiceId(processRequest.getInvoice().getInvoiceId().toString());
+    } else {
+        dto.setInvoiceId(null);
+    }
+
+    dto.setDescripcion(processRequest.getDescripcion());
+    dto.setName(processRequest.getName());
+    return dto;
+}
 
 }

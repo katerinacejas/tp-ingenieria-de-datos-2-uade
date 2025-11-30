@@ -3,11 +3,15 @@ package com.poliglota.controller;
 import com.poliglota.DTO.MessageDTO;
 import com.poliglota.DTO.request.SendDirectRequestDTO;
 import com.poliglota.DTO.request.SendGroupRequestDTO;
+import com.poliglota.DTO.response.UsuarioResponseDTO;
 import com.poliglota.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import com.poliglota.service.UsuarioService;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,6 +20,7 @@ import java.util.List;
 public class MessageController {
 
 	private final MessageService messageService;
+	private final UsuarioService usuarioService;
 
 	// Enviar mensaje directo A -> B
 	@PostMapping("/direct")
@@ -51,6 +56,19 @@ public class MessageController {
 	@GetMapping("/group/{groupId}")
 	public List<MessageDTO> getGroupMessages(  String groupId) {
 		return messageService.getGroupMessages(groupId);
+	}
+
+	// todos los usuarios con quienes mande un mensaje
+	@GetMapping("/direct/{userA}/conexiones")
+	public List<String> getUsersMensajes( String user) {
+		List <UsuarioResponseDTO> todosUsuariosDTO = usuarioService.getTodosLosUsuarios();
+		List<String> usuariosInteractuaron = new ArrayList<>();
+		for (UsuarioResponseDTO usuarioDTO : todosUsuariosDTO) {
+			if (getDirect(Long.parseLong(user), usuarioDTO.getUserId()) != null){
+				usuariosInteractuaron.add(usuarioDTO.getUserId().toString());
+			}
+		}
+		return usuariosInteractuaron;
 	}
 
 }
