@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import com.poliglota.vista.Vista;
+import com.poliglota.vista.VistaCompartida;
 
 @SpringBootApplication
 @EntityScan(basePackages = "com.poliglota.model.mysql")
@@ -15,9 +15,9 @@ import com.poliglota.vista.Vista;
 @EnableMongoRepositories(basePackages = "com.poliglota.repository.mongo")
 @EnableCassandraRepositories(basePackages = "com.poliglota.repository.cassandra")
 public class BackendPoliglotaApplication implements CommandLineRunner{
-	private final Vista vista;
+	private final VistaCompartida vista;
 
-	public BackendPoliglotaApplication(Vista vista) {
+	public BackendPoliglotaApplication(VistaCompartida vista) {
         this.vista = vista;
     }
 
