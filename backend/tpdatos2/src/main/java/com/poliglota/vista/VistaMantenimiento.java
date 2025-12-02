@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import com.poliglota.DTO.AlertsDTO;
 import com.poliglota.DTO.ProcessDTO;
 import com.poliglota.DTO.ProcessRequestDTO;
-import com.poliglota.DTO.request.ProcessRequestRequestDTO;
 import com.poliglota.DTO.response.UsuarioResponseDTO;
+import com.poliglota.DTO.SensorDTO;
 import com.poliglota.controller.AccountController;
 import com.poliglota.controller.AccountMovementHistoryController;
 import com.poliglota.controller.AlertsController;
@@ -94,30 +94,80 @@ public class VistaMantenimiento extends Vista{
 		String opcion;
 
 		System.out.println("===== SELECCIONE UNA OPCION =====");
-		System.out.println(" 1. Modulo sensores");
-		System.out.println(" 2. Modulo Alertas");
-		System.out.println(" 3. Modulo procesos");
-		System.out.println(" 4. Modulo chat");
-		System.out.println(" 6. Cerrar sesion");
+		System.out.println(" 1. Ver todos los sensores");
+		System.out.println(" 2. Crear un sensor");
+		System.out.println(" 3. Modificar datos / estado de un sensor");
+		System.out.println(" 4. Realizar un control de funcionamiento de sensor");
+		System.out.println(" 5. Ver historial de controles de funcionamiento de sensores");
+		System.out.println(" 6. Modulo chat privado/grupal");
+		System.out.println(" 7. Ver catalogo de procesos disponibles");
+		System.out.println(" 8. Ver solicitudes de procesos de todos los usuarios");
+		System.out.println(" 9. Aprobar (y ejecutar) / Rechazar solicitudes de procesos");
+		System.out.println(" 10. Ver historial de ejecuciones de procesos");
+		System.out.println(" 11. Ver todas las alertas");
+		System.out.println(" 12. Resolver alertas activas");
+		System.out.println(" 13. Ver facturas pendientes de pago de usuarios");
+		System.out.println(" 14. Ver todas las facturas de usuarios");
+		System.out.println(" 15. Cerrar sesion");
 		opcion = scanner.nextLine().trim();
 		switch (opcion) {
 			case "1":
-				moduloSensores();
+				
 				home();
 				break;
 			case "2":
-				moduloAlertas();
+				
 				home();
 				break;
 			case "3":
-				moduloProcesos();
+				
 				home();
 				break;
 			case "4":
+				
+				home();
+				break;
+			case "5":
+				
+				home();
+				break;								
+			case "6":
 				vistaGeneral.moduloChat(mailAutenticado, this);
 				home();
 				break;
-			case "6":
+			case "7":
+				verCatalogoProcesosDisponibles();
+				home();
+				break;
+			case "8":
+				
+				home();
+				break;
+			case "9":
+				
+				home();
+				break;
+			case "10":
+				
+				home();
+				break;
+			case "11":
+				
+				home();
+				break;
+			case "12":
+				
+				home();
+				break;
+			case "13":
+				
+				home();
+				break;
+			case "14":
+				
+				home();
+				break;																																
+			case "15":
 				cerrarSesion();
 				vistaGeneral.home();
 				break;
@@ -127,6 +177,9 @@ public class VistaMantenimiento extends Vista{
 		}
 	}
 
+	private void verCatalogoProcesosDisponibles() {
+		vistaGeneral.verCatalogoProcesosDisponibles();
+	}
 
 	/*
 			************************************************************
@@ -161,9 +214,9 @@ public class VistaMantenimiento extends Vista{
 	}
 
 	private void verTodosLosSensores() {
-		ResponseEntity<List<Sensor>> sensoresDTO = sensorController.list();
+		ResponseEntity<List<SensorDTO>> sensoresDTO = sensorController.list();
 		
-		List<Sensor> sensores = sensoresDTO.getBody();
+		List<SensorDTO> sensores = sensoresDTO.getBody();
 
 		if (sensores == null || sensores.isEmpty()) {
 			System.out.println("No hay sensores creados.");
@@ -171,7 +224,7 @@ public class VistaMantenimiento extends Vista{
 		}
 
 		System.out.println("===== SENSORES =====");
-		for (Sensor s : sensores) {
+		for (SensorDTO s : sensores) {
 			System.out.println("----------------------------");
 			System.out.println("ID sensor: " + s.getId());
 			System.out.println("Nombre: " + s.getName());

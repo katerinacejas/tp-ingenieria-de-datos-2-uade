@@ -1,5 +1,6 @@
 package com.poliglota.model.mysql;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.*;
 import jakarta.persistence.*;
@@ -19,14 +20,9 @@ public class ProcessRequest {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-	@ManyToOne(optional = true)
-    @JoinColumn(name = "process_id", nullable = true)
+	@ManyToOne(optional = false)
+    @JoinColumn(name = "process_id", nullable = false)
     private Process process;
-
-	@Column(nullable = false)
-    private String name; 
-	@Column(nullable = false)
-    private String descripcion; 
 
 	@Column(nullable = false)
     private LocalDateTime requestDate;
@@ -34,12 +30,24 @@ public class ProcessRequest {
 	@Column(nullable = false)
     private String status; 
 
-	@Column(nullable = false)
-	private String processType;
-
-	@ManyToOne
-    @JoinColumn(name = "invoice_id")
+	@OneToOne(optional = false)
+	@JoinColumn(name = "invoice_id")
     private Invoice invoice;
+
+	@Column(length = 100)
+    private String city;      
+
+    @Column(length = 100)
+    private String country;  
+
+    @Column(nullable = false)
+    private LocalDate startDate;
+
+    @Column(nullable = false)
+    private LocalDate endDate;
+
+	@Column(nullable = false)
+	private String agrupacionDeDatos;
 
 	public double getCostProcess() {
 		return process.getCost();

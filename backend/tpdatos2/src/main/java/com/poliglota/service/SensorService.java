@@ -1,6 +1,7 @@
 package com.poliglota.service;
 
 import com.poliglota.model.mongo.Sensor;
+import com.poliglota.DTO.SensorDTO;
 import com.poliglota.repository.mongo.SensorRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,14 @@ public class SensorService {
     private final SensorRepository sensorRepository;
 
     //  Obtener todos los sensores
-    public List<Sensor> getAllSensors() {
-        return sensorRepository.findAll();
+    public List<SensorDTO> getAllSensors() {
+        return sensorRepository.findAll().stream()
+		.map(sensor -> toDto(sensor))
+		.toList();
     }
 
-	public Sensor create(Sensor sensor) {
-		return sensorRepository.save(sensor);
+	public SensorDTO create(SensorDTO sensor) {
+		return toDto(sensorRepository.save(toEntity(sensor)));
 	}
 
     //  Obtener sensor por ID
@@ -70,4 +73,30 @@ public class SensorService {
     public void deleteSensor(String id) {
         sensorRepository.deleteById(id);
     }
+
+	private Sensor toEntity(SensorDTO sensorDTO) {
+		Sensor sensor = new Sensor();
+		sensor.setName(sensorDTO.getName());
+		sensor.setType(sensorDTO.getType());
+		sensor.setLatitud(sensorDTO.getLatitud());
+		sensor.setLongitud(sensorDTO.getLongitud());
+		sensor.setCity(sensorDTO.getCity());
+		sensor.setCountry(sensorDTO.getCountry());
+		sensor.setEstado(sensorDTO.getEstado());
+		sensor.setStartDate(sensorDTO.getStartDate());
+		return sensor;
+	}
+
+	private SensorDTO toDto(Sensor sensor){
+		SensorDTO sensorDTO = new SensorDTO();
+		sensorDTO.setName(sensor.getName());
+		sensorDTO.setType(sensor.getType());
+		sensorDTO.setLatitud(sensor.getLatitud());
+		sensorDTO.setLongitud(sensor.getLongitud());
+		sensorDTO.setCity(sensor.getCity());
+		sensorDTO.setCountry(sensor.getCountry());
+		sensorDTO.setEstado(sensor.getEstado());
+		sensorDTO.setStartDate(sensor.getStartDate());
+		return sensorDTO;
+	}
 }

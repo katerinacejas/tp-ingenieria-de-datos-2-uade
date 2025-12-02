@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import com.poliglota.service.SensorService;
-import com.poliglota.model.mongo.Sensor;
+import com.poliglota.DTO.SensorDTO;
 import java.util.List;
 
 @RestController
@@ -14,12 +14,12 @@ public class SensorController {
 	private final SensorService sensorService;
 
 	@PostMapping
-	public ResponseEntity<Sensor> create(  Sensor sensor) {
-		return ResponseEntity.ok(sensorService.create(sensor));
+	public ResponseEntity<SensorDTO> create(  SensorDTO sensorDTO) {
+		return ResponseEntity.ok(sensorService.create(sensorDTO));
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Sensor>> list() {
+	public ResponseEntity<List<SensorDTO>> list() {
 		return ResponseEntity.ok(sensorService.getAllSensors());
 	}
 }

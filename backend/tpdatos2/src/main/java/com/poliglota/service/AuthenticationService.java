@@ -50,30 +50,6 @@ public class AuthenticationService {
 	private SessionRepository sessionRepository;
 
     public boolean authenticate(LoginRequestDTO request) {
-        /*try {
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
-                    request.getPassword()
-                )
-            );
-
-            User usuario = (User) authentication.getPrincipal();
-			
-			String rolString = usuario.getRol().name();
-            String jwt = jwtUtil.generateToken(usuario.getEmail(), rolString);
-			Rol rol = usuario.getRol();
-
-			usuario.setStatus("activo");
-			usuarioRepository.save(usuario);
-
-            return new JwtResponseDTO(jwt, rol);
-
-        } catch (AuthenticationException ex) {
-            throw new RuntimeException("Credenciales inválidas");
-        }*/
-			
-
 		User usuario = usuarioRepository.findByEmail(request.getEmail()).orElse(null);
 		if (usuario != null) {
 			return passwordEncoder.matches(request.getPassword(), usuario.getPassword());
@@ -81,7 +57,6 @@ public class AuthenticationService {
 		else {
 			return false;
 		}
-		
     }
 
     public boolean register(RegistroRequestDTO request) {

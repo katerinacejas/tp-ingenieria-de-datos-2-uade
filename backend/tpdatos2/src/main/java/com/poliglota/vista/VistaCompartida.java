@@ -13,7 +13,6 @@ import com.poliglota.DTO.GroupDTO;
 import com.poliglota.DTO.InvoiceDTO;
 import com.poliglota.DTO.MessageDTO;
 import com.poliglota.DTO.request.LoginRequestDTO;
-import com.poliglota.DTO.request.ProcessRequestRequestDTO;
 import com.poliglota.DTO.request.RegistroRequestDTO;
 import com.poliglota.DTO.request.SendDirectRequestDTO;
 import com.poliglota.DTO.request.SendGroupRequestDTO;
@@ -36,8 +35,6 @@ import com.poliglota.controller.ProcessRequestController;
 import com.poliglota.controller.SensorController;
 import com.poliglota.controller.UsuarioController;
 
-import com.poliglota.model.mongo.Sensor;
-import com.poliglota.model.mysql.ExecutionHistory;
 import com.poliglota.service.ProcessService;
 
 @Component
@@ -223,7 +220,24 @@ public class VistaCompartida extends Vista{
 		}
 		if (response != null && "ADMIN".equals(response.getBody())) {
 			System.out.println("Inicio de sesion exitoso, rol MANTENIMIENTO");
-			VistaAdministrador vistaAdministrador = new VistaAdministrador(email, scanner);
+			VistaAdministrador vistaAdministrador = new VistaAdministrador(email, scanner,
+				accountController, 
+				accountMovementHistoryController,
+				alertsController,
+				authenticationController,
+				groupController,
+				invoiceController,
+				maintenanceCheckController,
+				measurementController,
+				messageController,
+				paymentController,
+				processController,
+				processRequestController,
+				sensorController,
+				usuarioController,
+				processService,
+				this				
+			);
 			vistaAdministrador.home();
 		}
 		if (response != null && "Error".equals(response.getBody())) {
@@ -453,6 +467,26 @@ public class VistaCompartida extends Vista{
 
 		messageController.sendToGroup(mensaje);
 		System.out.println(" Se ha enviado su mensaje al grupo");
+	}
+
+	public void verCatalogoProcesosDisponibles(){
+		ResponseEntity<List<ProcessDTO>> procesosDTO = processController.getAll();
+		List<ProcessDTO> procesos = procesosDTO.getBody();
+
+		if (procesos == null || procesos.isEmpty()) {
+			System.out.println("No hay procesos creados.");
+			return;
+		}
+
+		System.out.println("===== PROCESOS =====");
+		for (ProcessDTO p : procesos) {
+			System.out.println("----------------------------");
+			System.out.println("Nombre: " + p.getName());
+			System.out.println("Descripcion : " + p.getDescription());
+			System.out.println("Tipo: " +p.getProcessType());
+			System.out.println("Costo: " + p.getCost());
+		System.out.println("----------------------------");
+		}		
 	}
 
 	public void cerrarSesion(String mailAutenticado) {

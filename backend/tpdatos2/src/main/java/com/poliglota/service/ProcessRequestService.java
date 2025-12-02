@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 
 import com.poliglota.DTO.ProcessRequestDTO;
-import com.poliglota.DTO.request.ProcessRequestRequestDTO;
 import com.poliglota.model.mysql.ProcessRequest;
 import com.poliglota.repository.jpa.ExecutionHistoryRepository;
 import com.poliglota.repository.jpa.ProcessRepository;
@@ -28,29 +27,40 @@ public class ProcessRequestService {
 	private final ProcessRepository processRepository;
 	private final ExecutionHistoryRepository executionHistoryRepository;
 
-	public ProcessRequestDTO createProcessRequest(ProcessRequestDTO processRequestRequestDTO) {
-		User user = userRepository.findById(Long.parseLong(processRequestRequestDTO.getUserId()))
-				.orElseThrow(() -> new UsuarioNotFoundException("user not found: " + processRequestRequestDTO.getUserId()));
-        
-       // Process process = processRepository.findById(Long.parseLong(processRequestRequestDTO.getProcessId()))
-       //         .orElseThrow(() -> new ProcessNotFoundException("Process not found: " + processRequestRequestDTO.getProcessId()));
+	public ProcessRequestDTO createProcessRequest(ProcessRequestDTO processRequestDTO) {
+		User user = userRepository.findById(Long.parseLong(processRequestDTO.getUserId()))
+				.orElseThrow(() -> new UsuarioNotFoundException("user not found: " + processRequestDTO.getUserId()));
 
-        ProcessRequest processRequest = new ProcessRequest();
-        processRequest.setProcess(null);
+		Process process = processRepository.findById(Long.parseLong(processRequestDTO.getProcessId()))
+				.orElseThrow(
+						() -> new ProcessNotFoundException("Process not found: " + processRequestDTO.getProcessId()));
+
+		ProcessRequest processRequest = new ProcessRequest();
+		processRequest.setProcess(process);
 		processRequest.setUser(user);
-        processRequest.setRequestDate(LocalDateTime.now());
-		processRequest.setStatus("pendiente");
+		processRequest.setRequestDate(LocalDateTime.now());
+		processRequest.setStatus("PENDIENTE");
 		processRequest.setInvoice(null);
-		processRequest.setName(processRequestRequestDTO.getName());
-		processRequest.setDescripcion(processRequestRequestDTO.getDescripcion());
-		processRequest.setProcessType(processRequestRequestDTO.getProcessType());
+		processRequest.setCity(processRequestDTO.getCity());
+		processRequest.setCountry(processRequestDTO.getCountry());
+		processRequest.setStartDate(processRequestDTO.getStartDate());
+		processRequest.setEndDate(processRequestDTO.getEndDate());
+		processRequest.setAgrupacionDeDatos(processRequestDTO.getAgrupacionDeDatos());
 
-        return toDtoResponse(processRequestRepository.save(processRequest));
+		return toDtoResponse(processRequestRepository.save(processRequest));
 	}
 
-	public ProcessRequestDTO updateStatusProcessRequest(ProcessRequestRequestDTO processRequestRequestDTO) {
-		ProcessRequest processRequest = processRequestRepository.findById(Long.parseLong(processRequestRequestDTO.getRequestId()))
-				.orElseThrow(() -> new ProcessRequestNotFoundException("Process Request not found: " + processRequestRequestDTO.getProcessId()));
+	public List<ProcessRequestDTO> getProcessRequestByUser (Long userId) {
+		return processRequestRepository.findAllByUser_UserId(userId).stream()
+				.map(processRequest -> toDtoResponse(processRequest))
+				.toList();
+	}
+
+	public ProcessRequestDTO updateStatusProcessRequest(ProcessRequestDTO processRequestRequestDTO) {
+		ProcessRequest processRequest = processRequestRepository
+				.findById(Long.parseLong(processRequestRequestDTO.getProcessRequestId()))
+				.orElseThrow(() -> new ProcessRequestNotFoundException(
+						"Process Request not found: " + processRequestRequestDTO.getProcessId()));
 
 		if (processRequestRequestDTO.getStatus() == "pendiente") {
 			processRequest.setStatus("completado");
@@ -61,24 +71,26 @@ public class ProcessRequestService {
 
 	public List<ProcessRequestDTO> getAllProcessRequests() {
 		return processRequestRepository.findAll()
-			.stream()
-			.map(processRequest -> this.toDtoResponse(processRequest))
-			.toList();
+				.stream()
+				.map(processRequest -> this.toDtoResponse(processRequest))
+				.toList();
 	}
 
 	public List<ExecutionHistoryDTO> getExecutionHistoryByProcessRequestId(String processRequestId) {
 		return executionHistoryRepository.findByProcessRequest_ProcessRequestId(Long.parseLong(processRequestId))
-			.stream()
-			.map(executionHistory -> this.executionToDtoResponse(executionHistory))
-			.toList();
+				.stream()
+				.map(executionHistory -> this.executionToDtoResponse(executionHistory))
+				.toList();
 	}
 
 	private ExecutionHistoryDTO executionToDtoResponse(ExecutionHistory executionHistory) {
 		ExecutionHistoryDTO dto = new ExecutionHistoryDTO();
-		dto.setExecutionId(executionHistory.getExecutionId() != null ? executionHistory.getExecutionId().toString() : null);
-		dto.setProcessRequestId(executionHistory.getProcessRequest() != null && executionHistory.getProcessRequest().getProcessRequestId() != null
-			? executionHistory.getProcessRequest().getProcessRequestId().toString()
-			: null);
+		dto.setExecutionId(
+				executionHistory.getExecutionId() != null ? executionHistory.getExecutionId().toString() : null);
+		dto.setProcessRequestId(executionHistory.getProcessRequest() != null
+				&& executionHistory.getProcessRequest().getProcessRequestId() != null
+						? executionHistory.getProcessRequest().getProcessRequestId().toString()
+						: null);
 		dto.setExecutionDate(executionHistory.getExecutionDate());
 		dto.setResult(executionHistory.getResult());
 		dto.setStatus(executionHistory.getStatus());
@@ -86,34 +98,23 @@ public class ProcessRequestService {
 	}
 
 	private ProcessRequestDTO toDtoResponse(ProcessRequest processRequest) {
-    ProcessRequestDTO dto = new ProcessRequestDTO();
-    dto.setRequestId(processRequest.getProcessRequestId() != null
-            ? processRequest.getProcessRequestId().toString()
-            : null);
-    dto.setUserId(processRequest.getUser().getUserId().toString());
-
-    // ID de proceso si existe
-    if (processRequest.getProcess() == null) {
-        dto.setProcessId(null);
-    } else {
-        dto.setProcessId(processRequest.getProcess().getProcessId().toString());
-    }
-
-    // 🔴 IMPORTANTE: el tipo de proceso SIEMPRE viene de la propia solicitud
-    dto.setProcessType(processRequest.getProcessType());
-
-    dto.setRequestDate(processRequest.getRequestDate());
-    dto.setStatus(processRequest.getStatus());
-
-    if (processRequest.getInvoice() != null) {
-        dto.setInvoiceId(processRequest.getInvoice().getInvoiceId().toString());
-    } else {
-        dto.setInvoiceId(null);
-    }
-
-    dto.setDescripcion(processRequest.getDescripcion());
-    dto.setName(processRequest.getName());
-    return dto;
-}
+		ProcessRequestDTO dto = new ProcessRequestDTO();
+		dto.setProcessRequestId(processRequest.getProcessRequestId().toString());
+		dto.setUserId(processRequest.getUser().getUserId().toString());
+		dto.setProcessId(processRequest.getProcess().getProcessId().toString());
+		dto.setStatus(processRequest.getStatus());
+		dto.setRequestDate(processRequest.getRequestDate());
+		if (processRequest.getInvoice() != null) {
+			dto.setInvoiceId(processRequest.getInvoice().getInvoiceId().toString());
+		} else {
+			dto.setInvoiceId(null);
+		}
+		dto.setCity(processRequest.getCity());
+		dto.setCountry(processRequest.getCountry());
+		dto.setStartDate(processRequest.getStartDate());
+		dto.setEndDate(processRequest.getEndDate());
+		dto.setAgrupacionDeDatos(processRequest.getAgrupacionDeDatos());
+		return dto;
+	}
 
 }
