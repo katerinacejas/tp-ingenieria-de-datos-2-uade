@@ -36,6 +36,7 @@ import com.poliglota.controller.ProcessController;
 import com.poliglota.controller.ProcessRequestController;
 import com.poliglota.controller.SensorController;
 import com.poliglota.controller.UsuarioController;
+import com.poliglota.controller.SessionController;
 
 import com.poliglota.service.ProcessService;
 
@@ -57,7 +58,7 @@ public class VistaCompartida extends Vista{
 	private final UsuarioController usuarioController;
 	private final ProcessService processService;
 	private final ExecutionHistoryController executionHistoryController;
-
+	private final SessionController sessionController;
 	private final Scanner scanner;
 
 	public VistaCompartida(
@@ -76,7 +77,8 @@ public class VistaCompartida extends Vista{
             SensorController sensorController,
             UsuarioController usuarioController,
 			ProcessService processService,
-			ExecutionHistoryController executionHistoryController) {
+			ExecutionHistoryController executionHistoryController,
+			SessionController sessionController) {
         this.accountController = accountController;
         this.accountMovementHistoryController = accountMovementHistoryController;
         this.alertsController = alertsController;
@@ -93,7 +95,7 @@ public class VistaCompartida extends Vista{
         this.usuarioController = usuarioController;
 		this.processService = processService;
 		this.executionHistoryController = executionHistoryController;
-
+		this.sessionController = sessionController;
         this.scanner = new Scanner(System.in);
     }
 
@@ -243,7 +245,8 @@ public class VistaCompartida extends Vista{
 				sensorController,
 				usuarioController,
 				processService,
-				this				
+				this,
+				sessionController	
 			);
 			  System.out.println("=============================================\n\n");
 			vistaAdministrador.home();
@@ -270,25 +273,31 @@ public class VistaCompartida extends Vista{
 			switch (opcion) {
 				case "1":
 					verMensajesDirectos(mailAutenticado);
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 					break;
 				case "2":
 					verMensajesGrupo(mailAutenticado);
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 					break;
 				case "3":
 					enviarMensajeDirecto(mailAutenticado);
+
 					moduloChat(mailAutenticado, vista);
 					break;
 				case "4":
 					enviarMensajeGrupo(mailAutenticado);
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 					break;
 				case "5":
+					System.out.println("=============================================\n\n");
 					vista.home();
 					break;				
 				default:
 					System.out.println("Opcion invalida.");
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 			}
 		}
@@ -304,29 +313,36 @@ public class VistaCompartida extends Vista{
 			switch (opcion) {
 				case "1":
 					verMensajesDirectos(mailAutenticado);
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 					break;
 				case "2":
 					verMensajesGrupo(mailAutenticado);
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 					break;
 				case "3":
 					enviarMensajeDirecto(mailAutenticado);
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 					break;
 				case "4":
 					enviarMensajeGrupo(mailAutenticado);
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 					break;
 				case "5":
 					crearGrupo(mailAutenticado);
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 					break;			
 				case "6":
+					System.out.println("=============================================\n\n");
 					vista.home();
 					break;			
 				default:
 					System.out.println("Opcion invalida.");
+					System.out.println("=============================================\n\n");
 					moduloChat(mailAutenticado, vista);
 			}
 		}
@@ -334,9 +350,9 @@ public class VistaCompartida extends Vista{
 
 	private void crearGrupo(String mailAutenticado) {
 		UsuarioResponseDTO usuario = usuarioController.getUsuarioPorMail(mailAutenticado);
-		List<String> usuariosId = messageController.getUsersMensajes(usuario.getUserId().toString());
+		List<UsuarioResponseDTO> usuarios = usuarioController.getUsuariosYMantenimiento();
 
-		if(usuariosId  == null || usuariosId.isEmpty() ) {
+		if(usuarios  == null || usuarios.isEmpty() ) {
 			System.out.println("No hay usuarios suficientes para crear un grupo");
 			return;
 		}
@@ -348,8 +364,8 @@ public class VistaCompartida extends Vista{
 		List<String> usuariosAAgregar = new ArrayList<>();
 		while(finAgregar == null){
 			System.out.println(" Ingrese el usuario que desea añadir al grupo: Si no desea añadir a ninguno mas, ingrese FIN ");
-			for(String u : usuariosId) {
-				System.out.println(u);
+			for(UsuarioResponseDTO u : usuarios) {
+				System.out.println("ID " + u.getUserId() + " - " + u.getNombreCompleto());
 			}
 			String ingresa = scanner.nextLine().trim();
 			if (ingresa.equals("FIN")){
@@ -383,8 +399,10 @@ public class VistaCompartida extends Vista{
 
 		System.out.println(" Seleccione con que usuario quiere ver la conversacion");
 		for(String u : usuariosId) {
-			System.out.println(u);
+			UsuarioResponseDTO usuarioInterac = usuarioController.getUsuarioPorId(Long.parseLong(u));
+			System.out.println(usuarioInterac.getUserId() + " - " + usuarioInterac.getNombreCompleto());
 		}
+
 		String userSeleccionado = scanner.nextLine().trim();
 		List<MessageDTO> mensajes = messageController.getDirect(usuario.getUserId(), Long.parseLong(userSeleccionado));
 		for (MessageDTO m: mensajes) {
@@ -424,7 +442,7 @@ public class VistaCompartida extends Vista{
 
 	private void enviarMensajeDirecto(String mailAutenticado) {
 		UsuarioResponseDTO usuario = usuarioController.getUsuarioPorMail(mailAutenticado);
-		List<UsuarioResponseDTO> usuariosDTO = usuarioController.getTodosLosUsuarios();
+		List<UsuarioResponseDTO> usuariosDTO = usuarioController.getUsuariosYMantenimiento();
 		usuariosDTO.removeIf(u -> u.getEmail().equals(mailAutenticado));
 		
 		if(usuariosDTO  == null || usuariosDTO.isEmpty() ) {

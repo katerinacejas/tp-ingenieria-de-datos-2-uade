@@ -56,7 +56,7 @@ public class MessageController {
 
 	@GetMapping("/direct/{userA}/conexiones")
 	public List<String> getUsersMensajes( String user) {
-		List <UsuarioResponseDTO> todosUsuariosDTO = usuarioService.getTodosLosUsuarios();
+		List <UsuarioResponseDTO> todosUsuariosDTO = usuarioService.getUsuariosYMantenimiento();
 		List<String> usuariosInteractuaron = new ArrayList<>();
 		for (UsuarioResponseDTO usuarioDTO : todosUsuariosDTO) {
 			if (getDirect(Long.parseLong(user), usuarioDTO.getUserId()) != null){

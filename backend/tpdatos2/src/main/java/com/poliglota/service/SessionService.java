@@ -17,8 +17,8 @@ public class SessionService {
     private final SessionRepository sessionRepository;
 	private final UserRepository userRepository;
 
-    public List<Session> getAllSessions() {
-        return sessionRepository.findAll();
+    public List<SessionDTO> getAllSessions() {
+        return sessionRepository.findAll().stream().map(s-> toDto(s)).toList();
     }
 
     public List<Session> getActiveSessionsByUser(String userId) {

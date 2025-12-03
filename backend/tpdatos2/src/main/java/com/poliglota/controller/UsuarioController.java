@@ -29,6 +29,10 @@ public class UsuarioController {
 		return usuarioService.getTodosLosUsuarios();
 	}
 
+	public List<UsuarioResponseDTO> getUsuariosYMantenimiento() {
+		return usuarioService.getUsuariosYMantenimiento();
+	}
+
 	@GetMapping("/buscar")
 	@PreAuthorize("hasRole('ADMIN')")
 	public UsuarioResponseDTO getUsuarioPorMail(   String mail) {
