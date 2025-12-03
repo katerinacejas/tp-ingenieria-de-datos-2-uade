@@ -88,10 +88,87 @@ public class AuthenticationService {
 			nuevoUsuario.setRolEntity(rolUsuario);
 			nuevoUsuario.setRol(Rol.USUARIO);
 			usuarioRepository.save(nuevoUsuario);
-			System.out.println("guarde un usuario");
 			
 			accountRepository.save(account);
-			System.out.println("guarde una cuenta");
+
+            return true;
+
+        } catch (Exception e) {
+			System.out.println("Error al registrar usuario: " + e.getMessage());
+			return false;
+        }
+    }
+
+	public boolean registerMantenimiento(RegistroRequestDTO request) {
+        try {
+            if (usuarioRepository.existsByEmail(request.getEmail())) {
+				return false;
+            }
+
+            User nuevoUsuario = new User();
+            nuevoUsuario.setFullName(request.getNombreCompleto());
+            nuevoUsuario.setEmail(request.getEmail());
+
+			Account account = new Account();
+			account.setUser(nuevoUsuario);
+			account.setCurrentBalance(0.0);
+
+            String encryptedPassword = passwordEncoder.encode(request.getPassword());
+            nuevoUsuario.setPassword(encryptedPassword);
+
+            RolEntity rolMantenimiento = rolRepository.findByCode(Rol.MANTENIMIENTO)
+                .orElseThrow(() -> new IllegalStateException("Rol MANTENIMIENTO no configurado"));
+            nuevoUsuario.setRolEntity(rolMantenimiento);
+
+            System.out.println("Rol asignado al usuario: " + nuevoUsuario.getRol());
+
+			nuevoUsuario.setStatus("activo");
+			nuevoUsuario.setRegisteredAt(LocalDateTime.now());
+
+			nuevoUsuario.setRolEntity(rolMantenimiento);
+			nuevoUsuario.setRol(Rol.MANTENIMIENTO);
+			usuarioRepository.save(nuevoUsuario);
+			accountRepository.save(account);
+
+            return true;
+
+        } catch (Exception e) {
+			System.out.println("Error al registrar usuario: " + e.getMessage());
+			return false;
+        }
+    }
+
+	public boolean registerAdmin(RegistroRequestDTO request) {
+        try {
+            if (usuarioRepository.existsByEmail(request.getEmail())) {
+				return false;
+            }
+
+            User nuevoUsuario = new User();
+            nuevoUsuario.setFullName(request.getNombreCompleto());
+            nuevoUsuario.setEmail(request.getEmail());
+
+			Account account = new Account();
+			account.setUser(nuevoUsuario);
+			account.setCurrentBalance(0.0);
+
+            String encryptedPassword = passwordEncoder.encode(request.getPassword());
+            nuevoUsuario.setPassword(encryptedPassword);
+
+            RolEntity rolAdmin = rolRepository.findByCode(Rol.ADMIN)
+                .orElseThrow(() -> new IllegalStateException("Rol ADMIN no configurado"));
+            nuevoUsuario.setRolEntity(rolAdmin);
+
+            System.out.println("Rol asignado al usuario: " + nuevoUsuario.getRol());
+
+			nuevoUsuario.setStatus("activo");
+			nuevoUsuario.setRegisteredAt(LocalDateTime.now());
+
+			nuevoUsuario.setRolEntity(rolAdmin);
+			nuevoUsuario.setRol(Rol.ADMIN);
+			usuarioRepository.save(nuevoUsuario);
+			
+			accountRepository.save(account);
 
             return true;
 

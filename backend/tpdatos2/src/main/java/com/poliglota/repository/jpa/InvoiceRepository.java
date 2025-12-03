@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
-   //  Buscar facturas por usuario
     List<Invoice> findByUser(User user);
 
-    //  Buscar facturas por estado
     List<Invoice> findByStatus(String status);
+
+	List<Invoice> findByUserAndStatus(User user, String status);
 }

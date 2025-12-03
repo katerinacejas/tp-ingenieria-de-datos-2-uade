@@ -30,14 +30,29 @@ public class ProcessRequestController {
         return ResponseEntity.ok(processRequestService.getProcessRequestByUser(userId));
     }
 
+	@GetMapping("/user/{userId}/state/{state}")
+    public ResponseEntity<List<ProcessRequestDTO>> getProcessRequestByUserAndStatus(Long userId, String status) {
+        return ResponseEntity.ok(processRequestService.getProcessRequestByUserAndStatus(userId, status));
+    }
+
+	@PostMapping("/{processRequestId}/approve-and-execute")
+    public ResponseEntity<ExecutionHistoryDTO> approveAndExecute(Long processRequestId) {
+        return ResponseEntity.ok(processRequestService.approveAndExecute(processRequestId));
+    }
+
+	@GetMapping("{state}")
+    public ResponseEntity<List<ProcessRequestDTO>> getProcessRequestByStatus(String status) {
+        return ResponseEntity.ok(processRequestService.getProcessRequestByStatus(status));
+    }
+
+	@GetMapping("{id}")
+    public ResponseEntity<ProcessRequestDTO> getProcessRequestById(  Long id) {
+        return ResponseEntity.ok(processRequestService.getProcessRequestById(id));
+    }
+
 	@GetMapping
 	public ResponseEntity<List<ProcessRequestDTO>> getAll() {
 		return ResponseEntity.ok(processRequestService.getAllProcessRequests());
-	}
-
-	@GetMapping("/{processRequestId}/execution-history")
-	public ResponseEntity<List<ExecutionHistoryDTO>> getExecutionHistoryByProcessRequestId(  String processRequestId) {
-		return ResponseEntity.ok(processRequestService.getExecutionHistoryByProcessRequestId(processRequestId));
 	}
 
 }

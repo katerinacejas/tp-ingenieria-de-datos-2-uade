@@ -17,7 +17,6 @@ public class SensorService {
 
     private final SensorRepository sensorRepository;
 
-    //  Obtener todos los sensores
     public List<SensorDTO> getAllSensors() {
         return sensorRepository.findAll().stream()
 		.map(sensor -> toDto(sensor))
@@ -28,32 +27,28 @@ public class SensorService {
 		return toDto(sensorRepository.save(toEntity(sensor)));
 	}
 
-    //  Obtener sensor por ID
-    public Optional<Sensor> getSensorById(String id) {
-        return sensorRepository.findById(id);
+    public SensorDTO getSensorById(String id) {
+        return sensorRepository.findById(id)
+                .map(this::toDto)
+                .orElseThrow(() -> new RuntimeException("Sensor no encontrado con ID: " + id));
     }
 
-    //  Buscar por tipo
     public List<Sensor> getSensorsByType(String type) {
         return sensorRepository.findByType(type);
     }
 
-    //  Buscar por país
     public List<Sensor> getSensorsByCountry(String country) {
         return sensorRepository.findByCountry(country);
     }
 
-    //  Buscar por ciudad
     public List<Sensor> getSensorsByCity(String city) {
         return sensorRepository.findByCity(city);
     }
 
-    //  Buscar por estado (activo/inactivo)
     public List<Sensor> getSensorsByActive(String estado) {
         return sensorRepository.findByEstado(estado);
     }
 
-    //  Crear o actualizar un sensor
     public Sensor saveSensor(Sensor sensor) {
         if (sensor.getStartDate() == null) {
             sensor.setStartDate(LocalDateTime.now());
@@ -61,15 +56,13 @@ public class SensorService {
         return sensorRepository.save(sensor);
     }
 
-    //  Activar o desactivar un sensor
-    public Sensor toggleSensorStatus(String id, String estado) {
+    public SensorDTO toggleSensorStatus(String id, String estado) {
         Sensor sensor = sensorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sensor no encontrado con ID: " + id));
         sensor.setEstado(estado);
-        return sensorRepository.save(sensor);
+        return toDto(sensorRepository.save(sensor));
     }
 
-    //  Eliminar sensor
     public void deleteSensor(String id) {
         sensorRepository.deleteById(id);
     }
@@ -89,6 +82,7 @@ public class SensorService {
 
 	private SensorDTO toDto(Sensor sensor){
 		SensorDTO sensorDTO = new SensorDTO();
+		sensorDTO.setId(sensor.getId());
 		sensorDTO.setName(sensor.getName());
 		sensorDTO.setType(sensor.getType());
 		sensorDTO.setLatitud(sensor.getLatitud());

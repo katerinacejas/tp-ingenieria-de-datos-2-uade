@@ -14,17 +14,7 @@ import com.poliglota.vista.VistaCompartida;
 @EnableJpaRepositories(basePackages = "com.poliglota.repository.jpa")
 @EnableMongoRepositories(basePackages = "com.poliglota.repository.mongo")
 @EnableCassandraRepositories(basePackages = "com.poliglota.repository.cassandra")
-public class BackendPoliglotaApplication implements CommandLineRunner{
-	private final VistaCompartida vista;
-
-	public BackendPoliglotaApplication(VistaCompartida vista) {
-        this.vista = vista;
-    }
-
-	@Override
-	public void run(String... args) {
-		vista.start();
-    }
+public class BackendPoliglotaApplication{
     public static void main(String[] args) {
         SpringApplication.run(BackendPoliglotaApplication.class, args);
     }

@@ -36,4 +36,9 @@ public class UsuarioController {
 				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + mail));
 	}
 
+	public UsuarioResponseDTO getUsuarioPorId(Long id) {
+		return usuarioService.getUsuarioPorId(id)
+				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con id: " + id));
+	}
+
 }

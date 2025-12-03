@@ -40,7 +40,6 @@ public class MessageService {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("Grupo no encontrado: " + groupId));
 
-        // Validar pertenencia del remitente al grupo
         if (group.getMemberIds() == null || !group.getMemberIds().contains(senderId)) {
             throw new IllegalStateException("El usuario " + senderId + " no pertenece al grupo " + groupId);
         }

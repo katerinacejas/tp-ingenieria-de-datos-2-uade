@@ -22,4 +22,13 @@ public class SensorController {
 	public ResponseEntity<List<SensorDTO>> list() {
 		return ResponseEntity.ok(sensorService.getAllSensors());
 	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<SensorDTO> getById (String id) {
+		return ResponseEntity.ok(sensorService.getSensorById(id));
+	}
+
+	public SensorDTO updateStateSensor(String id, String estado) {
+		return sensorService.toggleSensorStatus(id, estado);
+	}
 }

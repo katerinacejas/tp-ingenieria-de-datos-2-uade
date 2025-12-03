@@ -17,7 +17,6 @@ public class AlertsService {
 
     private final AlertsRepository alertsRepository;
 
-    //  Obtener todas las alertas
     public List<AlertsDTO> getAllAlerts() {
         return alertsRepository.findAll()
 			.stream()
@@ -25,14 +24,12 @@ public class AlertsService {
 			.toList();
     }
 
-    //  Buscar alerta por ID
     public Optional<AlertsDTO> getAlertById(String id) {
         Alerts alert =  alertsRepository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Alerta no encontrada con ID: " + id));
 		return Optional.of(toDto(alert));
     }
 
-    //  Buscar alertas por tipo
     public List<AlertsDTO> getAlertsByType(String type) {
         return alertsRepository.findByType(type)
 			.stream()
@@ -40,7 +37,6 @@ public class AlertsService {
 			.toList();
     }
 
-    //  Buscar alertas por estado
     public List<AlertsDTO> getAlertsByState(String state) {
         return alertsRepository.findByState(state)
 			.stream()
@@ -48,7 +44,6 @@ public class AlertsService {
 			.toList();		
     }
 
-    //  Buscar alertas por sensor
     public List<AlertsDTO> getAlertsBySensor(String sensorId) {
         return alertsRepository.findBySensorId(sensorId)
 			.stream()
@@ -56,7 +51,6 @@ public class AlertsService {
 			.toList();			
     }
 
-    //  Buscar alertas en un rango de fechas
     public List<AlertsDTO> getAlertsByDateRange(LocalDateTime start, LocalDateTime end) {
         return alertsRepository.findByDatetimeBetween(start, end)
 			.stream()
@@ -64,7 +58,6 @@ public class AlertsService {
 			.toList();				
     }
 
-    //  Crear o actualizar una alerta
     public AlertsDTO createAlert(AlertsDTO alertDTO) {
 		Alerts alert = new Alerts();
 		if (alertDTO.getSensorId() != null) {
@@ -82,7 +75,6 @@ public class AlertsService {
         return toDto(alertsRepository.save(alert));
     }
 
-    //  Cambiar estado (ej: de activa a resuelta)
     public AlertsDTO updateAlertState(String id, String newState) {
         Alerts alert = alertsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Alerta no encontrada con ID: " + id));

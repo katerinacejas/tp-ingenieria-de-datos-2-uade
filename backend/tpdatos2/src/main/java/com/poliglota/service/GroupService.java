@@ -34,7 +34,7 @@ public class GroupService {
         }
 
         List<Long> members = Optional.ofNullable(dto.getMemberIds()).orElseGet(ArrayList::new);
-        // de-duplicar manteniendo orden de inserción
+		
         members = new ArrayList<>(new LinkedHashSet<>(members));
 
         Group g = new Group(null, name, members);
@@ -62,7 +62,7 @@ public class GroupService {
 
     public GroupDTO addMember(String groupId, Long userId) {
         Query q = Query.query(Criteria.where("_id").is(groupId));
-        Update u = new Update().addToSet("memberIds", userId); // $addToSet evita duplicados
+        Update u = new Update().addToSet("memberIds", userId); // addToSet evita duplicados
         Group updated = mongoTemplate.findAndModify(
                 q, u,
                 FindAndModifyOptions.options().returnNew(true),
@@ -74,7 +74,7 @@ public class GroupService {
 
     public GroupDTO removeMember(String groupId, Long userId) {
         Query q = Query.query(Criteria.where("_id").is(groupId));
-        Update u = new Update().pull("memberIds", userId); // $pull elimina el valor del array
+        Update u = new Update().pull("memberIds", userId); // pull elimina el valor del array
         Group updated = mongoTemplate.findAndModify(
                 q, u,
                 FindAndModifyOptions.options().returnNew(true),

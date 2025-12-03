@@ -82,4 +82,56 @@ public class AuthenticationController {
 			return ResponseEntity.internalServerError().body("Error en registro de usuario: " + e.getMessage());
 		}
     }
+
+	public ResponseEntity<String> registerMantenimiento(  RegistroRequestDTO request) {
+		try {
+			boolean ok = authenticationService.registerMantenimiento(request);
+			if (ok == true) {
+				UsuarioResponseDTO usuarioResponseDTO = usuarioService.getUsuarioPorMail(request.getEmail()).orElse(null);
+				SessionDTO sessionDTO = new SessionDTO();
+				sessionDTO.setUserId(usuarioResponseDTO.getUserId().toString());
+				sessionDTO.setRolId(usuarioResponseDTO.getRol());
+				sessionDTO.setStartTime(LocalDateTime.now());
+				sessionDTO.setEndTime(null);
+				sessionDTO.setStatus("activa");
+				sessionService.createSession(sessionDTO);
+				return ResponseEntity.status(401).body("ok");
+			}
+			else {
+				if (request.getEmail().equals("admin@admin.com")){
+					return ResponseEntity.status(401).body("usuario admin ya existia");
+				}
+				return ResponseEntity.status(401).body("Credenciales inválidas");
+			}
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().body("Error en registro de usuario: " + e.getMessage());
+		}
+    }
+
+	public ResponseEntity<String> registerAdmin(  RegistroRequestDTO request) {
+		try {
+			boolean ok = authenticationService.registerAdmin(request);
+			if (ok == true) {
+				UsuarioResponseDTO usuarioResponseDTO = usuarioService.getUsuarioPorMail(request.getEmail()).orElse(null);
+				SessionDTO sessionDTO = new SessionDTO();
+				sessionDTO.setUserId(usuarioResponseDTO.getUserId().toString());
+				sessionDTO.setRolId(usuarioResponseDTO.getRol());
+				sessionDTO.setStartTime(LocalDateTime.now());
+				sessionDTO.setEndTime(null);
+				sessionDTO.setStatus("activa");
+				sessionService.createSession(sessionDTO);
+				return ResponseEntity.status(401).body("ok");
+			}
+			else {
+				if (request.getEmail().equals("admin@admin.com")){
+					return ResponseEntity.status(401).body("usuario admin ya existia");
+				}
+				return ResponseEntity.status(401).body("Credenciales inválidas");
+			}
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().body("Error en registro de usuario: " + e.getMessage());
+		}
+    }
+
+	
 }

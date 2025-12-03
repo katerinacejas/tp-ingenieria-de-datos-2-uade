@@ -11,6 +11,5 @@ public interface GroupRepository extends MongoRepository<Group, String> {
     Optional<Group> findByName(String name);
     boolean existsByName(String name);
 
-    // Busca todos los grupos donde el usuario (id MySQL) participa
     List<Group> findByMemberIds(Long memberId);
 }

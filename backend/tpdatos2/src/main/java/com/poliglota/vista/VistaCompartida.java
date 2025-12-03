@@ -19,11 +19,13 @@ import com.poliglota.DTO.request.SendGroupRequestDTO;
 import com.poliglota.DTO.response.UsuarioResponseDTO;
 import com.poliglota.DTO.ProcessDTO;
 import com.poliglota.DTO.ProcessRequestDTO;
+import com.poliglota.DTO.SensorDTO;
 
 import com.poliglota.controller.AccountController;
 import com.poliglota.controller.AccountMovementHistoryController;
 import com.poliglota.controller.AlertsController;
 import com.poliglota.controller.AuthenticationController;
+import com.poliglota.controller.ExecutionHistoryController;
 import com.poliglota.controller.GroupController;
 import com.poliglota.controller.InvoiceController;
 import com.poliglota.controller.MaintenanceCheckController;
@@ -54,6 +56,7 @@ public class VistaCompartida extends Vista{
 	private final SensorController sensorController;
 	private final UsuarioController usuarioController;
 	private final ProcessService processService;
+	private final ExecutionHistoryController executionHistoryController;
 
 	private final Scanner scanner;
 
@@ -72,7 +75,8 @@ public class VistaCompartida extends Vista{
             ProcessRequestController processRequestController,
             SensorController sensorController,
             UsuarioController usuarioController,
-			ProcessService processService) {
+			ProcessService processService,
+			ExecutionHistoryController executionHistoryController) {
         this.accountController = accountController;
         this.accountMovementHistoryController = accountMovementHistoryController;
         this.alertsController = alertsController;
@@ -88,6 +92,7 @@ public class VistaCompartida extends Vista{
         this.sensorController = sensorController;
         this.usuarioController = usuarioController;
 		this.processService = processService;
+		this.executionHistoryController = executionHistoryController;
 
         this.scanner = new Scanner(System.in);
     }
@@ -99,14 +104,10 @@ public class VistaCompartida extends Vista{
 		registro.setNombreCompleto("admin");
 		registro.setPassword("Test1234");
 		registro.setRol("ADMIN");
-		ResponseEntity<String> response = authenticationController.register(registro);
+		ResponseEntity<String> response = authenticationController.registerAdmin(registro);
 		if (response != null && "ok".equals(response.getBody())) {
 			System.out.println("usuario administrador por default generado OK");
 		}
-		else {
-			System.out.println("no se pudo generar el usuario admin defult");
-		}
-
 		home();
 	}
 
@@ -128,6 +129,7 @@ public class VistaCompartida extends Vista{
 				break;
 			default:
 				System.out.println("Opcion invalida.");
+				    System.out.println("=============================================\n\n");
 				home();
 		}
 	}
@@ -151,6 +153,7 @@ public class VistaCompartida extends Vista{
 		ResponseEntity<String> response = authenticationController.register(registro);
 		if (response != null && "ok".equals(response.getBody())) {
 			System.out.println("Registro exitoso, puede iniciar sesion");
+			  System.out.println("=============================================\n\n");
 			home();
 		}
 		else {
@@ -192,8 +195,10 @@ public class VistaCompartida extends Vista{
 				sensorController,
 				usuarioController,
 				processService,
-				this
+				this,
+				executionHistoryController
 			);
+			  System.out.println("=============================================\n\n");
 			vistaUsuario.home();
 		}
 		if (response != null && "MANTENIMIENTO".equals(response.getBody())) {
@@ -214,8 +219,10 @@ public class VistaCompartida extends Vista{
 				sensorController,
 				usuarioController,
 				processService,
-				this
+				this,
+				executionHistoryController
 			);
+			  System.out.println("=============================================\n\n");
 			vistaMantenimiento.home();
 		}
 		if (response != null && "ADMIN".equals(response.getBody())) {
@@ -238,6 +245,7 @@ public class VistaCompartida extends Vista{
 				processService,
 				this				
 			);
+			  System.out.println("=============================================\n\n");
 			vistaAdministrador.home();
 		}
 		if (response != null && "Error".equals(response.getBody())) {
@@ -487,6 +495,30 @@ public class VistaCompartida extends Vista{
 			System.out.println("Costo: " + p.getCost());
 		System.out.println("----------------------------");
 		}		
+	}
+
+	public void verTodosLosSensores() {
+		ResponseEntity<List<SensorDTO>> sensoresDTO = sensorController.list();
+		
+		List<SensorDTO> sensores = sensoresDTO.getBody();
+
+		if (sensores == null || sensores.isEmpty()) {
+			System.out.println("No hay sensores creados.");
+			return;
+		}
+
+		System.out.println("===== SENSORES =====");
+		for (SensorDTO s : sensores) {
+			System.out.println("----------------------------");
+			System.out.println("ID sensor: " + s.getId());
+			System.out.println("Nombre: " + s.getName());
+			System.out.println("tipo : " + s.getType());
+			System.out.println("ciudad: " + s.getCity());
+			System.out.println("pais: " + s.getCountry());
+			System.out.println("Estado: " + s.getEstado());
+			System.out.println("fecha de inicio: " + s.getStartDate());
+		System.out.println("----------------------------");
+		}
 	}
 
 	public void cerrarSesion(String mailAutenticado) {

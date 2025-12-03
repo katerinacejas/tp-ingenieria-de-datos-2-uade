@@ -35,83 +35,11 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-				.cors(Customizer.withDefaults()) ///Aplica configuración CORS
-				.csrf(CsrfConfigurer::disable) ///CSRF gestionado selectivamente (stateless API)
+				.cors(Customizer.withDefaults())
+				.csrf(CsrfConfigurer::disable)
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/api/**").permitAll()
-				/*
-						//Público solo auth
-						.requestMatchers("/api/auth/**").permitAll()
-
-						///Dashboard (resumen)
-						.requestMatchers(HttpMethod.GET, "/api/dashboard/**")
-							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
-
-						///Facturación //pagos //cuentas //movimientos: lectura para todos los roles autenticados
-						.requestMatchers(HttpMethod.GET,
-							"/api/invoices/**", "/api/payments/**",
-							"/api/accounts/**", "/api/account-movements/**")
-							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
-						//Registrar pago
-						.requestMatchers(HttpMethod.POST, "/api/payments/**")
-							.hasAnyRole("USUARIO","MANTENIMIENTO")
-
-						//Sensores //mediciones
-						.requestMatchers(HttpMethod.GET, "/api/measurements/**", "/api/sensors/**")
-							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
-						.requestMatchers(HttpMethod.POST, "/api/measurements/**", "/api/sensors/**")
-							.hasRole("MANTENIMIENTO")
-						.requestMatchers(HttpMethod.PUT, "/api/measurements/**", "/api/sensors/**")
-							.hasRole("MANTENIMIENTO")
-						.requestMatchers(HttpMethod.PATCH, "/api/measurements/**", "/api/sensors/**")
-							.hasRole("MANTENIMIENTO")
-						.requestMatchers(HttpMethod.DELETE, "/api/measurements/**", "/api/sensors/**")
-							.hasRole("MANTENIMIENTO")
-
-						//Alertas
-						.requestMatchers(HttpMethod.GET, "/api/alerts/**")
-							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
-						.requestMatchers(HttpMethod.POST, "/api/alerts/**")
-							.hasRole("MANTENIMIENTO")
-						.requestMatchers(HttpMethod.PUT, "/api/alerts/**")
-							.hasRole("MANTENIMIENTO")
-						.requestMatchers(HttpMethod.PATCH, "/api/alerts/**")
-							.hasRole("MANTENIMIENTO")
-						.requestMatchers(HttpMethod.DELETE, "/api/alerts/**")
-							.hasRole("MANTENIMIENTO")
-
-						//Procesos
-						.requestMatchers(HttpMethod.GET, "/api/processes/**")
-							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
-						.requestMatchers(HttpMethod.POST, "/api/processes/**")
-							.hasAnyRole("USUARIO","MANTENIMIENTO")
-						.requestMatchers(HttpMethod.PUT, "/api/processes/**")
-							.hasRole("MANTENIMIENTO")
-						.requestMatchers(HttpMethod.PATCH, "/api/processes/**")
-							.hasRole("MANTENIMIENTO")
-						.requestMatchers(HttpMethod.DELETE, "/api/processes/**")
-							.hasRole("MANTENIMIENTO")
-
-						//Mensajes y grupos
-						.requestMatchers("/api/messages/**", "/api/groups/**")
-							.hasAnyRole("USUARIO","MANTENIMIENTO","ADMIN")
-
-						//Administración (alta de personal de mantenimiento, etc.)
-						.requestMatchers("/api/admin/**", "/api/accounts/**", "/api/maintenance/**", "/api/users/**", "/api/maintenance/**")
-							.hasRole("ADMIN")
-						.requestMatchers(HttpMethod.POST, "/api/accounts/**", "/api/users/**")
-							.hasRole("ADMIN")
-						.requestMatchers(HttpMethod.PUT, "/api/accounts/**", "/api/users/**")
-							.hasRole("ADMIN")
-						.requestMatchers(HttpMethod.PATCH, "/api/accounts/**", "/api/users/**")
-							.hasRole("ADMIN")
-						.requestMatchers(HttpMethod.DELETE, "/api/accounts/**", "/api/users/**")
-							.hasRole("ADMIN")
-
-						//Todo lo demás autenticado
-						.anyRequest().authenticated()
-						*/
 					)
 
 				.authenticationProvider(authenticationProvider())

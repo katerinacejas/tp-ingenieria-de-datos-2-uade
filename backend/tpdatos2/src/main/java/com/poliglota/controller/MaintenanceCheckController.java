@@ -17,13 +17,11 @@ public class MaintenanceCheckController {
 
     private final MaintenanceCheckService maintenanceCheckService;
 
-    //  Obtener todos los chequeos
     @GetMapping
     public ResponseEntity<List<MaintenanceCheck>> getAllChecks() {
         return ResponseEntity.ok(maintenanceCheckService.getAllChecks());
     }
 
-    //  Obtener un chequeo por ID
     @GetMapping("/{id}")
     public ResponseEntity<MaintenanceCheck> getCheckById(  String id) {
         return maintenanceCheckService.getCheckById(id)
@@ -31,13 +29,11 @@ public class MaintenanceCheckController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    //  Obtener chequeos por sensor
     @GetMapping("/sensor/{sensorId}")
     public ResponseEntity<List<MaintenanceCheck>> getBySensor(  String sensorId) {
         return ResponseEntity.ok(maintenanceCheckService.getBySensor(sensorId));
     }
 
-    //  Obtener chequeos entre fechas
     @GetMapping("/between")
     public ResponseEntity<List<MaintenanceCheck>> getByDateRange(
                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
@@ -45,13 +41,11 @@ public class MaintenanceCheckController {
         return ResponseEntity.ok(maintenanceCheckService.getByDateRange(start, end));
     }
 
-    //  Crear o actualizar un chequeo
     @PostMapping
     public ResponseEntity<MaintenanceCheck> saveCheck(  MaintenanceCheck check) {
         return ResponseEntity.ok(maintenanceCheckService.saveCheck(check));
     }
 
-    //  Eliminar un chequeo
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCheck(  String id) {
         maintenanceCheckService.deleteCheck(id);

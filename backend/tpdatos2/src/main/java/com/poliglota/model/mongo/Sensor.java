@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class Sensor {
 	@Id
 
-	private String Id;
+	private String id;
 
 	private String name;
 	private String type;

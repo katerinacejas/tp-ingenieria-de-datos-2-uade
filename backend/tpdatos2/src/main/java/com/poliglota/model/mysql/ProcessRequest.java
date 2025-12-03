@@ -30,7 +30,7 @@ public class ProcessRequest {
 	@Column(nullable = false)
     private String status; 
 
-	@OneToOne(optional = false)
+	@OneToOne(optional = true)
 	@JoinColumn(name = "invoice_id")
     private Invoice invoice;
 

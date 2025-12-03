@@ -9,6 +9,7 @@ import com.poliglota.model.mysql.ProcessRequest;
 
 @Repository
 public interface ProcessRequestRepository extends JpaRepository<ProcessRequest, Long> {
-	ProcessRequest findByName(String name);
 	List<ProcessRequest> findAllByUser_UserId(Long userId);
+	List<ProcessRequest> findAllByUser_UserIdAndStatus(Long userId, String status);
+	List<ProcessRequest> findAllByStatus(String status);
 }

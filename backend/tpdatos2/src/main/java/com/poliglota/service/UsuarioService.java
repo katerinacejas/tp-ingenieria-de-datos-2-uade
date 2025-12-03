@@ -29,7 +29,6 @@ public class UsuarioService {
 		this.sessionRepository = sessionRepository;
 	}
 
-	//  Obtener todos los usuarios
 	public List<UsuarioResponseDTO> getTodosLosUsuarios() {
 		return usuarioRepository.findAll()
 				.stream()

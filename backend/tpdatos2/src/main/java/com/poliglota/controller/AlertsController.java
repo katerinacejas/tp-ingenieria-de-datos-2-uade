@@ -17,13 +17,11 @@ public class AlertsController {
 
     private final AlertsService alertsService;
 
-    //  Obtener todas las alertas
     @GetMapping
     public ResponseEntity<List<AlertsDTO>> getAllAlerts() {
         return ResponseEntity.ok(alertsService.getAllAlerts());
     }
 
-    //  Obtener alerta por ID
     @GetMapping("/{id}")
     public ResponseEntity<AlertsDTO> getAlertById(  String id) {
         return alertsService.getAlertById(id)
@@ -31,25 +29,21 @@ public class AlertsController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    //  Obtener alertas por tipo
     @GetMapping("/type/{type}")
     public ResponseEntity<List<AlertsDTO>> getAlertsByType(  String type) {
         return ResponseEntity.ok(alertsService.getAlertsByType(type));
     }
 
-    //  Obtener alertas por estado
     @GetMapping("/state/{state}")
     public ResponseEntity<List<AlertsDTO>> getAlertsByState(  String state) {
         return ResponseEntity.ok(alertsService.getAlertsByState(state));
     }
 
-    //  Obtener alertas por sensor
     @GetMapping("/sensor/{sensorId}")
     public ResponseEntity<List<AlertsDTO>> getAlertsBySensor(  String sensorId) {
         return ResponseEntity.ok(alertsService.getAlertsBySensor(sensorId));
     }
 
-    //  Obtener alertas entre fechas
     @GetMapping("/between")
     public ResponseEntity<List<AlertsDTO>> getAlertsByDateRange(
                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
@@ -57,13 +51,11 @@ public class AlertsController {
         return ResponseEntity.ok(alertsService.getAlertsByDateRange(start, end));
     }
 
-    //  Crear o actualizar una alerta
     @PostMapping
     public ResponseEntity<AlertsDTO> createAlert(  AlertsDTO alertDTO) {
         return ResponseEntity.ok(alertsService.createAlert(alertDTO));
     }
 
-    //  Actualizar estado de una alerta
     @PutMapping("/{id}/state")
     public ResponseEntity<AlertsDTO> updateAlertState(
               String id,

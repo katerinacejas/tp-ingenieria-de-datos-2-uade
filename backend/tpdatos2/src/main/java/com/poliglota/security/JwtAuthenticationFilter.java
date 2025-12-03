@@ -33,7 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        // 1) Si no hay Bearer, continuar (no romper rutas públicas ni responder vacío)
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -42,14 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt = authHeader.substring(7);
 
         try {
-            // 2) Extraer username; si no se puede, 401 explícito
             final String email = jwtUtil.extractUsername(jwt);
             if (email == null || email.isBlank()) {
                 unauthorized(response, "invalid_token: missing subject");
                 return;
             }
 
-            // 3) Si todavía no hay autenticación en el contexto, validar token y setear
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -65,11 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
 
-            // 4) Continuar cadena
             filterChain.doFilter(request, response);
 
         } catch (Exception ex) {
-            // Cualquier error de parseo/validación/lookup -> 401 JSON (no conexión vacía)
             logger.warning("JWT error: " + ex.getMessage());
             unauthorized(response, "invalid_token");
         }

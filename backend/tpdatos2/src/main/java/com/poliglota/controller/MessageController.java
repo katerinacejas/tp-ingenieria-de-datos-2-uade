@@ -22,7 +22,6 @@ public class MessageController {
 	private final MessageService messageService;
 	private final UsuarioService usuarioService;
 
-	// Enviar mensaje directo A -> B
 	@PostMapping("/direct")
 	public MessageDTO sendDirect(  SendDirectRequestDTO req) {
 		try {
@@ -34,7 +33,6 @@ public class MessageController {
 		}
 	}
 
-	// Enviar mensaje a un grupo
 	@PostMapping("/group")
 	public MessageDTO sendToGroup(  SendGroupRequestDTO req) {
 		try {
@@ -46,19 +44,16 @@ public class MessageController {
 		}
 	}
 
-	// Obtener toda la conversación directa (A <-> B) ordenada por timestamp asc
 	@GetMapping("/direct/{userA}/{userB}")
 	public List<MessageDTO> getDirect(  Long userA,   Long userB) {
 		return messageService.getDirectConversation(userA, userB);
 	}
 
-	// Mensajes de un grupo
 	@GetMapping("/group/{groupId}")
 	public List<MessageDTO> getGroupMessages(  String groupId) {
 		return messageService.getGroupMessages(groupId);
 	}
 
-	// todos los usuarios con quienes mande un mensaje
 	@GetMapping("/direct/{userA}/conexiones")
 	public List<String> getUsersMensajes( String user) {
 		List <UsuarioResponseDTO> todosUsuariosDTO = usuarioService.getTodosLosUsuarios();
