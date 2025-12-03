@@ -11,6 +11,7 @@ import com.poliglota.DTO.response.UsuarioResponseDTO;
 import com.poliglota.model.mysql.Rol;
 import com.poliglota.model.mysql.User;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +36,19 @@ public class UsuarioService {
 				.map(this::mapToResponseDTO)
 				.collect(Collectors.toList());
 	}
+
+	 public List<UsuarioResponseDTO> getUsuariosYMantenimiento() {
+        List<User> usuarios = usuarioRepository.findByRol(Rol.USUARIO);
+        List<User> mantenimiento = usuarioRepository.findByRol(Rol.MANTENIMIENTO);
+
+        List<User> todos = new ArrayList<>();
+        todos.addAll(usuarios);
+        todos.addAll(mantenimiento);
+
+        return todos.stream()
+                .map(this::mapToResponseDTO)
+                .toList();
+    }
 
 	public Optional<UsuarioResponseDTO> getUsuarioPorMail(String email) {
 		return usuarioRepository.findByEmail(email)

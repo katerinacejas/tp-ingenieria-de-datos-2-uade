@@ -14,6 +14,7 @@ import com.poliglota.controller.GroupController;
 import com.poliglota.controller.InvoiceController;
 import com.poliglota.controller.MaintenanceCheckController;
 import com.poliglota.controller.MeasurementController;
+import com.poliglota.controller.SessionController;
 import com.poliglota.controller.MessageController;
 import com.poliglota.controller.PaymentController;
 import com.poliglota.controller.ProcessController;
@@ -44,6 +45,7 @@ public class VistaAdministrador extends Vista {
 	private final UsuarioController usuarioController;
 	private final ProcessService processService;
 	private final VistaCompartida vistaGeneral;
+	private final SessionController sessionController;
 
 	public VistaAdministrador(String mailAutenticado, Scanner scanner,
 			AccountController accountController,
@@ -61,7 +63,8 @@ public class VistaAdministrador extends Vista {
 			SensorController sensorController,
 			UsuarioController usuarioController,
 			ProcessService processService,
-			VistaCompartida vistaGeneral) {
+			VistaCompartida vistaGeneral,
+			SessionController sessionController) {
 		this.mailAutenticado = mailAutenticado;
 		this.scanner = scanner;
 		this.accountController = accountController;
@@ -80,6 +83,7 @@ public class VistaAdministrador extends Vista {
 		this.usuarioController = usuarioController;
 		this.processService = processService;
 		this.vistaGeneral = vistaGeneral;
+		this.sessionController = sessionController;
 	}
 
 	@Override
@@ -97,6 +101,7 @@ public class VistaAdministrador extends Vista {
 		System.out.println(" 8. Ver todas las facturas de usuarios");
 		System.out.println(" 9. Ver total facturado y total deuda");
 		System.out.println(" 10. Cerrar sesion");
+		System.out.println(" 11. Ver todas las sesiones de usuarios");
 		opcion = scanner.nextLine().trim();
 		switch (opcion) {
 			case "1":
@@ -149,6 +154,11 @@ public class VistaAdministrador extends Vista {
 				    System.out.println("=============================================\n\n");
 				vistaGeneral.home();
 				break;
+			case "11":
+				verSesiones();
+				    System.out.println("=============================================\n\n");
+				home();
+				break;				
 			default:
 				System.out.println("Opcion invalida.");
 				    System.out.println("=============================================\n\n");
@@ -371,4 +381,24 @@ public class VistaAdministrador extends Vista {
 		System.out.println("Total adeudado (facturas PENDIENTES): " + String.format("%.2f", totalDeuda));
 	}
 
+	private void verSesiones() {
+		List<SessionDTO> lista = sessionController.getAllSessions();
+		if (lista == null || lista.isEmpty()) {
+			System.out.println("No hay sessiones de usuarios.");
+			return;
+		}
+		UsuarioResponseDTO usuario;
+		System.out.println("===== SESIONES =====");
+		for(SessionDTO s: lista) {
+			usuario = usuarioController.getUsuarioPorId(Long.parseLong(s.getUserId()));
+			System.out.println("----------------------------");
+			System.out.println("ID usuario: " + s.getUserId());
+			System.out.println("Nombre usuario: " + usuario.getNombreCompleto());
+			System.out.println("Email usuario: " + usuario.getEmail());
+			System.out.println("Rol: " + usuario.getRol());
+			System.out.println("Fecha de inicio de sesion: " + s.getStartTime());
+			System.out.println("Fecha de finalizacion de sesion: " + s.getEndTime());
+			System.out.println("Estado sesion: " + s.getStatus());
+		}
+	}
 }

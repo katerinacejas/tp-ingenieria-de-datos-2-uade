@@ -4,6 +4,7 @@ import com.poliglota.DTO.SessionDTO;
 import com.poliglota.model.mysql.Session;
 import com.poliglota.repository.jpa.SessionRepository;
 import com.poliglota.repository.jpa.UserRepository;
+import org.springframework.data.domain.Sort;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,24 +15,29 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SessionService {
-    private final SessionRepository sessionRepository;
+	private final SessionRepository sessionRepository;
 	private final UserRepository userRepository;
 
-    public List<Session> getAllSessions() {
-        return sessionRepository.findAll();
-    }
+	public List<SessionDTO> getAllSessions() {
+		return sessionRepository
+				.findAll(Sort.by(Sort.Direction.ASC, "startTime"))
+				.stream()
+				.map(this::toDto)
+				.toList();
+	}
 
-    public List<Session> getActiveSessionsByUser(String userId) {
-        return sessionRepository.findByUser_UserIdAndStatus(Long.parseLong(userId), "active");
-    }
+	public List<Session> getActiveSessionsByUser(String userId) {
+		return sessionRepository.findByUser_UserIdAndStatus(Long.parseLong(userId), "active");
+	}
 
-    public SessionDTO createSession(SessionDTO sessionDTO) {
+	public SessionDTO createSession(SessionDTO sessionDTO) {
 		User user = userRepository.findById(Long.parseLong(sessionDTO.getUserId())).orElse(null);
 		return toDto(sessionRepository.save(toEntity(sessionDTO, user)));
-    }
+	}
 
 	public void closeSession(SessionDTO sessionDTO) {
-		Session session = sessionRepository.findByUser_UserIdAndStatus(Long.parseLong(sessionDTO.getUserId()), "activa").get(0);
+		Session session = sessionRepository.findByUser_UserIdAndStatus(Long.parseLong(sessionDTO.getUserId()), "activa")
+				.get(0);
 		session.setStatus("inactiva");
 		session.setEndTime(LocalDateTime.now());
 		sessionRepository.save(session);
