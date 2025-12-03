@@ -157,7 +157,7 @@ public class VistaAdministrador extends Vista {
 			case "11":
 				verSesiones();
 				    System.out.println("=============================================\n\n");
-				vistaGeneral.home();
+				home();
 				break;				
 			default:
 				System.out.println("Opcion invalida.");
