@@ -18,9 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("select u from User u where u.rolEntity.code = :code")
 	List<User> findByRol(@Param("code") Rol code);
 
-	// Método para verificar si un usuario existe por su email
 	boolean existsByEmail(String email);
 
-	// Método para eliminar un usuario por su id
 	void deleteById(Long id);
 }

@@ -1,6 +1,7 @@
 package com.poliglota.DTO;
 
-import java.time.Instant;
+import java.time.LocalDate;
+
 import lombok.Data;
 
 @Data
@@ -8,5 +9,5 @@ public class MeasurementDTO {
 	public String sensorId;
     public Double temperature;
     public Double humidity;
-	public Instant timestamp;
+	public LocalDate timestamp;
 }

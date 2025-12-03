@@ -6,6 +6,7 @@ import org.springframework.data.cassandra.core.cql.Ordering;
 import org.springframework.data.cassandra.core.mapping.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @PrimaryKeyClass
 @Data
@@ -17,5 +18,5 @@ public class MeasurementKey implements Serializable {
 	private String sensorId;
 	
 	@PrimaryKeyColumn(name = "timestamp", type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
-	private Instant timestamp;
+	private LocalDate timestamp;
 }

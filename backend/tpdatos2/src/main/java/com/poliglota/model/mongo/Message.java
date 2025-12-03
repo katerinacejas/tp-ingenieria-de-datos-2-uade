@@ -17,5 +17,5 @@ public class Message {
     private String recipientId; // puede ser ID de usuario o de grupo
     private LocalDateTime timestamp;
     private String content;
-    private String type;  // "user" o "group"
+    private String type;  
 }

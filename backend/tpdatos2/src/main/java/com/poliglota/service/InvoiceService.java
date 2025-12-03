@@ -3,8 +3,10 @@ package com.poliglota.service;
 import com.poliglota.DTO.InvoiceDTO;
 import com.poliglota.model.mysql.Invoice;
 import com.poliglota.model.mysql.ProcessRequest;
+import com.poliglota.model.mysql.Payment;
 import com.poliglota.model.mysql.User;
 import com.poliglota.repository.jpa.InvoiceRepository;
+import com.poliglota.repository.jpa.PaymentRepository;
 import com.poliglota.repository.jpa.ProcessRequestRepository;
 import com.poliglota.repository.jpa.UserRepository;
 
@@ -23,8 +25,8 @@ public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final UserRepository userRepository;
 	private final ProcessRequestRepository processRequestRepository;
+	private final PaymentRepository paymentRepository;
 
-    //  Obtener todas las facturas
     public List<InvoiceDTO> getAllInvoices() {
         return invoiceRepository.findAll()
 			.stream()
@@ -32,14 +34,12 @@ public class InvoiceService {
 			.toList();
     }
 
-    //  Obtener factura por ID
     public InvoiceDTO getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada con ID: " + id));
         return toDto(invoice);
     }
 
-    //  Obtener facturas por usuario
     public List<InvoiceDTO> getInvoicesByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + userId));
@@ -49,7 +49,15 @@ public class InvoiceService {
 			.toList();
     }
 
-    //  Obtener facturas por estado
+	public List<InvoiceDTO> getInvoicesByUserByStatus(Long userId, String status) {
+		User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + userId));
+        return invoiceRepository.findByUserAndStatus(user, status)
+				.stream()
+				.map(this::toDto)
+				.toList();
+	}
+
     public List<InvoiceDTO> getInvoicesByStatus(String status) {
         return invoiceRepository.findByStatus(status)
 			.stream()
@@ -57,30 +65,34 @@ public class InvoiceService {
 			.toList();
     }
 
-    //  Crear factura nueva
-    public InvoiceDTO createInvoice(Long userId, List<ProcessRequest> processes) {
+    public InvoiceDTO createInvoice(Long userId, ProcessRequest processRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + userId));
 
         Invoice invoice = new Invoice();
         invoice.setUser(user);
         invoice.setIssueDate(LocalDateTime.now());
-        invoice.setBilledProcesses(processes);
-        invoice.setStatus("pendiente");
+        invoice.setBilledProcessRequest(processRequest);
+        invoice.setStatus("PENDIENTE");
 
-		for (ProcessRequest process : processes) {
-			process.setInvoice(invoice);
-			processRequestRepository.save(process);
-		}
-		
+		processRequest.setInvoice(invoice);
+		processRequestRepository.save(processRequest);
+
         return toDto(invoiceRepository.save(invoice));
     }
 
-    //  Cambiar estado de factura
-    public InvoiceDTO updateStatus(Long id, String newStatus) {
+    public InvoiceDTO pagarFactura(Long id, double monto, String metodoPago) {
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Factura no encontrada con ID: " + id));
-        invoice.setStatus(newStatus);
+        invoice.setStatus("PAGADA");
+
+		Payment payment = new Payment();
+		payment.setInvoice(invoice);
+		payment.setPaymentDate(LocalDateTime.now());
+		payment.setAmount(monto);
+		payment.setPaymentMethod(metodoPago);
+		paymentRepository.save(payment);
+
         return toDto(invoiceRepository.save(invoice));
     }
 
@@ -89,9 +101,7 @@ public class InvoiceService {
         dto.setInvoiceId(invoice.getInvoiceId().toString());
         dto.setUserId(invoice.getUser().getUserId().toString());
         dto.setIssueDate(invoice.getIssueDate());
-        dto.setBilledProcessesIds(invoice.getBilledProcesses().stream()
-                .map(pr -> pr.getProcessRequestId().toString())
-                .toList());
+        dto.setBilledProcessRequest(invoice.getBilledProcessRequest().getProcessRequestId().toString());
         dto.setStatus(invoice.getStatus());
         return dto;
     }

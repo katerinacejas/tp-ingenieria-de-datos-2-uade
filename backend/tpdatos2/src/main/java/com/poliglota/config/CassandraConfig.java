@@ -1,4 +1,3 @@
-// com/poliglota/config/CassandraConfig.java
 package com.poliglota.config;
 
 import java.util.List;
@@ -44,23 +43,20 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
         return localDatacenter;
     }
 
-    // Crea el keyspace si no existe ANTES de inicializar los repos/plantillas
     @Override
     protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
         return List.of(
             CreateKeyspaceSpecification.createKeyspace(keyspaceName)
                 .ifNotExists()
-                .withSimpleReplication(1)   // ajustá RF si tenés cluster
+                .withSimpleReplication(1)  
         );
     }
 
-    // Hace que Spring Data cree tablas si no existen
     @Override
     public SchemaAction getSchemaAction() {
         return SchemaAction.CREATE_IF_NOT_EXISTS;
     }
 
-    // Paquete donde están tus @Table de Cassandra
     @Override
     public String[] getEntityBasePackages() {
         return new String[] { "com.poliglota.model.cassandra" };

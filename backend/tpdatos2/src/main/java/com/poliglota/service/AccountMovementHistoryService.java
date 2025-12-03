@@ -21,7 +21,6 @@ public class AccountMovementHistoryService {
     private final AccountMovementHistoryRepository movementHistoryRepository;
     private final AccountRepository accountRepository;
 
-    //  Obtener todos los movimientos
     public List<AccountMovementHistoryDTO> getAllMovements() {
         return movementHistoryRepository.findAll()
 			.stream()
@@ -29,14 +28,12 @@ public class AccountMovementHistoryService {
 			.toList();
     }
 
-    //  Obtener movimiento por ID
     public AccountMovementHistoryDTO getMovementById(Long id) {
         return movementHistoryRepository.findById(id)
 			.map(this::toDto)
             .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado con ID: " + id));
     }
 
-    //  Movimientos por cuenta
     public List<AccountMovementHistoryDTO> getMovementsByAccount(Long accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Cuenta no encontrada con ID: " + accountId));
@@ -46,7 +43,6 @@ public class AccountMovementHistoryService {
 			.toList();
     }
 
-    //  Movimientos entre fechas
     public List<AccountMovementHistoryDTO> getMovementsByDateRange(LocalDateTime start, LocalDateTime end) {
         return movementHistoryRepository.findByMovementDateBetween(start, end)
 			.stream()

@@ -8,13 +8,12 @@ import java.util.List;
 @Repository
 public interface ProcessRepository extends JpaRepository<Process, Long> {
     
-    // Buscar por nombre exacto
     Process findByName(String name);
 
-    // Buscar por tipo de proceso
+	boolean existsByName(String name);
+
     List<Process> findByProcessType(String processType);
 
-    // Buscar procesos con costo menor a cierto valor
     List<Process> findByCostLessThan(double maxCost);
 
 }

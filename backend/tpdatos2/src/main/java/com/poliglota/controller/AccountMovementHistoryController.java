@@ -16,29 +16,25 @@ public class AccountMovementHistoryController {
 
     private final AccountMovementHistoryService movementHistoryService;
 
-    // Obtener todos los movimientos
     @GetMapping
     public ResponseEntity<List<AccountMovementHistoryDTO>> getAllMovements() {
         return ResponseEntity.ok(movementHistoryService.getAllMovements());
     }
 
-    //  Obtener movimiento por ID
     @GetMapping("/{id}")
-    public ResponseEntity<AccountMovementHistoryDTO> getMovementById(@PathVariable Long id) {
+    public ResponseEntity<AccountMovementHistoryDTO> getMovementById(  Long id) {
         return ResponseEntity.ok(movementHistoryService.getMovementById(id));
     }
 
-    //  Obtener movimientos por cuenta
     @GetMapping("/account/{accountId}")
-    public ResponseEntity<List<AccountMovementHistoryDTO>> getMovementsByAccount(@PathVariable Long accountId) {
+    public ResponseEntity<List<AccountMovementHistoryDTO>> getMovementsByAccount(  Long accountId) {
         return ResponseEntity.ok(movementHistoryService.getMovementsByAccount(accountId));
     }
 
-    //  Obtener movimientos entre fechas
     @GetMapping("/between")
     public ResponseEntity<List<AccountMovementHistoryDTO>> getMovementsByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         return ResponseEntity.ok(movementHistoryService.getMovementsByDateRange(start, end));
     }
 

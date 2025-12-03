@@ -25,16 +25,20 @@ public class UsuarioController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasRole('ADMIN')")
 	public List<UsuarioResponseDTO> getTodosLosUsuarios() {
 		return usuarioService.getTodosLosUsuarios();
 	}
 
 	@GetMapping("/buscar")
 	@PreAuthorize("hasRole('ADMIN')")
-	public UsuarioResponseDTO getUsuarioPorMail(@RequestParam String mail) {
+	public UsuarioResponseDTO getUsuarioPorMail(   String mail) {
 		return usuarioService.getUsuarioPorMail(mail)
 				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + mail));
+	}
+
+	public UsuarioResponseDTO getUsuarioPorId(Long id) {
+		return usuarioService.getUsuarioPorId(id)
+				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con id: " + id));
 	}
 
 }

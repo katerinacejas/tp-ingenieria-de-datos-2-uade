@@ -49,45 +49,20 @@ public class AuthenticationService {
 	@Autowired
 	private SessionRepository sessionRepository;
 
-    public String authenticate(LoginRequestDTO request) {
-       /* try {
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
-                    request.getPassword()
-                )
-            );
-
-            User usuario = (User) authentication.getPrincipal();
-			
-			String rolString = usuario.getRol().name();
-            String jwt = jwtUtil.generateToken(usuario.getEmail(), rolString);
-			Rol rol = usuario.getRol();
-
-			usuario.setStatus("activo");
-			usuarioRepository.save(usuario);
-
-            return new JwtResponseDTO(jwt, rol);
-
-        } catch (AuthenticationException ex) {
-            throw new RuntimeException("Credenciales inválidas");
-        }
-			*/
-
+    public boolean authenticate(LoginRequestDTO request) {
 		User usuario = usuarioRepository.findByEmail(request.getEmail()).orElse(null);
 		if (usuario != null) {
-			return "existe ese mail en la base";
+			return passwordEncoder.matches(request.getPassword(), usuario.getPassword());
 		}
 		else {
-			return "no existe ese mail en la base";
+			return false;
 		}
-		
     }
 
-    public String register(RegistroRequestDTO request) {
+    public boolean register(RegistroRequestDTO request) {
         try {
             if (usuarioRepository.existsByEmail(request.getEmail())) {
-                throw new RuntimeException("Ya existe un usuario con ese email");
+				return false;
             }
 
             User nuevoUsuario = new User();
@@ -113,15 +88,93 @@ public class AuthenticationService {
 			nuevoUsuario.setRolEntity(rolUsuario);
 			nuevoUsuario.setRol(Rol.USUARIO);
 			usuarioRepository.save(nuevoUsuario);
-			System.out.println("guarde un usuario");
 			
 			accountRepository.save(account);
-			System.out.println("guarde una cuenta");
 
-            return "Usuario registrado con éxito";
+            return true;
 
         } catch (Exception e) {
-            throw new RuntimeException("Error al registrar usuario: " + e.getMessage());
+			System.out.println("Error al registrar usuario: " + e.getMessage());
+			return false;
+        }
+    }
+
+	public boolean registerMantenimiento(RegistroRequestDTO request) {
+        try {
+            if (usuarioRepository.existsByEmail(request.getEmail())) {
+				return false;
+            }
+
+            User nuevoUsuario = new User();
+            nuevoUsuario.setFullName(request.getNombreCompleto());
+            nuevoUsuario.setEmail(request.getEmail());
+
+			Account account = new Account();
+			account.setUser(nuevoUsuario);
+			account.setCurrentBalance(0.0);
+
+            String encryptedPassword = passwordEncoder.encode(request.getPassword());
+            nuevoUsuario.setPassword(encryptedPassword);
+
+            RolEntity rolMantenimiento = rolRepository.findByCode(Rol.MANTENIMIENTO)
+                .orElseThrow(() -> new IllegalStateException("Rol MANTENIMIENTO no configurado"));
+            nuevoUsuario.setRolEntity(rolMantenimiento);
+
+            System.out.println("Rol asignado al usuario: " + nuevoUsuario.getRol());
+
+			nuevoUsuario.setStatus("activo");
+			nuevoUsuario.setRegisteredAt(LocalDateTime.now());
+
+			nuevoUsuario.setRolEntity(rolMantenimiento);
+			nuevoUsuario.setRol(Rol.MANTENIMIENTO);
+			usuarioRepository.save(nuevoUsuario);
+			accountRepository.save(account);
+
+            return true;
+
+        } catch (Exception e) {
+			System.out.println("Error al registrar usuario: " + e.getMessage());
+			return false;
+        }
+    }
+
+	public boolean registerAdmin(RegistroRequestDTO request) {
+        try {
+            if (usuarioRepository.existsByEmail(request.getEmail())) {
+				return false;
+            }
+
+            User nuevoUsuario = new User();
+            nuevoUsuario.setFullName(request.getNombreCompleto());
+            nuevoUsuario.setEmail(request.getEmail());
+
+			Account account = new Account();
+			account.setUser(nuevoUsuario);
+			account.setCurrentBalance(0.0);
+
+            String encryptedPassword = passwordEncoder.encode(request.getPassword());
+            nuevoUsuario.setPassword(encryptedPassword);
+
+            RolEntity rolAdmin = rolRepository.findByCode(Rol.ADMIN)
+                .orElseThrow(() -> new IllegalStateException("Rol ADMIN no configurado"));
+            nuevoUsuario.setRolEntity(rolAdmin);
+
+            System.out.println("Rol asignado al usuario: " + nuevoUsuario.getRol());
+
+			nuevoUsuario.setStatus("activo");
+			nuevoUsuario.setRegisteredAt(LocalDateTime.now());
+
+			nuevoUsuario.setRolEntity(rolAdmin);
+			nuevoUsuario.setRol(Rol.ADMIN);
+			usuarioRepository.save(nuevoUsuario);
+			
+			accountRepository.save(account);
+
+            return true;
+
+        } catch (Exception e) {
+			System.out.println("Error al registrar usuario: " + e.getMessage());
+			return false;
         }
     }
 

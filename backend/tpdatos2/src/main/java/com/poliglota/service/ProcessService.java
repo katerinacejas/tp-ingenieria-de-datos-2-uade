@@ -1,20 +1,34 @@
 package com.poliglota.service;
 
+import com.poliglota.model.mysql.ExecutionHistory;
 import com.poliglota.model.mysql.Process;
+import com.poliglota.model.mysql.ProcessRequest;
+import com.poliglota.repository.jpa.ExecutionHistoryRepository;
 import com.poliglota.repository.jpa.ProcessRepository;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.poliglota.repository.jpa.ProcessRequestRepository;
 import com.poliglota.DTO.ProcessDTO;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.stereotype.Service;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
 public class ProcessService {
 
     private final ProcessRepository processRepository;
-
+	private final ProcessRequestRepository processRequestRepository;
+	private final MongoTemplate mongoTemplate;
+	private final ExecutionHistoryRepository executionHistoryRepository;
 
     public List<ProcessDTO> getAllProcesses() {
         return processRepository.findAll()
@@ -47,7 +61,8 @@ public class ProcessService {
     }
 
     public ProcessDTO saveProcess(ProcessDTO processDTO) {
-        return toDto(processRepository.save(toEntity(processDTO)));
+        Process proceso = processRepository.save(toEntity(processDTO));
+		return toDto(proceso);
     }
 
     public boolean deleteProcess(Long id) {
@@ -63,7 +78,7 @@ public class ProcessService {
 		process.setName(dto.getName());
 		process.setDescription(dto.getDescription());
 		process.setProcessType(dto.getProcessType());
-		process.setCost(dto.getCost());
+		process.setCost(dto.getCost());                   
 		return process;
 	}
     
@@ -73,6 +88,7 @@ public class ProcessService {
 		dto.setDescription(process.getDescription());
 		dto.setProcessType(process.getProcessType());
 		dto.setCost(process.getCost());
+		dto.setId(process.getProcessId());
 		return dto;
 	}
 }

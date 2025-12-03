@@ -24,8 +24,8 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
 	private final AccountMovementHistoryRepository accountMovementHistoryRepository;
+	private final PaymentService paymentService;
 
-    //  Obtener todas las cuentas
     public List<AccountDTO> getAllAccounts() {
         return accountRepository.findAll()			
 			.stream()
@@ -33,14 +33,12 @@ public class AccountService {
 			.toList();
     }
 
-    //  Obtener cuenta por ID
     public AccountDTO getAccountById(Long id) {
         return accountRepository.findById(id)
 			.map(this::toDto)
 			.orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada con ID: " + id));
     }
 
-	//  Obtener cuenta por usuario
 	public AccountDTO getAccountByUserId(Long userId) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con ID: " + userId));
@@ -48,7 +46,6 @@ public class AccountService {
 				.orElseThrow(() -> new AccountNotFoundException("Cuenta no encontrada para el usuario ID: " + userId)));
 	}
 
-    //  Acreditar saldo
     public AccountDTO deposit(Long accountId, double amount) {
         if (amount <= 0) throw new IllegalArgumentException("El monto debe ser mayor que cero.");
         
@@ -69,7 +66,6 @@ public class AccountService {
         return toDto(accountRepository.save(account));
     }
 
-    //  Debitar saldo
     public Account withdraw(Long accountId, double amount) {
         if (amount <= 0) throw new IllegalArgumentException("El monto debe ser mayor que cero.");
       
@@ -90,7 +86,7 @@ public class AccountService {
 		
         account.setCurrentBalance(account.getCurrentBalance() - amount);
 
-        return accountRepository.save(account);
+        return accountRepository.save(account);		
     }
 
 	private AccountDTO toDto(Account account) {

@@ -10,7 +10,6 @@ import java.time.OffsetDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // --- DTO de error ---
     public static class ErrorResponse {
         public final String error;
         public final String message;
@@ -27,7 +26,6 @@ public class GlobalExceptionHandler {
         }
     }
 
-    // Exception de dominio
     public static class InvalidStateException extends RuntimeException {
         public InvalidStateException() {
             super();
@@ -40,13 +38,10 @@ public class GlobalExceptionHandler {
         }
     }
 
-    // Util para armar la respuesta
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String msg, String path) {
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(status.getReasonPhrase(), msg, status.value(), path));
     }
-
-    // --- Handlers ESPECÍFICOS (uno por excepción, sin listas que se pisen) ---
 
     @ExceptionHandler(UsuarioNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUsuarioNotFound(UsuarioNotFoundException ex, jakarta.servlet.http.HttpServletRequest req) {
@@ -63,13 +58,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), req.getRequestURI());
     }
 
-    // --- Otros casos de dominio (si los tenés) ---
     @ExceptionHandler(InvalidStateException.class)
     public ResponseEntity<ErrorResponse> handleInvalidState(InvalidStateException ex, jakarta.servlet.http.HttpServletRequest req) {
         return build(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), req.getRequestURI());
     }
 
-    // --- Fallbacks (ordenados de más específico a más general) ---
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex, jakarta.servlet.http.HttpServletRequest req) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), req.getRequestURI());

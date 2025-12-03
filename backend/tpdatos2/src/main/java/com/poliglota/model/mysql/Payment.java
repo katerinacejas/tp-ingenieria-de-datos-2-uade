@@ -17,6 +17,7 @@ public class Payment {
     private Long paymentId;
 
 	@OneToOne(optional = false)
+	@JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
 	@Column(nullable = false)

@@ -24,15 +24,14 @@ public class Invoice {
 	@Column(nullable = false)
 	private LocalDateTime issueDate = LocalDateTime.now();
 
-	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ProcessRequest> billedProcesses = new ArrayList<ProcessRequest>();
+	@OneToOne(optional = false)
+	@JoinColumn(name = "process_request_id")
+	private ProcessRequest billedProcessRequest;
 
 	@Column(nullable = false)
 	private String status; 
 
 	public double calculateTotalAmount() {
-		return billedProcesses.stream()
-			.mapToDouble(processRequest -> processRequest.getCostProcess())
-			.sum();
+		return billedProcessRequest.getCostProcess();
 	}
 }

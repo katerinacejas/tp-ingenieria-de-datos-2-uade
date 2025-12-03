@@ -75,36 +75,6 @@ services:
       echo 'Keyspace listo.';
     restart: "no"
 
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: tp_backend
-    restart: unless-stopped
-    depends_on:
-      mysql:
-        condition: service_healthy
-      mongo:
-        condition: service_healthy
-      cassandra:
-        condition: service_healthy
-      cassandra-init:
-        condition: service_completed_successfully
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
-      SPRING_JPA_SHOW_SQL: "true"
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/poliglota?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: app
-      SPRING_DATASOURCE_PASSWORD: app123
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/poliglota
-      SPRING_CASSANDRA_CONTACT_POINTS: cassandra
-      SPRING_CASSANDRA_PORT: 9042
-      SPRING_CASSANDRA_KEYSPACE_NAME: poliglota
-      SPRING_CASSANDRA_LOCAL_DATACENTER: datacenter1
-    ports:
-      - "8080:8080"
-
 volumes:
   mysql_data:
   mongo_data:

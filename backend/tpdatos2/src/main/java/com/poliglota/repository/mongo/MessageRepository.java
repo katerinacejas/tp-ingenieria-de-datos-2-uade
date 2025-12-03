@@ -12,17 +12,14 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends MongoRepository<Message, String> {
 
-    // Conversación directa entre dos usuarios, type = "user"
     @Query(value = "{ 'type': 'user', $or: [ " +
             "{ 'senderId': ?0, 'recipientId': ?1 }, " +
             "{ 'senderId': ?2, 'recipientId': ?3 } " +
             "] }")
     List<Message> findDirectConversation(Long userA, String userBStr, Long userB, String userAStr, Sort sort);
 
-    // Mensajes por grupo (type = "group")
     @Query(value = "{ 'type': 'group', 'recipientId': ?0 }")
     List<Message> findByGroupId(String groupId, Sort sort);
 
-    // Mensajes enviados por un usuario historiales
     Page<Message> findBySenderId(Long senderId, Pageable pageable);
 }

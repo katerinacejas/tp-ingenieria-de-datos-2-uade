@@ -18,44 +18,31 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    //  Obtener todos los pagos
     @GetMapping
     public ResponseEntity<List<PaymentDTO>> getAllPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());
     }
 
-    //  Obtener pago por ID
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentDTO> getPaymentById(@PathVariable Long id) {
+    public ResponseEntity<PaymentDTO> getPaymentById(  Long id) {
         return ResponseEntity.ok(paymentService.getPaymentById(id));
     }
 
-    //  Obtener pagos por factura
-    @GetMapping("/invoice/{invoiceId}")
-    public ResponseEntity<List<PaymentDTO>> getPaymentsByInvoice(@PathVariable Long invoiceId) {
-        return ResponseEntity.ok(paymentService.getPaymentsByInvoice(invoiceId));
-    }
-
-    //  Obtener pagos por método
     @GetMapping("/method/{paymentMethod}")
-    public ResponseEntity<List<PaymentDTO>> getPaymentsByMethod(@PathVariable String paymentMethod) {
+    public ResponseEntity<List<PaymentDTO>> getPaymentsByMethod(  String paymentMethod) {
         return ResponseEntity.ok(paymentService.getPaymentsByMethod(paymentMethod));
     }
 
-    //  Obtener pagos entre fechas
     @GetMapping("/between")
     public ResponseEntity<List<PaymentDTO>> getPaymentsByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         return ResponseEntity.ok(paymentService.getPaymentsByDateRange(start, end));
     }
 
-    //  Registrar nuevo pago
-    @PostMapping
-    public ResponseEntity<PaymentDTO> registerPayment(
-            @RequestParam Long invoiceId,
-            @RequestParam String paymentMethod) {
-        return ResponseEntity.ok(paymentService.registerPayment(invoiceId, paymentMethod));
-    }
+	@GetMapping("/user/{userId}")
+	public ResponseEntity<List<PaymentDTO>> getPaymentsByUser(Long userId) {
+		return ResponseEntity.ok(paymentService.getPaymentsByUser(userId));
+	}
 
 }
